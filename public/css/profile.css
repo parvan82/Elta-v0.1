@@ -1,0 +1,954 @@
+ /* تغییر اندازه اسکرول‌بار */
+ ::-webkit-scrollbar {
+    width: 8px; /* عرض اسکرول‌بار */
+}
+
+/* تغییر استایل پس‌زمینه اسکرول‌بار */
+::-webkit-scrollbar-track {
+    background: #2c2c2c;
+    border-radius: 4px;
+}
+
+/* تغییر استایل خود نوار اسکرول */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+/* هنگام هاور روی اسکرول */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+body{
+    min-height: 100vh;
+    background: linear-gradient(#212529, #495057);
+    box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#rtl{
+    text-align: right;
+}
+
+.breadcrumb{
+    justify-content: space-between;
+    color: white;
+    background-color: #444;
+}
+.portfolio-container{
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    background-color: #444;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+.portfolio-container p{
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    margin: 0px;
+}
+#img-icon ,
+#img-icon-name{
+    height: 40px;
+}
+
+.main-body {
+    padding: 40px;
+}
+
+.username-card{
+    color: #b7b7b7;
+    margin-top: 1px;
+    font-size: 12px;
+}
+.card {
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #444;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+}
+
+.gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+}
+
+.gutters-sm>.col,
+.gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.mb-3, .my-3 {
+    margin-bottom: 1rem!important;
+}
+
+.bg-gray-300 {
+    background-color: #444;
+}
+
+.h-100 {
+    height: 100%!important;
+}
+
+.shadow-none {
+    box-shadow: none!important;
+}
+
+.list-group-item{
+    background-color: #444;
+}
+
+.button.x {
+    max-width: 320px;
+    display: flex;
+    padding: 0.5rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(24, 23, 23, 0.25);
+    gap: 0.75rem;
+    color: #ffffff;
+    background-color: rgb(24, 23, 23);
+    cursor: pointer;
+    transition: all 0.6s ease;
+    text-decoration: none;
+}
+
+.button.x:hover {
+    transform: scale(1.02);
+    background-color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button.x:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.button.x:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+}
+
+.editBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+    background-color: #212529;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.123);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.editBtn::before {
+    content: "";
+    width: 200%;
+    height: 200%;
+    background-color: #495057;
+    position: absolute;
+    z-index: 1;
+    transform: scale(0);
+    transition: all 0.5s;
+    border-radius: 50%;
+    filter: blur(10px);
+}
+
+.editBtn:hover::before {
+    transform: scale(1);
+}
+
+.editBtn:hover {
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.336);
+}
+
+.editBtn svg {
+    height: 12px;
+    fill: white;
+    z-index: 3;
+    transition: all 0.2s;
+    transform-origin: bottom;
+}
+
+.editBtn:hover svg {
+    transform: rotate(-15deg) translateX(5px);
+}
+
+.editBtn::after {
+    content: "";
+    width: 21px;
+    height: 1.5px;
+    position: absolute;
+    bottom: 14px;
+    left: -5px;
+    background-color: white;
+    border-radius: 2px;
+    z-index: 2;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease-out;
+}
+
+.editBtn:hover::after {
+    transform: scaleX(1);
+    left: 0px;
+    transform-origin: right;
+}
+
+.deletebtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #212529;
+    border: none;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+    gap: 2px;
+}
+
+.svgIcon {
+    width: 12px;
+    transition-duration: 0.3s;
+}
+
+.svgIcon path {
+    fill: white;
+}
+
+.deletebtn:hover {
+    transition-duration: 0.3s;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+    gap: 0;
+}
+
+.bin-top {
+    transform-origin: bottom right;
+}
+
+.deletebtn:hover .bin-top {
+    transition-duration: 0.5s;
+    transform: rotate(160deg);
+}
+
+.card{
+    padding: 10px;
+}
+
+.jobcard , .study-card
+, .language , .skill{
+    text-align: right;
+    padding: 15px;
+    background-color:rgb(53, 54, 55);
+    border-radius: 10px;
+}
+
+
+/* هر آیتم مهارت */
+.skillselect {
+    display: flex;
+    flex-direction: row; /* چینش المان‌ها به صورت افقی داخل هر skillselect */
+    max-width: 200px;
+    text-align: right;
+    padding: 10px;
+    background-color: #212529;
+    border-radius: 10px;
+    margin-right: 5px; /* کمی فاصله بین هر آیتم */
+    margin-bottom: 5px; /* فاصله پایین هر آیتم */
+}
+
+.levelspan{
+    font-size: 14px;
+}
+.skillsapn{
+    margin-top: 3px;
+    font-size: 14px;
+}
+.deletespan{
+    margin-top: 3px;
+}
+
+
+
+/* تنظیم اسکرول افقی برای لیست مهارت‌های انتخاب شده */
+#selectedSkillsList {
+    display: flex;
+    flex-wrap: wrap; /* اجازه می‌دهد تا آیتم‌ها به خط بعدی بروند */
+    max-height: 100px; /* حداکثر ارتفاع برای لیست مهارت‌ها */
+    padding-right: 10px; /* فضای اضافی برای اسکرول */
+}
+
+.select-container {
+    margin-bottom: 20px;
+
+}
+
+.software-list {
+    padding: 10px;
+    border: 3px solid  #212529;
+    border-radius: 20px;
+    display: flex;
+    flex-wrap: wrap; /* اجازه می‌دهد تا آیتم‌ها به خط بعدی بروند */
+}
+
+.software-item {
+    margin: 5px 2px;
+    position: relative;
+
+}
+
+.software-level {
+    margin-top: 2px;
+    background-color:rgb(53, 54, 55);
+    border-radius: 10px;
+    padding: 5px;
+    border: 2px solid  #212529;
+    max-width: 100px;
+    display: none;
+    flex-direction: column; /* قرار دادن دکمه‌ها به صورت عمودی */
+    z-index: 9999; /* مقدار بالای z-index برای قرار گرفتن در بالای سایر المان‌ها */
+    position: absolute; /* برای اطمینان از اینکه در لایه بالاتر قرار بگیرد */
+    
+}
+
+.software-level button {
+    padding: 5px;
+    color: white;
+    border: none;
+    background-color:  #212529;
+    border-radius: 10px;
+    margin-top: 5px;
+    max-width: 100px;
+    width: 100%; /* این ویژگی باعث می‌شود دکمه‌ها عرض کامل داشته باشند */
+}
+
+
+
+.selected-skills {
+    margin-top: 10px;
+}
+
+.selected-skills ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+.selected-skills li {
+    margin-bottom: 5px;
+}
+
+
+.software-btn{
+    padding: 10px;
+    color: white;
+    border: none;
+    background-color:  #212529;
+    border-radius: 10px;
+}
+
+
+.input  , #level
+, #language , #degree
+,#editedegree
+,.search-bar input
+,#categorySelect
+{
+    color:  white;
+    padding: 10px;
+    width: 100%;
+    text-align: right;
+    background-color: #212529;
+    border: none;
+    border-radius: 10px;
+    direction: rtl; /* تنظیم جهت متن به راست */
+}
+
+.form-group{
+    text-align: right;
+}
+
+.input::placeholder{
+    color: #ffffff;
+}
+
+#info-submit:active{
+    background-color: #444 ;
+    color: #111;
+    border: 1px #111 solid;
+
+
+}
+
+.addBtn , .closeBtn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 0px;
+    cursor: pointer;
+    transition-duration: .3s;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+    background-color: #212529;
+    border-radius: 50%;
+}
+
+.sign {
+    width: 100%;
+    font-size: 1.5rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addBtn:hover
+,.closeBtn:hover{
+    background-color: #495057;
+
+}
+
+.profile-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* اگر می‌خواهی زیر عکس چیز دیگری باشد */
+    gap: 10px; /* فاصله بین عکس و سایر محتوا */
+}
+
+#editBtn {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+}
+
+.popup {
+    display: none; /* پنهان کردن پاپ‌آپ به صورت پیش‌فرض */
+    position: fixed;
+    overflow: auto; /* به پاپ‌آپ امکان اسکرول بدهید */
+    color: white;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+
+}
+
+.popup-content {
+
+    background-color: #333;
+    margin:  auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+}
+
+.popup-body {
+    display: flex;
+    gap: 20px;
+}
+
+.left-column, .right-column {
+
+    flex: 1;
+}
+.left-column {
+    display: flex; /* فعال کردن Flexbox */
+    justify-content: center; /* وسط چین افقی */
+    align-items: center; /* وسط چین عمودی */
+    height: 100%; /* اگر والد ارتفاع مشخصی دارد */
+    text-align: center; /* برای متن‌های داخل */
+}
+
+
+
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+label{
+    display: block;
+    font-size: 14px;
+    margin: 8px;
+    text-align: right; /* چسباندن لیبل به سمت راست */
+    width: 100%;
+    direction: rtl; /* تنظیم جهت متن به راست */
+}
+
+.input-group input, .about-me textarea {
+    color:  white;
+    padding: 10px;
+    width: 100%;
+    text-align: right;
+    background-color: #212529;
+    border: none;
+    border-radius: 10px;
+    direction: rtl; /* تنظیم جهت متن به راست */
+}
+
+.about-me {
+    margin-top: 20px;
+}
+
+.save-btn , #LanguageSubmit
+,#EduSubmit , #info-submit
+,#editeEduSubmit, #skillSubmit
+,#editJobSubmit, #JobSubmit
+,#portfolioSubmit{
+    color:  white;
+    padding: 10px;
+    background-color: #212529;
+    border: none;
+    border-radius: 10px;
+}
+
+.save-btn:active ,
+#LanguageSubmit:active
+,#EduSubmit:active
+,#info-submit:active
+,#skillSubmit:active
+,#editeEduSubmit:active
+,#editJobSubmit:active
+,#JobSubmit:active
+,#portfolioSubmit:active
+{
+    background-color: #333 ;
+    color: #fff;
+    border: none;
+}
+
+.profile-pic-label {
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-pic-input {
+    display: none;
+}
+
+
+
+.socialBtn{
+    margin: 0px 2px;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition-duration: .4s;
+    cursor: pointer;
+    position: relative;
+    background-color: #212529;
+    overflow: hidden;
+}
+#buttonsContainer {
+    text-align: right;
+    margin-top: 10px;
+}
+
+
+.github-svgIcon {
+    transition-duration: .3s;
+}
+
+.soundcloud-svgIcon {
+    height: 25px;
+    width: 25px;
+    transition-duration: .3s;
+}
+
+.github-svgIcon path {
+    fill: white;
+}
+
+.soundcloud-svgIcon path {
+
+    fill: #ff5500;
+}
+
+.text {
+    position: absolute;
+    color: rgb(255, 255, 255);
+    width: 100px;
+    font-weight: 600;
+    opacity: 0;
+    transition-duration: 0.4s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.socialBtn:hover {
+    width: 110px;
+    transition-duration: .4s;
+    border-radius: 30px;
+}
+
+.socialBtn:hover .text {
+    opacity: 1;
+    transition-duration: .4s;
+}
+
+.socialBtn:hover .github-svgIcon {
+    opacity: 0;
+    transition-duration: .3s;
+}
+
+.socialBtn:hover .soundcloud-svgIcon {
+    opacity: 0;
+    transition-duration: .3s;
+}
+#portfolioPreview{
+    margin-top: 5px;
+    border-radius: 10px;
+    border: 3px solid #212529;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container{
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: 2px solid #212529;
+    margin-bottom: 10px;
+}
+
+/* استایل برای تصویر و ویدئوها */
+#portfolioPreview img,
+#portfolioPreview video,
+.image-container img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* اطمینان از اینکه تصویر یا ویدئو بدون کشیده شدن، درون کادر قرار می‌گیرد */
+}
+
+.info-text {
+    text-align: center;
+    color: red;
+}
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none; /* در ابتدا مخفی باشد */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+}
+.loader {
+    --color: #a5a5b0;
+    --size: 70px;
+    width: var(--size);
+    height: var(--size);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  
+  .loader span {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color);
+    animation: keyframes-blink 0.6s alternate infinite linear;
+  }
+  
+  .loader span:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  
+  .loader span:nth-child(2) {
+    animation-delay: 200ms;
+  }
+  
+  .loader span:nth-child(3) {
+    animation-delay: 300ms;
+  }
+  
+  .loader span:nth-child(4) {
+    animation-delay: 400ms;
+  }
+  
+  .loader span:nth-child(5) {
+    animation-delay: 500ms;
+  }
+  
+  .loader span:nth-child(6) {
+    animation-delay: 600ms;
+  }
+  
+  @keyframes keyframes-blink {
+    0% {
+      opacity: 0.3;
+      transform: scale(0.5) rotate(5deg);
+    }
+  
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+
+.custom-alert {
+    display: none; /* مخفی در حالت عادی */
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 99999;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.success-alert {
+    background-color: #4CAF50; /* رنگ سبز */
+    color: white;
+}
+
+.error-alert {
+    background-color: #f44336; /* رنگ قرمز */
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.confirm-popup {
+    display: none; /* مخفی در حالت عادی */
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 99999;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.confirm-content {
+    background: #444;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+    width: 300px;
+}
+
+.confirm-content p {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.confirm-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.yes:hover{
+    background: #4CAF50; /* رنگ سبز */
+    color: white;
+}
+
+.no:hover{
+    background: #f44336; /* رنگ قرمز */
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .button.x {
+        max-width: 100%;
+    }
+    .main-body{
+        padding: 15px;
+    }
+    h6{
+        font-size: 14px;
+        font-weight: normal;
+    }
+    p{
+        font-size: 14px;
+    }
+    h4{
+        font-size: 18px;
+    }
+    .info-value{
+        padding: 0px 5px;
+        font-size: 14px;
+        width: 60%;
+    }
+    .info-title{
+        padding: 0px 5px;
+
+        width: 40%;
+    }
+    .card-body{
+        padding: 10px;
+    }
+    .portfolio-container{
+        padding: 15px;
+    }
+    .container{
+        padding: 0px;
+    }
+    iframe{
+        max-height: 400px;
+    }
+    #portfolio-description{
+        font-size: 12px;
+    }
+    .about-me{
+        margin: 0px
+    }
+    #profilePic{
+        width: 125px;
+        height: 125px;
+    }
+    #aboutMe,#workArea
+    ,#fullName{
+        font-size: 13px;
+    }
+}
+@media (max-height: 630px) {
+    .main-body{
+        padding: 15px;
+    }
+    h6{
+        font-size: 14px;
+        font-weight: normal;
+    }
+    p{
+        font-size: 14px;
+    }
+    h4{
+        font-size: 18px;
+    }
+    .info-value{
+        padding: 0px 5px;
+        font-size: 14px;
+        width: 60%;
+    }
+    .info-title{
+        padding: 0px 5px;
+
+        width: 40%;
+    }
+    .card-body{
+        padding: 10px;
+    }
+    #img-icon{
+        display: block;
+    }
+    .card-img-top{
+        object-fit: cover;
+        height: 400px;
+    }
+    .portfolio-container{
+        padding: 5px;
+    }
+    .container{
+        padding: 0px;
+    }
+    iframe{
+        max-height: 400px;
+    }
+    #portfolio-description{
+        font-size: 12px;
+    }
+    .about-me{
+        margin: 0px
+    }
+    #profilePic{
+        width: 100px;
+        height: 100px;
+    }
+}

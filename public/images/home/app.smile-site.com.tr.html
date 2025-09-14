@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+	<base href="https://app.smile-site.com.tr/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="smile">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="smile">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>smile</title>
+  <link rel="manifest" href="manifest.json">
+	<style>
+    *{font-family:Tahoma}
+</style>
+</head>
+<body style="margin:0px;">
+  <script src="flutter_bootstrap.js" async></script>
+  <script>
+window.addEventListener('load', function(ev) {
+  document.getElementById("main-loading-progress").style.width = "100%";
+  document.getElementById("main-loading-progress-counter").innerHTML = "100%";
+  setTimeout(function(){document.getElementById("main-loading-page").remove();}, 10000);
+});
+</script>
+<div id="main-loading-page" style="width:100vw;height:100vh;background:#0d89c8;padding:0px;margin:0px;">
+	<div style="display:flex;justify-content:center;">
+		<img src="Loading/smile-icon.png" alt="" style="margin-top:15vh;width:200px;">
+	</div>
+	<div style="display:flex;justify-content:center;">
+		<div style="border:1px solid white;width:250px;height:50px;margin-top:5vh">
+			<span style="float:left;background:white;width:1%;height:50px" id="main-loading-progress"></span>
+		</div>
+	</div>
+	<div style="display:flex;justify-content:center;">
+		<span id="main-loading-progress-counter" style="font-size:45px;color:white;line-height:50px;margin-top:20px;font-weight:600;font-family:Tahoma;display:none">1%</span>
+	</div>
+	<div style="display:flex;justify-content:center;">
+		<h3 style="color:#FFF;font-size:40px;font-weight:600;margin-top:15vh">loading ...</h3>
+	</div>
+	<script>
+		let mainLoadingProgressbarCounter = 1;
+		const mainLoadingTimer = setInterval(
+			function (  )
+			{
+				if(mainLoadingProgressbarCounter > 97)
+				{
+					return;
+				}
+				const mainLoadingProgressbar = document.getElementById("main-loading-progress");
+				mainLoadingProgressbarCounter += 0.07;
+				mainLoadingProgressbar.style.width = mainLoadingProgressbarCounter + "%";
+				document.getElementById("main-loading-progress-counter").innerHTML = Math.round(mainLoadingProgressbarCounter) + "%";
+			}, 5
+		);
+	</script>
+</div></body>
+</html>
