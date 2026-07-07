@@ -52,7 +52,6 @@ class UsersSeeder extends Seeder
                 'aboutme' => $faker->randomElement($aboutMeSentences), // توضیحات درباره خود به فارسی
                 'profilepic' => 'images/default.jpg', // تصویر پیش‌فرض پروفایل
                 'role' => 'freelancer', // رول فریلنسر
-                'email' => $faker->unique()->safeEmail,
                 'password' => bcrypt('password'), // رمز عبور پیش‌فرض
             ]);
 

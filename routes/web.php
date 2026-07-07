@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriteChatController;
 use App\Http\Controllers\NotificationController;
@@ -84,3 +83,4 @@ Route::post('/confirm/reset/password' , [AuthController::class, 'confirmResetPas
 Route::get('/reset/password' , function(){return view('reset-password-form');})->name('reset.password.form');
 
 Route::middleware(['auth' , 'role:employer'])->get('/home/new-project', function () {return view('new-project');})->name('newProject');
+Route::middleware(['auth' , 'role:employer'])->post('/home/new-project', [App\Http\Controllers\NewProjectController::class, 'store'])->name('new-project.store');

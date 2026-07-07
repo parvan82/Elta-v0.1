@@ -20,13 +20,8 @@ return new class extends Migration
             $table->string('aboutme')->nullable();
             $table->string('profilepic')->default('images/default.jpg');
             $table->string('role')->default('employer');
-            $table->string('email')->unique()->nullable();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-
-            // 🔹 توکن مخصوص دستگاه/سشن
             $table->string('session_token')->nullable()->index();
-
             $table->rememberToken();
             $table->timestamps();
         });

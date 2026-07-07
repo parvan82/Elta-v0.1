@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('military_status')->nullable();
             $table->string('personal_id')->nullable();
             $table->string('email')->nullable();
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // ارتباط با جدول کاربران
             $table->timestamps();
         });

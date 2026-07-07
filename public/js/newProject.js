@@ -97,7 +97,112 @@ $(document).ready(function() {
 	setTimeout(function() {
 		$("#progressbar li:first-child").addClass("active");
 	}, 500);
+	
+	// اضافه کردن قابلیت کلیک روی مراحل progress bar
+	$("#progressbar li").click(function() {
+		if(animating) return false;
+		
+		const clickedIndex = $(this).index();
+		const currentIndex = $("fieldset").index($("fieldset:visible"));
+		
+		// اگر روی مرحله فعلی کلیک شده، کاری نکن
+		if(clickedIndex === currentIndex) return;
+		
+		// اگر روی مرحله قبلی کلیک شده، به عقب برو
+		if(clickedIndex < currentIndex) {
+			goToPreviousStep(clickedIndex);
+		}
+		// اگر روی مرحله بعدی کلیک شده، به جلو برو
+		else if(clickedIndex > currentIndex) {
+			goToNextStep(clickedIndex);
+		}
+	});
 });
+
+// تابع برای رفتن به مرحله قبلی
+function goToPreviousStep(targetIndex) {
+	if(animating) return false;
+	animating = true;
+	
+	current_fs = $("fieldset:visible");
+	previous_fs = $("fieldset").eq(targetIndex);
+	
+	// به‌روزرسانی progress bar
+	$("#progressbar li").removeClass("active completed");
+	for(let i = 0; i <= targetIndex; i++) {
+		$("#progressbar li").eq(i).addClass("active");
+	}
+	
+	previous_fs.show();
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			scale = 0.8 + (1 - now) * 0.2;
+			left = ((1-now) * 50)+"%";
+			opacity = 1 - now;
+			current_fs.css({'left': left});
+			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+		}, 
+		duration: 800, 
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		}, 
+		easing: 'easeInOutBack'
+	});
+}
+
+// تابع برای رفتن به مرحله بعدی
+function goToNextStep(targetIndex) {
+	if(animating) return false;
+	animating = true;
+	
+	current_fs = $("fieldset:visible");
+	next_fs = $("fieldset").eq(targetIndex);
+	
+	// به‌روزرسانی progress bar
+	$("#progressbar li").removeClass("active completed");
+	for(let i = 0; i < targetIndex; i++) {
+		$("#progressbar li").eq(i).addClass("completed");
+	}
+	$("#progressbar li").eq(targetIndex).addClass("active");
+	
+	next_fs.show(); 
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			scale = 1 - (1 - now) * 0.2;
+			left = (now * 50)+"%";
+			opacity = 1 - now;
+			current_fs.css({
+        'transform': 'scale('+scale+')',
+        'position': 'absolute'
+      });
+			next_fs.css({'left': left, 'opacity': opacity});
+		}, 
+		duration: 800, 
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+			// به‌روزرسانی کارت پروژه بعد از تغییر مرحله
+			setTimeout(updateProjectCard, 100);
+		}, 
+		easing: 'easeInOutBack'
+	});
+}
+
+// تابع برای رفتن مستقیم به مرحله خاص
+function goToStep(stepIndex) {
+	if(animating) return false;
+	
+	const currentIndex = $("fieldset").index($("fieldset:visible"));
+	
+	if(stepIndex === currentIndex) return;
+	
+	if(stepIndex < currentIndex) {
+		goToPreviousStep(stepIndex);
+	} else {
+		goToNextStep(stepIndex);
+	}
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const skillsTags = document.getElementById('skills-tags');
@@ -590,6 +695,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const tabs = document.querySelectorAll('.skill-tab');
     const categories = document.querySelectorAll('.skill-category');
+    const tabsContainer = document.querySelector('.skill-tabs');
+    const leftArrow = document.querySelector('.skill-tabs-arrow.left');
+    const rightArrow = document.querySelector('.skill-tabs-arrow.right');
     
     tabs.forEach(tab => {
         tab.addEventListener('click', function(e) {
@@ -603,8 +711,49 @@ document.addEventListener('DOMContentLoaded', function() {
             
             categories.forEach(cat => cat.classList.remove('active'));
             document.getElementById(`category-${category}`).classList.add('active');
+
+            if (tabsContainer) {
+                const tabRect = this.getBoundingClientRect();
+                const containerRect = tabsContainer.getBoundingClientRect();
+                const offset = (tabRect.left - containerRect.left) - (containerRect.width / 2 - tabRect.width / 2);
+                tabsContainer.scrollBy({ left: offset, behavior: 'smooth' });
+                setTimeout(updateArrows, 300);
+            }
         });
     });
+    function updateArrows() {
+        if (!tabsContainer || !leftArrow || !rightArrow) return;
+        const maxScrollLeft = tabsContainer.scrollWidth - tabsContainer.clientWidth;
+        leftArrow.disabled = tabsContainer.scrollLeft <= 0;
+        rightArrow.disabled = tabsContainer.scrollLeft >= maxScrollLeft - 1;
+    }
+
+    if (tabsContainer) {
+        tabsContainer.addEventListener('scroll', updateArrows, { passive: true });
+        // اطمینان از مقداردهی اولیه بدون نیاز به کلیک روی تب‌ها
+        requestAnimationFrame(updateArrows);
+        setTimeout(updateArrows, 300);
+        window.addEventListener('load', updateArrows);
+        if (typeof ResizeObserver !== 'undefined') {
+            const ro = new ResizeObserver(() => updateArrows());
+            ro.observe(tabsContainer);
+        }
+    }
+
+    function scrollTabs(direction = 'right') {
+        if (!tabsContainer) return;
+        const amount = Math.max(200, Math.floor(tabsContainer.clientWidth * 0.6));
+        const delta = direction === 'right' ? amount : -amount;
+        tabsContainer.scrollBy({ left: delta, behavior: 'smooth' });
+        setTimeout(updateArrows, 400);
+    }
+
+    // در RTL: فلش راست باید به سمت راست اسکرول کند و فلش چپ به سمت چپ
+    if (rightArrow) rightArrow.addEventListener('click', () => scrollTabs('right'));
+    if (leftArrow) leftArrow.addEventListener('click', () => scrollTabs('left'));
+
+    // در صورتی که محتوای صفحه دیرتر لود شود، دوباره وضعیت فلش‌ها را بررسی کن
+    setTimeout(updateArrows, 800);
     
     const searchInput = document.getElementById('skill-search');
     if (searchInput) {
@@ -867,6 +1016,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('سرویس‌های انتخاب شده:', window.selectedServices);
             updateProjectCard();
+            updateInvoice();
         }
         
         if (option.getAttribute('data-value') === 'create-project') {
@@ -874,6 +1024,106 @@ document.addEventListener('DOMContentLoaded', function() {
             window.selectedServices.push('create-project');
         }
     });
+
+    // ---------------- صورتحساب -----------------
+    const prices = {
+        base: { 'create-project': 139000 },
+        services: {
+            'unlimited': 599000,
+            'project-manager': 5000000,
+            'urgent-featured': 299000,
+            'urgent': 149000,
+            'featured': 349000,
+            'professional': 99000,
+            'distinctive': 99000,
+            'web-hosting': 0
+        }
+    };
+
+    function formatPrice(amount) {
+        try {
+            return amount.toLocaleString('fa-IR') + ' تومان';
+        } catch (e) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' تومان';
+        }
+    }
+
+    function getServiceTitle(key) {
+        switch (key) {
+            case 'create-project': return 'ایجاد پروژه';
+            case 'unlimited': return 'بی‌نهایت';
+            case 'project-manager': return 'مدیر پروژه';
+            case 'urgent-featured': return 'بسته فوری + برجسته (۴۰٪ تخفیف)';
+            case 'urgent': return 'فوری';
+            case 'featured': return 'برجسته';
+            case 'professional': return 'حرفه‌ای';
+            case 'distinctive': return 'متمایز';
+            case 'web-hosting': return 'میزبانی وب';
+            default: return key;
+        }
+    }
+
+    function updateInvoice() {
+        const itemsContainer = document.getElementById('invoice-items');
+        const totalAmountEl = document.getElementById('invoice-total-amount');
+        if (!itemsContainer || !totalAmountEl) return;
+
+        itemsContainer.innerHTML = '';
+
+        let total = 0;
+
+        // ردیف پایه ایجاد پروژه
+        total += prices.base['create-project'];
+        itemsContainer.insertAdjacentHTML('beforeend', `
+            <div class="invoice-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 8px;">
+                <span>ایجاد پروژه</span>
+                <span>${formatPrice(prices.base['create-project'])}</span>
+            </div>
+            <hr style="margin:0; border-color:#eef2f5;">
+        `);
+
+        // قوانین قیمت‌گذاری:
+        // اگر urgent-featured انتخاب شد، ردیف‌های فوری/برجسته تکی را اضافه نکن
+        const hasCombo = window.selectedServices.includes('urgent-featured');
+
+        const uniqueServices = Array.from(new Set(window.selectedServices)).filter(s => s !== 'create-project');
+
+        uniqueServices.forEach(serviceKey => {
+            if (serviceKey === 'urgent' || serviceKey === 'featured') {
+                if (hasCombo) return; // نادیده بگیر چون بسته تخفیفی انتخاب شده
+            }
+
+            const price = prices.services[serviceKey];
+            if (typeof price !== 'number') return;
+
+            total += price;
+            itemsContainer.insertAdjacentHTML('beforeend', `
+                <div class="invoice-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 8px;">
+                    <span>${getServiceTitle(serviceKey)}</span>
+                    <span>${formatPrice(price)}</span>
+                </div>
+                <hr style="margin:0; border-color:#eef2f5;">
+            `);
+        });
+
+        // اگر بسته urgent-featured انتخاب شده، یک ردیف برای خودش اضافه کن
+        if (hasCombo) {
+            const comboPrice = prices.services['urgent-featured'];
+            total += comboPrice;
+            itemsContainer.insertAdjacentHTML('beforeend', `
+                <div class="invoice-row" style="display:flex; justify-content:space-between; align-items:center; padding:10px 8px;">
+                    <span>${getServiceTitle('urgent-featured')}</span>
+                    <span>${formatPrice(comboPrice)}</span>
+                </div>
+                <hr style="margin:0; border-color:#eef2f5;">
+            `);
+        }
+
+        totalAmountEl.textContent = formatPrice(total);
+    }
+
+    // بروزرسانی صورتحساب در لحظه
+    updateInvoice();
 });
 
 function truncateText(text, maxLength = 80) {
@@ -1015,6 +1265,91 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProjectCard();
 });
 
+// ارسال فرم
+document.addEventListener('DOMContentLoaded', function() {
+    const payBtn = document.getElementById('pay-btn');
+    if (payBtn) {
+        payBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            submitForm();
+        });
+    }
+});
+
+function submitForm() {
+    const form = document.getElementById('msform');
+    if (!form) return;
+
+    // جمع‌آوری داده‌ها
+    const formData = new FormData();
+    
+    // عنوان و توضیحات
+    const title = document.querySelector('input[type="text"]')?.value || '';
+    const description = document.querySelector('#project-desc')?.value || '';
+    const service = document.querySelector('#service-select')?.value || '';
+    
+    // اولویت و بودجه
+    const selectedPriority = document.querySelector('.priority-option.selected')?.getAttribute('data-value') || '';
+    const selectedBudget = document.querySelector('.budget-option.selected')?.getAttribute('data-value') || '';
+    
+    // مهارت‌های انتخاب شده
+    const selectedSkills = window.selectedSkills || [];
+    const skillsWithLevels = selectedSkills.map(skill => ({
+        skill: skill.text,
+        level: 'متوسط' // می‌توانید سطح را از UI دریافت کنید
+    }));
+    
+    // سرویس‌های انتخاب شده
+    const selectedServices = window.selectedServices || [];
+    
+    // اضافه کردن داده‌ها به FormData
+    formData.append('_token', document.querySelector('input[name="_token"]')?.value || '');
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('service', service);
+    formData.append('priority', selectedPriority);
+    formData.append('budget', selectedBudget);
+    formData.append('selected_skills', JSON.stringify(skillsWithLevels));
+    formData.append('selected_services', JSON.stringify(selectedServices));
+    formData.append('elta_services', JSON.stringify(selectedServices));
+
+    // ارسال درخواست
+    fetch('/home/new-project', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]')?.value || ''
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (window.alertManager) {
+                window.alertManager.success(data.message || 'پروژه با موفقیت ثبت شد!');
+            } else {
+                alert('پروژه با موفقیت ثبت شد!');
+            }
+            // می‌توانید کاربر را به صفحه دیگری هدایت کنید
+            // window.location.href = '/dashboard';
+        } else {
+            if (window.alertManager) {
+                window.alertManager.error(data.message || 'خطا در ثبت پروژه');
+            } else {
+                alert('خطا در ثبت پروژه: ' + (data.message || 'خطای نامشخص'));
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (window.alertManager) {
+            window.alertManager.error('خطا در ارسال درخواست');
+        } else {
+            alert('خطا در ارسال درخواست');
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const titleInput = document.querySelector('input[type="text"]');
     if (titleInput) {
@@ -1043,5 +1378,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
- 

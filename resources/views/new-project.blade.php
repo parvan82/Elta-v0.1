@@ -16,8 +16,52 @@
 
     <link rel="stylesheet" href="../css/home.css">
     <link rel="stylesheet" href="../css/newProject.css">
+    <link rel="stylesheet" href="../css/alerts.css">
 </head>
 <body>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="custom-alert error" id="alert-message">
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="alert-message">{{ $error }}</div>
+                    <button class="alert-close" type="button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        @endforeach
+    @endif
+
+    @if (session('success'))
+        <div class="custom-alert success" id="alert-message">
+            <div class="alert-content">
+                <div class="alert-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="alert-message">{{ session('success') }}</div>
+                <button class="alert-close" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="custom-alert error" id="alert-message">
+            <div class="alert-content">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="alert-message">{{ session('error') }}</div>
+                <button class="alert-close" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    @endif
 <header>
     <section class="nav-head">
         <div class="header">
@@ -92,7 +136,7 @@
     <div class="row">
         <div class="col-md-12 p-3">
             <form id="msform">
-
+                @csrf      
                 <h2 id="h11">ایجاد پروژه</h2>
                 <ul id="progressbar">
                   <li>عنوان و توضیحات</li>
@@ -110,6 +154,7 @@
                   <textarea id="project-desc" placeholder="توضیحات پروژه را وارد کنید" style="height: 100px;"></textarea>
                   <input type="button" name="next" class="next action-button" value="بعدی" />
                 </fieldset>
+
                 <fieldset dir="rtl">
                     <h2 class="fs-title" >سرویس و مهارت های مورد نیاز پروژه</h2>
                     <h3 class="fs-subtitle"> سرویس مورد نظر :</h3>
@@ -146,19 +191,23 @@
                           <i class="fas fa-search skill-search-icon "></i>
                         </div>
 
-                        <div class="skill-tabs">
-                          <button type="button" class="skill-tab active" data-category="devops">برنامه نویسی</button>
-                          <button type="button" class="skill-tab" data-category="system">سیستم عامل</button>
-                          <button type="button" class="skill-tab" data-category="design">طراحی</button>
-                          <button type="button" class="skill-tab" data-category="architecture">معماری</button>
-                          <button type="button" class="skill-tab" data-category="civil">عمران</button>
-                          <button type="button" class="skill-tab" data-category="crm">CRM</button>
-                          <button type="button" class="skill-tab" data-category="erp">ERP</button>
-                          <button type="button" class="skill-tab" data-category="marketing">تولید محتوا</button>
-                          <button type="button" class="skill-tab" data-category="database">دیتابیس</button>
-                          <button type="button" class="skill-tab" data-category="data">داده کاوی</button>
-                          <button type="button" class="skill-tab" data-category="game">بازی سازی</button>
-                          <button type="button" class="skill-tab" data-category="music">آهنگسازی</button>
+                        <div class="skill-tabs-wrapper">
+                          <button type="button" class="skill-tabs-arrow right" aria-label="بعدی"><i class="fas fa-chevron-right"></i></button>
+                          <div class="skill-tabs">
+                            <button type="button" class="skill-tab active" data-category="devops">برنامه نویسی</button>
+                            <button type="button" class="skill-tab" data-category="system">سیستم عامل</button>
+                            <button type="button" class="skill-tab" data-category="design">طراحی</button>
+                            <button type="button" class="skill-tab" data-category="architecture">معماری</button>
+                            <button type="button" class="skill-tab" data-category="civil">عمران</button>
+                            <button type="button" class="skill-tab" data-category="crm">CRM</button>
+                            <button type="button" class="skill-tab" data-category="erp">ERP</button>
+                            <button type="button" class="skill-tab" data-category="marketing">تولید محتوا</button>
+                            <button type="button" class="skill-tab" data-category="database">دیتابیس</button>
+                            <button type="button" class="skill-tab" data-category="data">داده کاوی</button>
+                            <button type="button" class="skill-tab" data-category="game">بازی سازی</button>
+                            <button type="button" class="skill-tab" data-category="music">آهنگسازی</button>
+                          </div>
+                          <button type="button" class="skill-tabs-arrow left" aria-label="قبلی"><i class="fas fa-chevron-left"></i></button>
                         </div>
 
                         <div class="skill-category" id="category-devops">
@@ -485,9 +534,21 @@
                             </div>
                         </div>
                     </div>
+                    <h2 class="fs-title">صورتحساب</h2>
+                    <h3 class="fs-subtitle">جزئیات هزینه‌ها و مجموع پرداختی</h3>
 
-                    <input type="button" name="next" class="next action-button" value="بعدی" />
-                    <input type="button" name="previous" class="previous action-button" value="قبلی" />
+                    <div id="invoice-container" style="max-width: 800px; margin: 0 auto; text-align: right;">
+                        <div id="invoice-items" style="background: #fff; border: 2px solid #e1e8ed; border-radius: 12px; padding: 15px;">
+                            <!-- ردیف‌های صورتحساب اینجا رندر می‌شوند -->
+                        </div>
+                        <div id="invoice-total" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; background: #f8f9fa; border: 2px solid #e1e8ed; border-radius: 12px; padding: 12px 16px;">
+                            <span style="font-weight: 700; color: #2C3E50;">مجموع قابل پرداخت</span>
+                            <span id="invoice-total-amount" style="font-weight: 800; color: #27AE60;">۰ تومان</span>
+                        </div>
+                    </div>
+
+                    <button type="button" id="pay-btn" class="action-button">ثبت پروژه</button>
+                    <input type="button" class="previous action-button" value="قبلی" />
 
                 </fieldset>
 
@@ -503,5 +564,42 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 <div id="overlay" class="overlay"></div>
 <script src="../js/newProject.js"> </script>
+<script>
+document.getElementById("pay-btn").addEventListener("click", function() {
+    // همه داده‌های فرم رو جمع کن
+    let formData = new FormData(document.getElementById("msform"));
+
+    fetch("/payment/request", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.url) {
+            window.location.href = data.url; // رفتن به درگاه زرین‌پال
+        }
+    });
+});
+</script>
+
+<!-- Alert System -->
+<script src="../js/alerts.js"></script>
+<script>
+// نمایش اعلانات موجود در صفحه
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.custom-alert');
+    alerts.forEach(alert => {
+        alert.style.display = 'block';
+        
+        // بعد از 5 ثانیه، اعلان به تدریج ناپدید می‌شود
+        setTimeout(function() {
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 500);
+        }, 5000);
+    });
+});
+</script>
 </body>
 </html>

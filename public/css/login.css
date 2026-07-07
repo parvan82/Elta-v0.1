@@ -447,48 +447,6 @@ form.sign-up__form{
 .wrapper__area.sign-up__Mode-active .sign-up__aside-info{
     opacity: 1;
 }
-.custom-alert {
-    display: none; /* مخفی در حالت عادی */
-    position: fixed;
-    top: 40px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 15px 20px;
-    border-radius: 10px;
-    text-align: center;
-    z-index: 99999;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-    background-color: #f44336; /* رنگ قرمز */
-    color: white;
-}
-.custom-alert.fade-in {
-    animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-    0% {
-        top: -100px; /* شروع از بالای صفحه */
-    }
-    100% {
-        top: 40px; /* به 20px پایین‌تر می‌آید */
-    }
-}
-.custom-alert.fade-out {
-    animation: fadeOut 1s ease-out forwards;
-}
-
-/* انیمیشن fade-out */
-@keyframes fadeOut {
-    0% {
-        top: 40px; /* به 20px پایین‌تر می‌آید */
-
-    }
-    100% {
-        top: -100px; /* شروع از بالای صفحه */
-
-    }
-}
 @media (max-width:770px) {
     .verify-card {
         max-width: 420px;

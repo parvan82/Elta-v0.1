@@ -231,15 +231,14 @@
                 <div class="suggest"> فوتوشاپ </div>
             </div>
             <div class="suggest-card-container">
-
                 @foreach ($users as $user)
                     <div class="eltaCard">
-                        <div class="front-elta-card pt-5">
+                        <div class="front-elta-card pb-3">
                             <div class="image-container">
                                 <img src="{{ asset('storage/' . $user->profilepic) }}" alt="Profile Picture">
                             </div>
                             <div class="info-container">
-                                <h4 class="name">{{ $user->name }}</h4>
+                                <h4 class="name">{{ $user->companies->company_representative_name}}</h4>
                                 <h6 class="scope-work">{{ $user->workarea }}</h6>
                                 <h6 class="username-card">{{ $user->username}}</h6>
                                 <p class="about-me">{{ $user->aboutme }}</p>
@@ -268,7 +267,7 @@
                                         </div>
                                     </div>
                                 @endif
-                            </div>`
+                            </div>
                         </div>
 
                         <div class="button-container ">

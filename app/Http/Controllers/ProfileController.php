@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\NewProject;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,18 +35,15 @@ class ProfileController extends Controller
 
     public function showSuggestedEmployer()
     {
-        $users = User::with(['skills', 'languages'])
-            ->where('role', 'employer')
-            ->whereNotNull('name')
-            ->whereNotNull('username')
-            ->whereNotNull('workarea')
-            ->whereNotNull('aboutme')
+
+        $users = User::with(['companies'])->where('role', 'employer')
             ->inRandomOrder()
             ->take(15)
             ->get();
 
-
         return view('HomeFreelancer', compact('users'));
+
+
     }
 
     public function unreadMessagesCount()

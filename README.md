@@ -1,6 +1,5 @@
-<img src="/art/preview.png" style="width:100%;" />
+<img src="https://l.top4top.io/p_35508noe91.jpg" style="width:100%;" />
 
-This is a Laravel demo app for [Chatify](https://github.com/munafio/chatify).
 
 ## Quick Start
 
@@ -11,7 +10,16 @@ This is a Laravel demo app for [Chatify](https://github.com/munafio/chatify).
 -   `php artisan migrate --seed`
 -   `php artisan key:generate`
 -   `npm install && npm run dev`
--   `php artisan storage:link`
+-   `php artisan storage:link ` beofr in CMD `rmdir /s /q C:\xampp\htdocs\chatify-demo-master\public\storage`
+
 -   `php artisan serve`
+-   `php artisan schedule:work` 
+-   `php artisan db:seed --class=UsersSeeder`
+-   `php artisan db:seed --class=skillSeeder`
+-   `php artisan db:seed --class=keywordSeeder`
+-   `php artisan db:seed --class=employerSeeder`
+-   `php artisan db:seed --class=skillMappingSeeder`
+-   `php artisan db:seed --class=keywordMappingSeeder`
 
 then choose a user from the database and login.
+****

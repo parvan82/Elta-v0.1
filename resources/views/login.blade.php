@@ -9,14 +9,48 @@
 
     <title>Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./../css/login.css">
+    <link rel="stylesheet" href="./../css/alerts.css">
 </head>
 <body>
 @if ($errors->any())
-    <div class="custom-alert" id="alert-message">
-        @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-        @endforeach
+    @foreach ($errors->all() as $error)
+        <div class="custom-alert error" id="alert-message">
+            <div class="alert-content">
+
+                <div class="alert-message">{{ $error }}</div>
+
+            </div>
+        </div>
+    @endforeach
+@endif
+
+@if (session('success'))
+    <div class="custom-alert success" id="alert-message">
+        <div class="alert-content">
+            <div class="alert-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="alert-message">{{ session('success') }}</div>
+            <button class="alert-close" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="custom-alert error" id="alert-message">
+        <div class="alert-content">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="alert-message">{{ session('error') }}</div>
+            <button class="alert-close" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
     </div>
 @endif
 <!-- Wrapper Area -->
@@ -63,9 +97,9 @@
                             <span class="checkmark"></span>
                         </label>                    
 
-                            <div id="forgotPasswordBtn" class="forgot_password">
-                                رمز عبور خود را فراموش کردید؟
-</div>
+                        <div id="forgotPasswordBtn" class="forgot_password">
+                            رمز عبور خود را فراموش کردید؟
+                        </div>
                     </div>
                     <!-- Login Button -->
                     <button type="submit" class="submit-button" id="loginSubmitBtn">ورود</button>
@@ -157,6 +191,26 @@
 <!-- End Wrapper Area -->
 
 <script src="./../js/login.js"></script>
+
+<!-- Alert System -->
+<script src="./../js/alerts.js"></script>
+<script>
+// نمایش اعلانات موجود در صفحه
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.custom-alert');
+    alerts.forEach(alert => {
+        alert.style.display = 'block';
+        
+        // بعد از 5 ثانیه، اعلان به تدریج ناپدید می‌شود
+        setTimeout(function() {
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 500);
+        }, 5000);
+    });
+});
+</script>
 
 </body>
 </html>
