@@ -1,99 +1,113 @@
-  /* صورتحساب */
-  #invoice-items .invoice-row:hover {
-      background: #f9fbfc;
-  }
-  #invoice-items .invoice-row span:last-child {
-      font-weight: 600;
-      color: #2C3E50;
-  }
+      .progressbar-disabled li {
+    pointer-events: none; /* غیرقابل کلیک */
+    cursor: default;      /* موس عادی */
+}
 
-        /*custom font*/
-
+#invoice-items .invoice-row span:last-child {
+    font-weight: 600;
+    color: white;
+}
+.invoice-row span:nth-of-type(2){
+    display: flex;
+}
+#invoice-total-amount{
+    display: flex;
+}
+.priority-info {
+    bottom: 28px;
+}
 /*form styles*/
 #msform {
     margin: auto;
-      width: auto;
-      text-align: center;
-      position: relative;
-      max-width: 1000px;
-  }
-  #msform fieldset {
-      background: white;
-      border: 0 none;
-      border-radius: 3px;
-      box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-      padding: 20px 30px;
-      box-sizing: border-box;
-      width: 80%;
-      margin: 0 10%;
-      
-      /*stacking fieldsets above each other*/
-      position: relative;
-  }
-  /*Hide all except first fieldset*/
-  #msform fieldset:not(:first-of-type) {
-      display: none;
-  }
-  /*inputs*/
-  #msform input, #msform textarea {
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      margin-bottom: 10px;
-      width: 100%;
-      box-sizing: border-box;
-      font-family: montserrat;
-      color: #2C3E50;
-      font-size: 13px;
-  }
-  /*buttons*/
-  #msform .action-button {
-      width: 100px;
-      background: #27AE60;
-      font-weight: bold;
-      color: white;
-      border: 0 none;
-      border-radius: 1px;
-      cursor: pointer;
-      padding: 10px;
-      margin: 10px 5px;
+    width: auto;
+    text-align: center;
+    position: relative;
+    max-width: 1000px;
+}
+#msform fieldset {
+    box-sizing: border-box;
+    width: 80%;
+    margin: 0 10%;
+    position: relative;
+    background: linear-gradient(135deg, #3a3f44 0%, #2d3237 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+/*Hide all except first fieldset*/
+#msform fieldset:not(:first-of-type) {
+    display: none;
+}
+
+/*inputs*/
+#msform input,
+#msform textarea {
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #ffffff;
+    padding: 14px 18px;
+    background: rgba(10, 25, 41, 0.4);
+    border: 1px solid rgba(10, 25, 41, 0.6);
+    border-radius: 12px;
+    direction: rtl;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+}
+/*buttons*/
+#msform .action-button {
+    width: 100px;
+    background: #27ae60;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 1px;
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px 5px;
     text-decoration: none;
     font-size: 14px;
-  }
-  #msform .action-button:hover, #msform .action-button:focus {
-      box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
-  }
-  /*headings*/
-  .fs-title {
-      font-size: 18px;
-      text-transform: uppercase;
-      color: #2C3E50;
-      margin-bottom: 10px;
-  }
-  .fs-subtitle {
-      text-align: right;
-      font-weight: bold;
-      font-size: 14px;
-      color: #666;
-      margin: 5px 0px;
-  }
-  .fs-subtitle::before {
-    content: "●";   /* یا \2022 یا هر علامتی */
-    color: black;      /* رنگ marker */
-  
-  }
-  
-  /*progressbar*/
-  #progressbar {
+}
+#msform .action-button:hover,
+#msform .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #27ae60;
+}
+/*headings*/
+.fs-title {
+    font-size: 18px;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 10px;
+    
+}
+.fs-subtitle {
+    text-align: right;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    margin: 5px 0px;
+    margin-bottom: 15px;
+    
+}
+.fs-subtitle::before {
+    content: "●"; 
+    color: white;
+}
+
+/*progressbar*/
+#progressbar {
     display: flex;
-    justify-content: space-between; /* فاصله‌ها رو تنظیم می‌کنه */
+    justify-content: space-between;
     margin-top: 30px;
     margin-bottom: 30px;
     counter-reset: step;
     padding: 0;
-  }
-  
-  #progressbar li {
+}
+
+#progressbar li {
     list-style-type: none;
     flex: 1; /* مساوی تقسیم میشه */
     text-align: center;
@@ -102,968 +116,1125 @@
     font-size: 12px;
     position: relative;
     cursor: pointer;
-  }
-  
-  #progressbar li:before {
-      content: counter(step);
-      counter-increment: step;
-      width: 20px;
-      line-height: 20px;
-      display: block;
-      font-size: 10px;
-      color: #333;
-      background: white;
-      border-radius: 3px;
-      margin: 0 auto 5px auto;
-      transition: all 0.5s ease;
-      transform: scale(1);
-  }
-  
-  /*progressbar connectors*/
-  #progressbar li:after {
-      content: '';
-      width: 100%;
-      height: 2px;
-      background: white;
-      position: absolute;
-      left: -50%;
-      top: 9px;
-      z-index: -1; /*put it behind the numbers*/
-      transition: all 0.5s ease;
-  }
-  
-  #progressbar li:first-child:after {
-      /*connector not needed before the first step*/
-      content: none; 
-  }
-  
-  /*marking active/completed steps green*/
-  /*The number of the step and the connector before it = green*/
-  #progressbar li.active:before,  #progressbar li.active:after{
-      background: #27AE60;
-      color: white;
-      animation: fillProgress 0.6s ease-in-out;
-  }
-  
-  #progressbar li.completed:before, #progressbar li.completed:after {
-      background: #27AE60;
-      color: white;
-      animation: fillProgress 0.6s ease-in-out;
-  }
-  
-  /* انیمیشن پر شدن نوار پیشرفت */
-  @keyframes fillProgress {
-      0% {
-          background: white;
-          box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4);
-      }
-      50% {
-          background: #27AE60;
-          box-shadow: 0 0 0 8px rgba(39, 174, 96, 0.1);
-      }
-      100% {
-          background: #27AE60;
-          box-shadow: 0 0 0 0 rgba(39, 174, 96, 0);
-      }
-  }
-  
-  /* انیمیشن خالی شدن نوار پیشرفت */
-  @keyframes emptyProgress {
-      0% {
-          background: #27AE60;
-          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
-      }
-      50% {
-          background: #27AE60;
-          box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1);
-      }
-      100% {
-          background: white;
-          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-      }
-  }
-  
-  /* انیمیشن برای خالی شدن */
-  #progressbar li:not(.active):not(.completed):before,
-  #progressbar li:not(.active):not(.completed):after {
-      animation: emptyProgress 0.4s ease-in-out;
-  }
-  
-  #h11{
-      color: #2C3E50;
-      margin: 10px 50px;
-      border-radius: 2px;
-      background-color: white;
-      padding: 5px;
-  }
-  
-  /* استایل‌های گزینه‌های اولویت و بودجه */
-  .priority-option:hover, .budget-option:hover {
-      border-color: #27AE60 !important;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  .priority-option.selected, .budget-option.selected {
-      border-color: #27AE60 !important;
-      background-color: #27AE60 !important;
-      color: white !important;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-  }
-  
-  .priority-option.selected h4, .budget-option.selected h4 {
-      color: white !important;
-  }
-  
-  .priority-option.selected p, .budget-option.selected p {
-      color: rgba(255, 255, 255, 0.9) !important;
-  }
-  
-  /* استایل‌های سرویس‌های التا */
-  .service:hover {
-      border-color: #27AE60 !important;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  .service.selected {
-      border-color: #000 !important;
-      background-color: rgba(128, 128, 128, 0.148) !important;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .service.selected h4 {
-      color: #000 !important;
-  }
-  
-  .service.selected p {
-      color: #333 !important;
-  }
-  
-  /* استایل‌های کامپوننت انتخاب مهارت‌ها */
-  .skill-selector-container {
-      position: relative;
-      width: 100%;
-      margin-bottom: 20px;
-  }
-  
-  .skill-search-container {
-      position: relative;
-      margin-bottom: 15px;
-      width: 100%;
-  }
-  
-  .skill-search-input {
-      width: 100%;
-      border: 2px solid #e1e8ed;
-      border-radius: 25px;
-      font-size: 14px;
-      font-family: 'Montserrat', sans-serif;
-      color: #2C3E50;
-      background: #fff;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      box-sizing: border-box;
-      text-indent: 0;
-  }
-  
-  .skill-search-input:focus {
-      outline: none;
-      border-color: #27AE60;
-      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.15);
-      transform: translateY(-1px);
-  }
-  
-  .skill-search-icon {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-70%);
-      color: #95a5a6;
-      font-size: 16px;
-      pointer-events: none;
-      z-index: 2;
-      background: #fff;
-      padding: 2px;
-      border-radius: 50%;
-  }
-  
-  .skill-tabs-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 15px;
-  }
+}
 
-  .skill-tabs {
-      display: flex;
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 4px;
-      margin: 0;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-  }
+#progressbar li:before {
+    content: counter(step);
+    counter-increment: step;
+    width: 20px;
+    line-height: 20px;
+    display: block;
+    font-size: 10px;
+    color: white;
+    background: linear-gradient(135deg, #3a3f44 0%, #2d3237 100%);
+    border-radius: 3px;
+    margin: 0 auto 5px auto;
+    transition: all 0.5s ease;
+    transform: scale(1);
 
-  .skill-tabs::-webkit-scrollbar { display: none; }
+    
+}
 
-  .skill-tabs-arrow {
-      background: #ffffff;
-      border: 1px solid #e1e8ed;
-      color: #6c757d;
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-  }
+/*progressbar connectors*/
+#progressbar li:after {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background: #4a4e53;
+    position: absolute;
+    left: -50%;
+    top: 9px;
+    z-index: -1; /*put it behind the numbers*/
+    transition: all 0.5s ease;
+}
 
-  .skill-tabs-arrow:hover { border-color: #27AE60; color: #27AE60; }
-  .skill-tabs-arrow:disabled { opacity: .4; cursor: default; }
-  
-  .skill-tab {
-      flex: 1;
-      min-width: 80px;
-      padding: 10px 15px;
-      text-align: center;
-      background: transparent;
-      border: none;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #6c757d;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      position: relative;
-      outline: none;
-  }
+#progressbar li:first-child:after {
+    /*connector not needed before the first step*/
+    content: none;
+}
 
-  .skill-tab:focus { outline: none; box-shadow: none; }
-  
-  .skill-tab:hover {
-      color: #27AE60;
-      background: rgba(39, 174, 96, 0.1);
-      transform: translateY(-1px);
-  }
-  
-  .skill-tab.active {
-      background: #27AE60;
-      color: white;
-      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-      transform: translateY(-2px);
-  }
-  
-  .skill-tab.active::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 6px solid #27AE60;
-  }
-  
-  .skill-category {
-      display: none;
-      animation: fadeIn 0.3s ease;
-  }
-  
-  .skill-category.active {
-      display: block;
-  }
-  
-  @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .skill-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
-      max-height: 300px;
-      overflow-y: auto;
-      padding: 10px;
-      background: #fff;
-      border-radius: 12px;
-      border: 2px solid #e1e8ed;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
-  .skill-item {
-      padding: 12px 8px;
-      background: #fff;
-      border: 2px solid #e1e8ed;
-      border-radius: 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 12px;
-      font-weight: 500;
-      color: #2C3E50;
-      position: relative;
-      overflow: hidden;
-  }
-  
-  .skill-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(39, 174, 96, 0.1), transparent);
-      transition: left 0.5s ease;
-  }
-  
-  .skill-item:hover {
-      border-color: #27AE60;
-      color: #27AE60;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(39, 174, 96, 0.2);
-  }
-  
-  .skill-item:hover::before {
-      left: 100%;
-  }
-  
-  .skill-item.selected {
-      background: #27AE60;
-      color: white;
-      border-color: #27AE60;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-  }
-  
-  .skill-item.selected::after {
-      content: '✓';
-      position: absolute;
-      top: 2px;
-      right: 4px;
-      font-size: 10px;
-      font-weight: bold;
-  }
-  
-  .skill-item.hidden {
-      display: none;
-  }
-  
-  .skill-category-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #2C3E50;
-      margin-bottom: 15px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #e1e8ed;
-      position: relative;
-  }
-  
-  .skill-category-title::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 50px;
-      height: 2px;
-      background: #27AE60;
-  }
-  
-  .no-results {
-      text-align: center;
-      padding: 40px 20px;
-      color: #95a5a6;
-      font-style: italic;
-  }
-  
-  .no-results i {
-      font-size: 48px;
-      margin-bottom: 15px;
-      display: block;
-      color: #e1e8ed;
-  }
-  
-  /* اسکرول بار سفارشی */
-  .skill-grid::-webkit-scrollbar {
-      width: 6px;
-  }
-  
-  .skill-grid::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 3px;
-  }
-  
-  .skill-grid::-webkit-scrollbar-thumb {
-      background: #27AE60;
-      border-radius: 3px;
-  }
-  
-  .skill-grid::-webkit-scrollbar-thumb:hover {
-      background: #219a52;
-  }
-  
-  /* انیمیشن برای تگ‌های انتخاب شده */
-  .skill-tag {
-      animation: slideIn 0.3s ease;
-  }
-  
-  @keyframes slideIn {
-      from {
-          opacity: 0;
-          transform: scale(0.8) translateY(-10px);
-      }
-      to {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-      }
-  }
-  
-  /* استایل‌های سلکشن باکس سرویس سفارشی */
-  .service-select-container {
-      position: relative;
-      width: 100%;
-      margin-bottom: 20px;
-  }
-  
-  .service-select-wrapper {
-      position: relative;
-      display: inline-block;
-      width: 100%;
-  }
-  
-  .service-select-trigger {
-      width: 100%;
-      padding: 15px 50px 15px 20px;
-      border: 3px solid #e1e8ed;
-      border-radius: 15px;
-      font-size: 14px;
-      font-family: 'Montserrat', sans-serif;
-      color: #2C3E50;
-      background: #fff;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      box-sizing: border-box;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 50px;
-  }
-  
-  .service-select-trigger:hover {
-      border-color: #27AE60;
-      box-shadow: 0 6px 20px rgba(39, 174, 96, 0.2);
-      transform: translateY(-2px);
-  }
-  
-  .service-select-trigger.active {
-      border-color: #27AE60;
-      box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
-      transform: translateY(-2px);
-  }
-  
-  .service-select-arrow {
-      color: #95a5a6;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      transform: rotate(0deg);
-  }
-  
-  .service-select-trigger.active .service-select-arrow {
-      color: #27AE60;
-      transform: rotate(180deg);
-  }
-  
-  .service-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border: 3px solid #27AE60;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
-      z-index: 1000;
-      max-height: 300px;
-      overflow-y: auto;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
-      margin-top: 5px;
-  }
-  
-  .service-dropdown.active {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-  }
-  
-  
-  /* اسکرول بار سفارشی برای dropdown */
-  .service-dropdown::-webkit-scrollbar {
-      width: 8px;
-  }
-  
-  .service-dropdown::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-  }
-  
-  .service-dropdown::-webkit-scrollbar-thumb {
-      background: #27AE60;
-      border-radius: 4px;
-  }
-  
-  .service-dropdown::-webkit-scrollbar-thumb:hover {
-      background: #219a52;
-  }
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before,
+#progressbar li.active:after {
+    background: #27ae60;
+    color: white;
+    animation: fillProgress 0.6s ease-in-out;
+}
 
-  /* آیتم‌های منوی سرویس */
-  .service-option {
-      padding: 12px 16px;
-      text-align: right;
-      cursor: pointer;
-      transition: background-color 0.15s ease, color 0.15s ease, padding 0.15s ease;
-      color: #2C3E50;
-  }
+#progressbar li.completed:before,
+#progressbar li.completed:after {
+    background: #27ae60;
+    color: white;
+    animation: fillProgress 0.6s ease-in-out;
+}
 
-  .service-option + .service-option {
-      border-top: 1px solid #eef2f5;
-  }
+/* انیمیشن پر شدن نوار پیشرفت */
+@keyframes fillProgress {
+    0% {
+        background: white;
+        box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4);
+    }
+    50% {
+        background: #27ae60;
+        box-shadow: 0 0 0 8px rgba(39, 174, 96, 0.1);
+    }
+    100% {
+        background: #27ae60;
+        box-shadow: 0 0 0 0 rgba(39, 174, 96, 0);
+    }
+}
 
-  .service-option:hover {
-      background-color: #f6fcf8;
-      color: #27AE60;
-  }
+/* انیمیشن خالی شدن نوار پیشرفت */
+@keyframes emptyProgress {
+    0% {
+        background: #27ae60;
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        background: #27ae60;
+        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        background: white;
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
 
-  .service-option.selected {
-      background-color: #ecf9f1;
-      font-weight: 600;
-      color: #1f8e50;
-  }
-  
-  /* انیمیشن برای تغییرات */
-  .service-select-container {
-      animation: fadeInUp 0.5s ease;
-  }
-  
-  @keyframes fadeInUp {
-      from {
-          opacity: 0;
-          transform: translateY(20px);
-      }
-      to {
-          opacity: 1;
-          transform: translateY(0);
-      }
-  }
-  
-  /* ریسپانسیو برای تبلت */
-  @media (max-width: 768px) {
-      .skill-grid {
-          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-          gap: 8px;
-      }
-      
-      .skill-item {
-          padding: 10px 6px;
-          font-size: 11px;
-      }
-      
-      .skill-tabs {
-          flex-wrap: nowrap;
-          overflow-x: auto;
-      }
-      
-      .skill-tab {
-          min-width: 70px;
-          padding: 8px 12px;
-          font-size: 11px;
-      }
-      
-      .service-select-trigger {
-          padding: 12px 45px 12px 15px;
-          font-size: 13px;
-      }
-      
-      .service-select-arrow {
-          right: 15px;
-          font-size: 14px;
-      }
-  }
-  
-  /* ریسپانسیو برای موبایل */
-  @media (max-width: 480px) {
-      /* فرم کلی */
-      #msform {
-          width: 95%;
-          margin: 10px auto;
-      }
-      
-      #msform fieldset {
-          width: 95%;
-          margin: 0 2.5%;
-          padding: 15px 20px;
-      }
-      
-      /* تایتل */
-      .fs-title {
-          font-size: 16px;
-          margin-bottom: 15px;
-      }
-      
-      .fs-subtitle {
-          font-size: 13px;
-          margin: 8px 0;
-      }
-      
-      /* دکمه‌ها */
-      #msform .action-button {
-          width: 80px;
-          padding: 8px;
-          font-size: 12px;
-          margin: 8px 3px;
-      }
-      
-      /* نوار پیشرفت */
-      #progressbar {
-          margin: 20px 0;
-      }
-      
-      #progressbar li {
-          font-size: 10px;
-      }
-      
-      #progressbar li:before {
-          width: 18px;
-          line-height: 18px;
-          font-size: 9px;
-      }
-      
-      /* کامپوننت انتخاب مهارت‌ها */
-      .skill-selector-container {
-          margin-bottom: 15px;
-      }
-      
-      .skill-search-input {
-          padding: 10px 35px 10px 12px;
-          font-size: 13px;
-          border-radius: 20px;
-      }
-      
-      .skill-search-icon {
-          right: 12px;
-          font-size: 14px;
-      }
-      
-      .skill-tabs {
-          padding: 3px;
-          margin-bottom: 12px;
-      }
-      
-      .skill-tab {
-          min-width: 60px;
-          padding: 6px 8px;
-          font-size: 10px;
-      }
-      
-      .skill-grid {
-          grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-          gap: 6px;
-          max-height: 250px;
-          padding: 8px;
-      }
-      
-      .skill-item {
-          padding: 8px 4px;
-          font-size: 10px;
-          border-radius: 6px;
-      }
-      
-      /* کامپوننت انتخاب سرویس */
-      .service-select-trigger {
-          padding: 12px 40px 12px 15px;
-          font-size: 13px;
-          border-radius: 12px;
-          min-height: 45px;
-      }
-      
-      .service-select-arrow {
-          right: 12px;
-          font-size: 14px;
-      }
-      
-      .service-dropdown {
-          border-radius: 12px;
-          max-height: 250px;
-      }
-      
-      .service-option {
-          padding: 12px 15px;
-          font-size: 13px;
-      }
-      
-      /* مهارت‌های انتخاب شده */
-      .selected-skills-container {
-          padding: 8px;
-          margin-top: 12px;
-      }
-      
-      .skill-tag {
-          font-size: 11px;
-          padding: 4px 8px;
-          margin: 1px;
-      }
-      
-      /* گزینه‌های اولویت و بودجه */
-      .priority-options, .budget-options {
-          grid-template-columns: 1fr;
-          gap: 10px;
-          margin-bottom: 15px;
-      }
-      
-      .priority-option, .budget-option {
-          padding: 15px;
-          border-radius: 6px;
-      }
-      
-      .priority-option h4, .budget-option h4 {
-          font-size: 14px;
-      }
-      
-      .priority-option p, .budget-option p {
-          font-size: 12px;
-      }
-      
-      /* سرویس‌های التا */
-      .elta-services {
-          gap: 12px;
-          margin-bottom: 15px;
-      }
-      
-      .service-option {
-          padding: 15px;
-          border-radius: 6px;
-      }
-      
-      .service-option h4 {
-          font-size: 16px;
-          margin-bottom: 8px;
-      }
-      
-      .service-option p {
-          font-size: 12px;
-          margin-bottom: 8px;
-      }
-      
-      /* کارت التا */
-      .eltaCard {
-          margin-bottom: 20px;
-      }
-      
-      .search-elta-card {
-          padding: 15px;
-      }
-      
-      .search-name {
-          font-size: 16px;
-      }
-      
-      .search-scope-work {
-          font-size: 13px;
-      }
-      
-      .search-about-me {
-          font-size: 12px;
-      }
-  }
-  
-  /* ریسپانسیو برای موبایل‌های کوچک (تا 300 پیکسل) */
-  @media (max-width: 300px) {
-      /* فرم کلی */
-      #msform {
-          width: 98%;
-          margin: 5px auto;
-      }
-      
-      #msform fieldset {
-          width: 98%;
-          margin: 0 1%;
-          padding: 10px 15px;
-      }
-      
-      /* تایتل */
-      .fs-title {
-          font-size: 14px;
-          margin-bottom: 12px;
-      }
-      
-      .fs-subtitle {
-          font-size: 12px;
-          margin: 6px 0;
-      }
-      
-      /* دکمه‌ها */
-      #msform .action-button {
-          width: 70px;
-          padding: 6px;
-          font-size: 11px;
-          margin: 6px 2px;
-      }
-      
-      /* نوار پیشرفت */
-      #progressbar {
-          margin: 15px 0;
-      }
-      
-      #progressbar li {
-          font-size: 9px;
-      }
-      
-      #progressbar li:before {
-          width: 16px;
-          line-height: 16px;
-          font-size: 8px;
-      }
-      
-      /* کامپوننت انتخاب مهارت‌ها */
-      .skill-search-input {
-          padding: 8px 30px 8px 10px;
-          font-size: 12px;
-          border-radius: 15px;
-      }
-      
-      .skill-search-icon {
-          right: 10px;
-          font-size: 12px;
-      }
-      
-      .skill-tabs {
-          padding: 2px;
-          margin-bottom: 10px;
-      }
-      
-      .skill-tab {
-          min-width: 50px;
-          padding: 4px 6px;
-          font-size: 9px;
-      }
-      
-      .skill-grid {
-          grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-          gap: 4px;
-          max-height: 200px;
-          padding: 6px;
-      }
-      
-      .skill-item {
-          padding: 6px 3px;
-          font-size: 9px;
-          border-radius: 4px;
-      }
-      
-      /* کامپوننت انتخاب سرویس */
-      .service-select-trigger {
-          padding: 10px 35px 10px 12px;
-          font-size: 12px;
-          border-radius: 10px;
-          min-height: 40px;
-      }
-      
-      .service-select-arrow {
-          right: 10px;
-          font-size: 12px;
-      }
-      
-      .service-dropdown {
-          border-radius: 10px;
-          max-height: 200px;
-      }
-      
-      .service-option {
-          padding: 10px 12px;
-          font-size: 12px;
-      }
-      
-      /* مهارت‌های انتخاب شده */
-      .selected-skills-container {
-          padding: 6px;
-          margin-top: 10px;
-      }
-      
-      .skill-tag {
-          font-size: 10px;
-          padding: 3px 6px;
-          margin: 1px;
-      }
-      
-      /* گزینه‌های اولویت و بودجه */
-      .priority-option, .budget-option {
-          padding: 12px;
-          border-radius: 4px;
-      }
-      
-      .priority-option h4, .budget-option h4 {
-          font-size: 13px;
-      }
-      
-      .priority-option p, .budget-option p {
-          font-size: 11px;
-      }
-      
-      /* سرویس‌های التا */
-      .service-option {
-          padding: 12px;
-          border-radius: 4px;
-      }
-      
-      .service-option h4 {
-          font-size: 14px;
-          margin-bottom: 6px;
-      }
-      
-      .service-option p {
-          font-size: 11px;
-          margin-bottom: 6px;
-      }
-      
-      /* کارت التا */
-      .search-elta-card {
-          padding: 12px;
-      }
-      
-      .search-name {
-          font-size: 14px;
-      }
-      
-      .search-scope-work {
-          font-size: 12px;
-      }
-      
-      .search-about-me {
-          font-size: 11px;
-      }
-      
-      /* اسکرول بار برای موبایل‌های کوچک */
-      .skill-grid::-webkit-scrollbar {
-          width: 4px;
-      }
-      
-      .service-dropdown::-webkit-scrollbar {
-          width: 4px;
-      }
-  }
-  
+/* انیمیشن برای خالی شدن */
+#progressbar li:not(.active):not(.completed):before,
+#progressbar li:not(.active):not(.completed):after {
+    animation: emptyProgress 0.4s ease-in-out;
+}
+
+#h11 {
+    color: white;
+    margin: 10px 50px;
+    background: linear-gradient(135deg, #3a3f44 0%, #2d3237 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+    .priority-option,
+    .budget-option {
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: #ffffff;
+    background: rgba(10, 25, 41, 0.4);
+    border: 1px solid rgba(10, 25, 41, 0.6);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 20px; 
+}
+.priority-option h4,
+.budget-option h4 {
+    color: white;
+    margin: 0;
+    font-size: 16px;
+}
+
+.priority-option p,
+.budget-option p {
+    color: rgb(162, 162, 162) ;
+    margin: 5px 0 0 0; 
+    font-size: 14px;
+}
+
+/* استایل‌های گزینه‌های اولویت و بودجه */
+.priority-option:hover,
+.budget-option:hover {
+    border-color: #27ae60 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.priority-option.selected,
+.budget-option.selected {
+    border-color: #27ae60 !important;
+    background-color: #27ae60 !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+.priority-option.selected p,
+.budget-option.selected p {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.service{
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: rgba(10, 25, 41, 0.4) !important;
+    border: 1px solid rgba(10, 25, 41, 0.6) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.service h4 {
+    color:white !important;
+}
+
+.service p {
+    color: white !important;
+}
+
+/* استایل‌های سرویس‌های التا */
+.service:hover {
+    border-color: #27ae5f !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.service.selected {
+    border-color: #27ae60 !important;
+    background-color: #18693a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);  
+}
+
+.service.selected h4 {
+    color:white !important;
+}
+
+.service.selected p {
+    color: white !important;
+}
+
+/* استایل‌های کامپوننت انتخاب مهارت‌ها */
+.skill-selector-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.skill-search-container {
+    position: relative;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.skill-search-input {
+    width: 100%;
+    border: 2px solid #e1e8ed;
+    border-radius: 25px;
+    font-size: 14px;
+    color: #2c3e50;
+    background: #fff;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    text-indent: 0;
+}
+
+.skill-search-input:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.15);
+    transform: translateY(-1px);
+}
+
+.skill-search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-70%);
+    color: #27ae60;
+    font-size: 16px;
+    pointer-events: none;
+    z-index: 2;
+     padding: 2px;
+    border-radius: 50%;
+}
+
+.skill-tabs-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.skill-tabs {
+    display: flex;
+    background: rgba(10, 25, 41, 0.4);
+    border-radius: 12px;
+    padding: 4px;
+    margin: 0;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.skill-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.skill-tabs-wrapper{
+    position: relative;
+    overflow: hidden;
+}
+
+/* لیست */
+
+.skill-tabs{
+    display:flex;
+    gap:10px;
+
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+
+    transition:transform .18s ease;
+    will-change:transform;
+}
+
+.skill-tabs::-webkit-scrollbar{
+    display:none;
+}
+
+
+/* Shadow */
+.skill-tabs{
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    user-select: none;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.skill-tabs.dragging{
+    cursor: grabbing;
+}
+
+.b2{
+    touch-action: pan-x;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+        display:flex;
+    width:max-content;
+}
+
+.skill-tab{
+    user-select:none;
+}
+
+.scroll-shadow{
+    position:absolute;
+    top:0;
+    width:55px;
+    height:100%;
+    z-index:10;
+    pointer-events:none;
+    opacity:0;
+    transition:.25s;
+}
+
+.scroll-shadow.left{
+    left:0;
+    background:linear-gradient(
+        to right,
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.15),
+        transparent
+    );
+}
+
+.scroll-shadow.right{
+    right:0;
+    background:linear-gradient(
+        to left,
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.15),
+        transparent
+    );
+}
+
+.scroll-shadow.show{
+    opacity:1;
+}
+
+.skill-tab {
+    flex: 1;
+    margin: 0px 10;
+    padding: 10px 15px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative;
+    outline: none;
+}
+
+.skill-tab:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.skill-tab:hover {
+    color: #27ae60;
+    background: rgba(39, 174, 96, 0.1);
+    transform: translateY(-1px);
+}
+
+.skill-tab.active {
+    background: #27ae60;
+    color: white;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+    transform: translateY(-2px);
+}
+
+.skill-tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #27ae60;
+}
+
+.skill-category {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.skill-category.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: scroll; /* یا auto در صورتی که فقط در مواقع نیاز ظاهر شود */
+    scrollbar-width: none;
+    padding: 10px;
+    background: linear-gradient(135deg, #3a3f44 0%, #2d3237 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(10, 25, 41, 0.6);
+    direction: rtl;
+    transition: all 0.3s ease;
+    box-shadow:  0 3px 4px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.skill-category::-webkit-scrollbar {
+    display: none; /* برای Chrome، Safari و Edge */
+}
+.skill-item {
+    padding: 12px 8px;
+    background: #fff;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 500;
+    color: #2c3e50;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: #ffffff;
+    background: rgba(10, 25, 41, 0.4);
+    border: 1px solid rgba(10, 25, 41, 0.6);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    
+}
+
+.skill-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(39, 174, 96, 0.1),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.skill-item:hover {
+    border-color: #27ae60;
+    color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.2);
+}
+
+.skill-item:hover::before {
+    left: 100%;
+}
+
+.skill-item.selected {
+    background: #27ae60;
+    color: white;
+    border-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.skill-item.selected::after {
+    content: "✓";
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.skill-item.hidden {
+    display: none;
+}
+
+.skill-category-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e1e8ed;
+    position: relative;
+}
+
+.skill-category-title::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: #27ae60;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #95a5a6;
+    font-style: italic;
+}
+
+.no-results i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    display: block;
+    color: #e1e8ed;
+}
+
+/* اسکرول بار سفارشی */
+.skill-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.skill-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.skill-grid::-webkit-scrollbar-thumb {
+    background: #27ae60;
+    border-radius: 3px;
+}
+
+.skill-grid::-webkit-scrollbar-thumb:hover {
+    background: #219a52;
+}
+
+/* انیمیشن برای تگ‌های انتخاب شده */
+.skill-tag {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* استایل‌های سلکشن باکس سرویس سفارشی */
+.service-select-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.service-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.service-select-trigger {
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 50px;
+    box-sizing: border-box;
+    color: #ffffff;
+    padding: 14px 18px;
+    background: rgba(10, 25, 41, 0.4);
+    border: 1px solid rgba(10, 25, 41, 0.6);
+    border-radius: 12px;
+    direction: rtl;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+}
+
+.service-select-trigger:hover {
+    border-color: #27ae60;
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.2);
+    transform: translateY(-2px);
+}
+
+.service-select-trigger.active {
+    border-color: #27ae60;
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+    transform: translateY(-2px);
+}
+
+.service-select-arrow {
+    color: #95a5a6;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    transform: rotate(0deg);
+}
+
+.service-select-trigger.active .service-select-arrow {
+    color: #27ae60;
+    transform: rotate(180deg);
+}
+
+.service-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+        background: linear-gradient(135deg, #3a3f44 0%, #2d3237 100%);
+    border: 3px solid #27ae60;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    margin-top: 5px;
+}
+
+.service-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.service-option {
+    padding: 12px 16px;
+    text-align: right;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease,padding 0.15s ease;
+    color: white;
+    background: rgba(10, 25, 41, 0.4);
+}
+
+.service-option + .service-option {
+    border-top: 1px solid #eef2f5;
+}
+
+.service-option:hover {
+    background-color: #f6fcf8;
+    color: #27ae60;
+}
+
+.service-option.selected {
+    background-color: #ecf9f1;
+    font-weight: 600;
+    color: #1f8e50;
+}
+
+/* انیمیشن برای تغییرات */
+.service-select-container {
+    animation: fadeInUp 0.5s ease;
+}
+
+#invoice-items,#invoice-total{
+       text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: #ffffff;
+    background: rgba(10, 25, 41, 0.4);
+    border: 1px solid rgba(10, 25, 41, 0.6);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ریسپانسیو برای تبلت */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 0px;
+    }
+    .skill-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+
+    .skill-item {
+        padding: 10px 6px;
+        font-size: 11px;
+    }
+
+    .skill-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .skill-tab {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+
+    .service-select-trigger {
+        padding: 12px 45px 12px 15px;
+        font-size: 13px;
+    }
+
+    .service-select-arrow {
+        right: 15px;
+        font-size: 14px;
+    }
+}
+
+/* ریسپانسیو برای موبایل */
+@media (max-width: 480px) {
+    .project-card{
+        margin: 0px;
+    }
+    /* فرم کلی */
+    #msform {
+        width: 95%;
+        margin: 10px auto;
+    }
+
+    #msform fieldset {
+        width: 98%;
+        margin: 0 1%;
+        padding: 10px 5px;
+    }
+
+
+    /* تایتل */
+    .fs-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .fs-subtitle {
+        font-size: 13px;
+    }
+
+    /* دکمه‌ها */
+    #msform .action-button {
+        width: 80px;
+        padding: 8px;
+        font-size: 12px;
+        margin: 8px 3px;
+    }
+
+    /* نوار پیشرفت */
+    #progressbar {
+        margin: 20px 0;
+    }
+
+    #progressbar li {
+        font-size: 10px;
+    }
+
+    #progressbar li:before {
+        width: 18px;
+        line-height: 18px;
+        font-size: 9px;
+    }
+
+    /* کامپوننت انتخاب مهارت‌ها */
+    .skill-selector-container {
+        margin-bottom: 15px;
+    }
+
+    .skill-search-input {
+        padding: 10px 35px 10px 12px;
+        font-size: 13px;
+        border-radius: 20px;
+    }
+
+    .skill-search-icon {
+        right: 12px;
+        font-size: 14px;
+    }
+
+    .skill-tabs {
+        padding: 3px;
+        margin-bottom: 12px;
+    }
+
+    .skill-tab {
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+
+    .skill-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 6px;
+        max-height: 250px;
+        padding: 8px;
+    }
+
+    .skill-item {
+        padding: 8px 4px;
+        font-size: 10px;
+        border-radius: 6px;
+    }
+
+    /* کامپوننت انتخاب سرویس */
+    .service-select-trigger {
+        padding: 12px 40px 12px 15px;
+        font-size: 13px;
+        border-radius: 12px;
+        min-height: 45px;
+    }
+
+    .service-select-arrow {
+        right: 12px;
+        font-size: 14px;
+    }
+
+    .service-dropdown {
+        border-radius: 12px;
+        max-height: 250px;
+    }
+
+    .service-option {
+        padding: 12px 15px;
+        font-size: 13px;
+    }
+
+    /* مهارت‌های انتخاب شده */
+    .selected-skills-container {
+        padding: 8px;
+        margin-top: 12px;
+    }
+
+    .skill-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+        margin: 1px;
+    }
+
+    /* گزینه‌های اولویت و بودجه */
+    .priority-options,
+    .budget-options {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .priority-option,
+    .budget-option {
+        padding: 15px;
+        border-radius: 6px;
+    }
+
+    .priority-option h4,
+    .budget-option h4 {
+        font-size: 14px;
+    }
+
+    .priority-option p,
+    .budget-option p {
+        font-size: 12px;
+    }
+
+    /* سرویس‌های التا */
+    .elta-services {
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .service-option {
+        padding: 15px;
+        border-radius: 6px;
+    }
+
+    .service-option h4 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .service-option p {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    /* کارت التا */
+    .eltaCard {
+        margin-bottom: 20px;
+    }
+
+    .search-elta-card {
+        padding: 15px;
+    }
+
+    .search-name {
+        font-size: 16px;
+    }
+
+    .search-scope-work {
+        font-size: 13px;
+    }
+
+    .search-about-me {
+        font-size: 12px;
+    }
+}
+
+/* ریسپانسیو برای موبایل‌های کوچک (تا 300 پیکسل) */
+@media (max-width: 300px) {
+    /* فرم کلی */
+    #msform {
+        width: 98%;
+        margin: 5px auto;
+    }
+
+
+    /* تایتل */
+    .fs-title {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .fs-subtitle {
+        font-size: 12px;
+        margin: 6px 0;
+    }
+
+    /* دکمه‌ها */
+    #msform .action-button {
+        width: 70px;
+        padding: 6px;
+        font-size: 11px;
+        margin: 6px 2px;
+    }
+
+    /* نوار پیشرفت */
+    #progressbar {
+        margin: 15px 0;
+    }
+
+    #progressbar li {
+        font-size: 9px;
+    }
+
+    #progressbar li:before {
+        width: 16px;
+        line-height: 16px;
+        font-size: 8px;
+    }
+
+    /* کامپوننت انتخاب مهارت‌ها */
+    .skill-search-input {
+        padding: 8px 30px 8px 10px;
+        font-size: 12px;
+        border-radius: 15px;
+    }
+
+    .skill-search-icon {
+        right: 10px;
+        font-size: 12px;
+    }
+
+    .skill-tabs {
+        padding: 2px;
+        margin-bottom: 10px;
+    }
+
+    .skill-tab {
+        min-width: 50px;
+        padding: 4px 6px;
+        font-size: 9px;
+    }
+
+    .skill-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 4px;
+        max-height: 200px;
+        padding: 6px;
+    }
+
+    .skill-item {
+        padding: 6px 3px;
+        font-size: 9px;
+        border-radius: 4px;
+    }
+
+    /* کامپوننت انتخاب سرویس */
+    .service-select-trigger {
+        padding: 10px 35px 10px 12px;
+        font-size: 12px;
+        border-radius: 10px;
+        min-height: 40px;
+    }
+
+    .service-select-arrow {
+        right: 10px;
+        font-size: 12px;
+    }
+
+    .service-dropdown {
+        border-radius: 10px;
+        max-height: 200px;
+    }
+
+    .service-option {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    /* مهارت‌های انتخاب شده */
+    .selected-skills-container {
+        padding: 6px;
+        margin-top: 10px;
+    }
+
+    .skill-tag {
+        font-size: 10px;
+        padding: 3px 6px;
+        margin: 1px;
+    }
+
+    /* گزینه‌های اولویت و بودجه */
+    .priority-option,
+    .budget-option {
+        padding: 12px;
+        border-radius: 4px;
+    }
+
+    .priority-option h4,
+    .budget-option h4 {
+        font-size: 13px;
+    }
+
+    .priority-option p,
+    .budget-option p {
+        font-size: 11px;
+    }
+
+    /* سرویس‌های التا */
+    .service-option {
+        padding: 12px;
+        border-radius: 4px;
+    }
+
+    .service-option h4 {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .service-option p {
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+
+    /* کارت التا */
+    .search-elta-card {
+        padding: 12px;
+    }
+
+    .search-name {
+        font-size: 14px;
+    }
+
+    .search-scope-work {
+        font-size: 12px;
+    }
+
+    .search-about-me {
+        font-size: 11px;
+    }
+
+    /* اسکرول بار برای موبایل‌های کوچک */
+    .skill-grid::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .service-dropdown::-webkit-scrollbar {
+        width: 4px;
+    }
+}

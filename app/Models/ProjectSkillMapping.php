@@ -14,7 +14,7 @@ class ProjectSkillMapping extends Model
     protected $fillable = [
         'project_id',
         'skill_id',
-        'level',
+
     ];
 
     public function project()

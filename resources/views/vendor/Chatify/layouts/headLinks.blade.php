@@ -10,15 +10,13 @@
 <meta name="url" content="{{ url('').'/'.config('chatify.routes.prefix') }}" data-user="{{ Auth::user()->id }}">
 
 {{-- scripts --}}
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('/js/jquery-3.5.1.js') }}"></script>
 <script src="{{ asset('js/chatify/font.awesome.min.js') }}"></script>
 <script src="{{ asset('js/chatify/autosize.js') }}"></script>
-<script src="{{ asset('js/app.js') }}"></script>
-<script src='https://unpkg.com/nprogress@0.2.0/nprogress.js'></script>
-<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.11.1/echo.iife.js"></script>
-
+@vite(['resources/js/app.js'])
+<script src="{{ asset('js/nprogress.js') }}"></script>
+<script src="{{ asset('js/pusher.min.js') }}"></script>
+<script src="{{ asset('js/echo.iife.js') }}"></script>
 <script>
     window.Pusher = Pusher;
 
@@ -42,5 +40,22 @@
 <style>
     :root {
         --primary-color: {{ $messengerColor }};
+    }
+    
+    /* Pinned Project Card Styles - Light Mode (default) */
+    .pinned-project-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .pinned-project-title {
+        color: #2c3e50;
+    }
+    
+    .pinned-project-description {
+        color: #6c757d;
+    }
+    
+    .pinned-project-card:hover {
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
     }
 </style>

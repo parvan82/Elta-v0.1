@@ -43,7 +43,7 @@ class UsersSeeder extends Seeder
         ];
 
         // ساخت 20 کاربر
-        foreach (range(1, 20) as $index) {
+        foreach (range(1, 60) as $index) {
             // ساخت کاربر
             $user = User::create([
                 'name' => $faker->name,

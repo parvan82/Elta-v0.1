@@ -7,8 +7,9 @@ $id = $id ?? 0;
 $message = $message ?? '';
 $attachment = $attachment ?? null;
 $seenIcon = (!!$seen ? 'check-double' : 'check');
+$seenIconColor = (!!$seen ? 'text-green' : 'text-balck');
 $timeAndSeen = "<span data-time='$created_at' class='message-time'>
-        ".($isSender ? "<span class='fas fa-$seenIcon' seen'></span>" : '' )." <span class='time'>$timeAgo</span>
+        ".($isSender ? "<span class='fas fa-$seenIcon $seenIconColor' seen' ></span>" : '' )." <span class='time'>$timeAgo</span>
     </span>";
 ?>
 
@@ -61,11 +62,7 @@ $timeAndSeen = "<span data-time='$created_at' class='message-time'>
 
     {{-- وقتی پیام متنی داریم --}}
     @else
-        @if($isSender)
-                <span class="edit-icon" data-message-id="{{ $id }}" data-message="{{ $message }}">
-            <i class="fas fa-pencil-alt"></i>
-        </span>
-         @endif
+
         <div class="message" style="display: block;">
             @if(@$attachment != null && !empty($attachment->file))
                 @if(@$attachment->type == 'image')

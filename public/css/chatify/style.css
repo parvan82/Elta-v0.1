@@ -274,7 +274,7 @@ a {
   font-size: 12px;
 }
 .messenger-list-item td b {
-  float: right;
+  float: left;
   color: #fff;
   background: var(--primary-color);
   padding: 0px 4px;
@@ -531,6 +531,7 @@ a {
   align-items: end;
 }
 .message-card .image-wrapper .image-file {
+  width: auto;
   position: relative;
 }
 .message-card .image-wrapper .image-file > div {
@@ -1132,18 +1133,25 @@ div.loadingPlaceholder-date {
     display: none;
   }
   .app-modal-container {
-    transform: unset;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
   }
   .app-modal-card {
-    max-width: unset;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 0px;
+    max-width: 100%;
+    position: relative;
+    left: unset;
+    right: unset;
+    top: unset;
+    bottom: unset;
+    width: calc(100% - 40px);
+    height: auto;
+    border-radius: 10px;
+    margin: 0;
+    padding: 20px;
   }
 }
 @media (min-width: 680px) {
@@ -1386,25 +1394,9 @@ audio::-webkit-media-controls-play-button {
     gap: 10px; /* فاصله بین متن و آیکون */
     direction: rtl; /* اگه زبان فارسیه و می‌خوای آیکون بیاد سمت چپ پیام */
 }
-
-.edit-icon {
-  background: #333;
-    z-index: -1;
-    border: 1px solid #999;
-    border-radius: 50px;
-    position: relative;
-    right: -15px;
-    padding: 5px;
-    color: #888;
-    cursor: pointer;
-    font-size: 10px;
-    transition: all 0.3s ease;
-  }
-
-  .message-card:hover .edit-icon {
-    z-index: 1;
-    right: 15px;
-    opacity: 1;
-  }
-
-
+.text-green{
+  color: green;
+}
+.text-black {
+  color: #636363;
+}

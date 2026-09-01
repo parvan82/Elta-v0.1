@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class Authenticate extends Middleware
 {
     /**
-     * Get the path the user should be redirected to when they are not authenticated.
+     * مسیر ریدایرکت زمانی که کاربر احراز هویت نشده
      */
     protected function redirectTo(Request $request): ?string
     {
@@ -16,12 +16,18 @@ class Authenticate extends Middleware
             return null;
         }
 
-        // اگر مسیر شامل کلمه freelancer است
+        // ۱️⃣ اگر مسیر کارت است یا هر مسیر دلخواه، role از query بگیر
+        $role = $request->query('role', null);
+
+        if ($role) {
+            return url("/elta/login?role={$role}");
+        }
+
+        // ۲️⃣ مسیرهای استاندارد employer / freelancer
         if ($request->is('freelancer/*')) {
             return url('/elta/login?role=freelancer');
         }
 
-        // اگر مسیر شامل employer است
         if ($request->is('employer/*')) {
             return url('/elta/login?role=employer');
         }
@@ -29,5 +35,5 @@ class Authenticate extends Middleware
         // مسیر پیش‌فرض
         return url('/elta/login');
     }
-
 }
+

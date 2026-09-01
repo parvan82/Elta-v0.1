@@ -25,6 +25,18 @@ const messagesContainer = $(".messenger-messagingView .m-body"),
 const getMessengerId = () => $("meta[name=id]").attr("content");
 const setMessengerId = (id) => $("meta[name=id]").attr("content", id);
 
+// Voice recording globals (guarded for duplicate script loads)
+window.chatifyRecorder = window.chatifyRecorder || {
+  mediaRecorder: null,
+  micStream: null,
+  audioChunks: [],
+  isRecording: false,
+  isRecordingLocked: false,
+  recStartTime: 0,
+  recTimerId: null,
+};
+window.chatifySendCard = window.chatifySendCard || $(".messenger-sendCard");
+
 /**
 *-------------------------------------------------------------
 * Pusher initialization
@@ -471,12 +483,8 @@ function sendMessage() {
    formData.append("temporaryMsgId", tempID);
    formData.append("_token", csrfToken);
 
-   // تعیین آدرس ارسال بر اساس حالت ویرایش
-   let url = $("#message-form").attr("action");
-   if (editingMessageId) {
-     formData.append("message_id", editingMessageId);
-     url = "/edit/message"; // یا مسیر کامل route('edit.message') در صورت نیاز
-   }
+  // تعیین آدرس ارسال
+  let url = $("#message-form").attr("action");
 
    $.ajax({
      url: url,
@@ -493,12 +501,7 @@ function sendMessage() {
 
        let previewContent = inputValue + "\n" + loadingSVG("18px");
 
-       if (editingMessageId) {
-         $(`.message-card[data-message-id="${editingMessageId}"]`).addClass("editing-now");
-         $("#editing-message-preview").hide();
-       } else {
-         messagesContainer.find(".messages").append(sendTempMessageCard(previewContent, tempID));
-       }
+      messagesContainer.find(".messages").append(sendTempMessageCard(previewContent, tempID));
 
        scrollToBottom(messagesContainer);
        messageInput.css({ height: "42px" });
@@ -516,20 +519,9 @@ function sendMessage() {
        } else {
          updateContactItem(getMessengerId());
 
-         if (editingMessageId) {
-           const editedMessageId = editingMessageId;
-           const editedMessageHtml = data.message;
-         
-           $(`.message-card[data-message-id="${editedMessageId}"]`).replaceWith(editedMessageHtml);
-         
-           sendMessageEditEvent(editedMessageId, editedMessageHtml); // ✅ اینجا تریگر کن
-         
-           editingMessageId = null;
-         }else {
-           const tempMsgCardElement = messagesContainer.find(`.message-card[data-id="${data.tempID}"]`);
-           tempMsgCardElement.before(data.message);
-           tempMsgCardElement.remove();
-         }
+        const tempMsgCardElement = messagesContainer.find(`.message-card[data-id="${data.tempID}"]`);
+        tempMsgCardElement.before(data.message);
+        tempMsgCardElement.remove();
 
          scrollToBottom(messagesContainer);
          sendContactItemUpdates(true);
@@ -720,7 +712,7 @@ clientListenChannel.bind("client-seen", function (data) {
    if (data.seen == true) {
      $(".message-time")
        .find(".fa-check")
-       .before('<span class="fas fa-check-double seen"></span> ');
+       .before('<span class="fas fa-check-double seen" ></span> ');
      $(".message-time").find(".fa-check").remove();
    }
  }
@@ -743,19 +735,10 @@ clientListenChannel.bind("client-messageDelete", function (data) {
 });
 
 // listen on delete conversation event
-clientListenChannel.bind("message.edited", function (data) {
- const messageCard = $("body").find(`.message-card[data-id="${data.message.id}"]`);
- messageCard.find(".message-text").html(data.message.body);
-});
+// removed edit message listener
 
 
-//listen to message edit event
-clientListenChannel.bind("client-messageEdit", function (data) {
- if (data.from == getMessengerId() && data.to == auth_id) {
-   const messageCard = $("body").find(`.message-card[data-id="${data.id}"]`);
-   messageCard.find(".message-text").html(data.new_body);
- }
-});
+// removed client-messageEdit listener
 
 // -------------------------------------
 // presence channel [User Active Status]
@@ -867,14 +850,7 @@ function sendDeleteConversationEvent() {
 * Trigger message edit
 *-------------------------------------------------------------
 */
-function sendMessageEditEvent(messageId, newBody) {
- return clientSendChannel.trigger("client-messageEdit", {
-   id: messageId,
-   new_body: newBody,
-   from: auth_id,
-   to: getMessengerId(),
- });
-}
+// removed sendMessageEditEvent
 
 
 /**
@@ -1436,6 +1412,20 @@ $(document).ready(function () {
  // calling Css Media Queries
  cssMediaQueries();
 
+  // Define --app-vh on load for mobile keyboard-safe height
+  (function initViewportHeightVariable() {
+    const setAppVh = (h) => {
+      if (h) {
+        document.documentElement.style.setProperty("--app-vh", h + "px");
+      }
+    };
+    if (window.visualViewport && window.visualViewport.height) {
+      setAppVh(window.visualViewport.height);
+    } else {
+      setAppVh(window.innerHeight);
+    }
+  })();
+
  // message form on submit.
  $("#message-form").on("submit", (e) => {
    e.preventDefault();
@@ -1522,6 +1512,11 @@ $(document).ready(function () {
      typingNow = 0;
    }, 1000);
  });
+
+  // Keep messages visible when focusing input on mobile
+  $("#message-form .m-send").on("focus", () => {
+    setTimeout(() => scrollToBottom(messagesContainer), 50);
+  });
 
  // Image modal
  $("body").on("click", ".chat-image", function () {
@@ -1683,15 +1678,25 @@ observer.observe(document, config);
 *-------------------------------------------------------------
 */
 var resizeTimeout;
-window.visualViewport.addEventListener("resize", (e) => {
- clearTimeout(resizeTimeout);
- resizeTimeout = setTimeout(function () {
-   const h = e.target.height;
-   if (h) {
-     $(".messenger-messagingView").css({ height: h + "px" });
-   }
- }, 100);
-});
+if (window.visualViewport) {
+ window.visualViewport.addEventListener("resize", (e) => {
+   clearTimeout(resizeTimeout);
+   resizeTimeout = setTimeout(function () {
+     const h = e.target.height;
+     if (h) {
+       document.documentElement.style.setProperty("--app-vh", h + "px");
+     }
+     scrollToBottom(messagesContainer);
+   }, 100);
+ });
+ window.visualViewport.addEventListener("scroll", () => {
+   setTimeout(() => scrollToBottom(messagesContainer), 50);
+ });
+} else {
+ $(window).on("resize", () => {
+   document.documentElement.style.setProperty("--app-vh", window.innerHeight + "px");
+ });
+}
 
 /**
 *-------------------------------------------------------------
@@ -1759,14 +1764,14 @@ setInterval(() => {
 
 
 function resetRecorderUI() {
- isRecording = false;
- isRecordingLocked = false;
- audioChunks = [];
+ window.chatifyRecorder.isRecording = false;
+ window.chatifyRecorder.isRecordingLocked = false;
+ window.chatifyRecorder.audioChunks = [];
  window.chatifyVoiceBlob = null;
 
  $(".upload-attachment-label, .emoji-button, .m-send, .send-button").show();
- sendCard.find(".recording-bar").hide();
- sendCard.find(".record-hint").html("");
+ window.chatifySendCard.find(".recording-bar").hide();
+ window.chatifySendCard.find(".record-hint").html("");
 }
 
 

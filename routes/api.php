@@ -20,3 +20,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route for getting project info (accessible without authentication for now, can add auth if needed)
+Route::get('/project/{id}', [\App\Http\Controllers\newProjectController::class, 'getProjectInfo']);

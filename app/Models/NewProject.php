@@ -16,6 +16,12 @@ class NewProject extends Model
         'service',
         'priority',
         'budget',
+        'status',
+        'expires_at',
+    ];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
     ];
 
     public function user()
@@ -30,8 +36,7 @@ class NewProject extends Model
 
     public function skills()
     {
-        return $this->belongsToMany(UserSkill::class, 'project_skill_mapping', 'project_id', 'skill_id')
-                    ->withPivot('level');
+        return $this->belongsToMany(UserSkill::class, 'project_skill_mapping', 'project_id', 'skill_id');
     }
 
     public function projectSkillMappings()
@@ -43,4 +48,19 @@ class NewProject extends Model
     {
         return $this->hasMany(ServicesMap::class, 'project_id');
     }
+    public function isOpen()
+    {
+        return $this->status === 'open';
+    }
+
+    public function isClosed()
+    {
+        return $this->status === 'closed';
+    }
+
+    public function isExpired()
+    {
+        return $this->status === 'expired';
+    }
+
 }

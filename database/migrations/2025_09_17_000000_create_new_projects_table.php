@@ -16,15 +16,14 @@ return new class extends Migration
             $table->string('service')->nullable();
             $table->string('priority')->nullable();
             $table->string('budget')->nullable();
+            $table->enum('status', ['open', 'closed', 'expired'])->default('open')->comment('open = باز | closed = بسته | expired = منقضی شده');
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
     }
-
 
     public function down(): void
     {
         Schema::dropIfExists('new_projects');
     }
 };
-
-

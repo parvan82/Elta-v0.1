@@ -15,6 +15,21 @@ use Morilog\Jalali\Jalalian;
 
 class AuthController extends Controller
 {
+    public function showLoginForm(Request $request)
+    {
+        // ذخیره role در session
+        if ($request->has('role')) {
+            session(['login_role' => $request->role]);
+        }
+
+        // مسیر redirect بعد از لاگین
+        if ($request->has('redirect_to')) {
+            session(['redirect_after_login' => $request->redirect_to]);
+        }
+
+        return view('auth.login');
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -54,76 +69,55 @@ class AuthController extends Controller
             return back()->withErrors(['sms' => 'خطای ارسال پیامک: '.$e->getMessage()]);
         }
     }
+
     public function login(Request $request)
     {
         $request->validate([
             'UsernameOrPhone' => 'required|string',
-            'password'        => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        $input    = $request->input('UsernameOrPhone');
-        $password = $request->input('password');
+        $input = $request->UsernameOrPhone;
 
-        // 🔹 پیدا کردن کاربر
         $user = preg_match('/^09\d{9}$/', $input)
             ? User::where('phone', $input)->first()
             : User::where('username', $input)->first();
 
-        if (!$user) {
-            return back()->withErrors(['UsernameOrPhone' => 'کاربری با این اطلاعات یافت نشد.'])->withInput();
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'UsernameOrPhone' => 'اطلاعات ورود نادرست است'
+            ])->withInput();
         }
 
-        if (!Hash::check($password, $user->password)) {
-            return back()->withErrors(['password' => 'رمز عبور اشتباه است.'])->withInput();
+        Auth::login($user);
+
+        $user->session_token = session()->getId();
+        $user->save();
+
+        if ($request->filled('redirect_to')) {
+            return redirect($request->redirect_to);
+        }
+        // اگر از صفحه ولکام برای مشاهده بیشتر آمده باشد
+        if ($request->redirect === 'search-results') {
+
+            return redirect()->route(
+                $user->role === 'employer'
+                    ? 'user.search'
+                    : 'user.search.employer',
+                [
+                    'redirect' => 'search-results'
+                ]
+            );
         }
 
-        // 🔹 ورود مستقیم برای admin
-        if ($user->username === 'danialja' && $password === 'danialja82') {
-            Auth::login($user);
-            // ذخیره شناسه سشن روی دیتابیس
-            $user->session_token = session()->getId();
-            $user->save();
 
-            return $user->role === 'employer'
-                ? redirect()->route('employerHome')->with('success', 'ورود مستقیم مدیر موفقیت‌آمیز بود.')
-                : redirect()->route('freelancerHome')->with('success', 'ورود مستقیم مدیر موفقیت‌آمیز بود.');
-        }
-
-        // 🔹 اگر قبلاً سشن معتبر داره (برای همین یوزر و همین دستگاه)
-        if ($user->session_token && $user->session_token === session()->getId()) {
-            Auth::login($user);
-            return $user->role === 'employer'
-                ? redirect()->route('employerHome')->with('success', 'ورود بدون OTP (سشن معتبر).')
-                : redirect()->route('freelancerHome')->with('success', 'ورود بدون OTP (سشن معتبر).');
-        }
-
-        // 🔹 در غیر این صورت → OTP
-        Session::put('register_data', [
-            'username' => $user->username,
-            'phone'    => $user->phone,
-            'role'     => $user->role,
-        ]);
-        Session::put('auth_type', 'login');
-
-        $otpCode = random_int(1000, 9999);
-        Session::put('otp_code', $otpCode);
-        Session::put('otp_expire', now()->addMinutes(2));
-
-        try {
-            $api = new KavenegarApi(config('services.kavenegar.api_key'));
-            $message = "کد احراز هویت شما در التا: {$otpCode}";
-            $api->Send(config('services.kavenegar.sender'), $user->phone, $message);
-
-            return redirect()->route('login-otp')
-                ->with('success', 'کد تایید به شماره شما ارسال شد.')
-                ->with('phone', $user->phone);
-
-        } catch (\Exception $e) {
-            return back()->withErrors(['sms' => 'خطای ارسال پیامک: '.$e->getMessage()]);
-        }
+        // سناریوی عادی
+        return redirect()->route(
+            $user->role === 'employer'
+                ? 'employerHome'
+                : 'freelancerHome'
+        )->with('success', 'ورود با موفقیت انجام شد.');
     }
-
-
 
     public function verifyCode(Request $request)
     {
@@ -221,7 +215,6 @@ class AuthController extends Controller
         return redirect()->route('login.form', ['role' => $role]);
     }
 
-    // تغییر رمز جدید
     public function resetPassword(Request $request)
     {
         $request->validate([

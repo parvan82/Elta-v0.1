@@ -10,10 +10,9 @@
     <title>home</title>
     <!-- Font Awesome CDN -->
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icons/bootstrap-icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icons/font-awesome/css/all.min.css') }}">
     <link rel="stylesheet" href="../css/home.css">
     <link rel="stylesheet" href="../css/newProject.css">
     <link rel="stylesheet" href="../css/alerts.css">
@@ -27,9 +26,6 @@
                         <i class="fas fa-exclamation-circle"></i>
                     </div>
                     <div class="alert-message">{{ $error }}</div>
-                    <button class="alert-close" type="button">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
             </div>
         @endforeach
@@ -42,9 +38,6 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="alert-message">{{ session('success') }}</div>
-                <button class="alert-close" type="button">
-                    <i class="fas fa-times"></i>
-                </button>
             </div>
         </div>
     @endif
@@ -56,9 +49,6 @@
                     <i class="fas fa-exclamation-circle"></i>
                 </div>
                 <div class="alert-message">{{ session('error') }}</div>
-                <button class="alert-close" type="button">
-                    <i class="fas fa-times"></i>
-                </button>
             </div>
         </div>
     @endif
@@ -67,6 +57,10 @@
         <div class="header">
             <!-- Sidebar -->
             <div id="sidebar" class="sidebar">
+                @php
+                    $user = auth()->user();
+                @endphp
+                @if ($user && $user->role === 'freelancer')
                 <div class="sidebar-header">
                     <div class="header-btn">
                         <button id="close-sidebar" class="closeBtn"><i class="bi bi-x"></i></button>
@@ -97,18 +91,63 @@
                                 @endif
                             </button>
                         </li>
-                        <li><button><a href="{{ url(config('chatify.routes.prefix')) }}"><span>پیام ها</span></a><div class="notification-badge">99</div></button></li>
-                        <li><button><a href="{{ route('portfolioShow', ['id' => auth()->user()->id]) }}"><span>رزومه</span></a> </button></li>
+                        <li><button><a href="{{ url(config('chatify.routes.prefix')) }}"><span>پیام ها</span></a><div class="notification-badge freelancer"></div></button></li>
+                        <li><button><a href="{{ route('mobile.profile', ['id' => auth()->user()->id]) }}"><span>رزومه</span></a> </button></li>
+                        <li><button><a href="{{ route('EltaCard') }}"><span>التا کارت</span></a></button></li>
                         <li><button><a href="#"><span>کیف پول</span></a> </button></li>
                     </ul>
                 </div>
                 <div class="sidebar-footer">
                     <form action="{{ route('logout') }}" method="POST" class="logout-form">
                         @csrf
-                        <button class="Btn"><div class="logout"><i class="bi bi-box-arrow-right"></i></div><div class="text">خروج</div></button>
+                        <button class="Btn"><div class="logout"><i class="bi bi-box-arrow-right"></i></div><div class="text" id="logout-btn">خروج</div></button>
                     </form>
-                    <button class="Btn"><div class="support"><i class="fa-solid fa-headset "></i></div><div class="text text-success" >پشتیبانی</div></button>
+                    <button class="Btn"><div class="support"><i class="fa-solid fa-headset "></i></div><div class="text" id="support-btn">پشتیبانی</div></button>
                 </div>
+                @else
+                <div class="sidebar-header">
+                    <div class="header-btn">
+                        <button id="close-sidebar" class="closeBtn"><i class="bi bi-x"></i></button>
+                        <a href="{{ route('employerProfile') }}?popup=open"><button class="editBtn"><svg height="1em" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path></svg></button></a>
+                    </div>
+                    
+                    <div class="user-info">
+                        <p class="name">{{ Auth::user()->name}}</p>
+                        <p class="career">{{ Auth::user()->workarea ?? 'کاربر التا'}}</p>
+                        <p class="username-title">{{ Auth::user()->username}}</p>
+
+                    </div>
+                    <div class="profile-picture">
+                        <img  src="{{ Auth::user()->profilepic ? asset('storage/' . Auth::user()->profilepic) : asset('images/default.jpg') }}" alt="Profile Picture">
+                    </div>
+                </div>
+                <div class="sidebar-content">
+                    <ul>
+                        <li><button><a href="{{route('newProject')}}"><span>ثبت پروژه</span></a> </button></li>
+                        <li><button>@php
+                                $user = auth()->user();
+                            @endphp                         
+
+                            @if ($user->role === 'freelancer')
+                                <a href="{{ route('freelancerProfile') }}"><span>پروفایل</span></a>
+                            @elseif ($user->role === 'employer')
+                                <a href="{{ route('employerProfile') }}"><span>پروفایل</span></a>
+                            @endif
+                            </button>
+                        </li>
+                        <li><button><a href="{{ url(config('chatify.routes.prefix')) }}"><span>پیام ها</span></a><div class="notification-badge"></div></button></li>
+                        <li><button><a href="{{ route('EltaCard') }}"><span>التا کارت</span></a></button></li>
+                        <li><button><a href="#"><span>کیف پول</span></a></button></li>
+                    </ul>
+                </div>
+                <div class="sidebar-footer">
+                    <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                        @csrf
+                        <button class="Btn"><div class="logout"><i class="bi bi-box-arrow-right"></i></div><div class="text" id="logout-btn">خروج</div></button>
+                    </form>
+                    <button class="Btn"><div class="support"><i class="fa-solid fa-headset "></i></div><div class="text" id="support-btn">پشتیبانی</div></button>
+                </div>
+                @endif
             </div>
             <!-- Main Content -->
             <div class="main-content">
@@ -123,7 +162,7 @@
                     @elseif ($user->role === 'employer')
                         <a href="{{route('employerHome')}}" class="open-btn"><i class="fas fa-home"></i></a>
                     @endif
-                    <a href="{{route('notifications')}}" class="open-btn"><i class="fa-solid fa-bell"></i></a>
+                    <a href="{{route('notifications')}}" class="open-btn"><i class="fa-solid fa-bell"></i><span class="notification-bell-badge"></span></a>
                 </div>
                 <div class="site-name">
                     <img id="img-icon" src="{{ asset('images/name.jpg') }}" alt="">
@@ -137,21 +176,26 @@
         <div class="col-md-12 p-3">
             <form id="msform">
                 @csrf      
-                <h2 id="h11">ایجاد پروژه</h2>
-                <ul id="progressbar">
-                  <li>عنوان و توضیحات</li>
-                  <li>سرویس و مهارت ها</li>
-                  <li>بودجه و اولیت ها</li>
-                  <li>خدمات التا</li>
-                  <li>التا کارت پروژه</li>
+                <h2 id="h11">{{ $renewProjectId ? 'تمدید پروژه' : 'ایجاد پروژه' }}</h2>
+                <ul id="progressbar" class="{{ $renewProjectId ? 'progressbar-disabled' : '' }}">
+                    @if(!($renewProjectId ?? false))
+                        <li class="active">عنوان و توضیحات</li>
+                        <li>مهارت و سرویس</li>
+                        <li>اولویت و بودجه</li>
+                        <li>خدمات التا</li>
+                        <li>التا کارت پروژه</li>
+                    @else
+                        <li class="active">التا کارت آگهی</li>
+                    @endif
                 </ul>
+
 
                 <fieldset dir="rtl">
                   <h2 class="fs-title">انتخاب عنوان و توضیحات</h2>
                   <h3 class="fs-subtitle"> عنوان پروژه :</h3>
-                  <input class="mb-3" type="text" placeholder="نام پروژه برای جذب فریلنسر مهم است"/>
+                  <input class="mb-3" type="text" name="title" placeholder="نام پروژه برای جذب فریلنسر مهم است"/>
                   <h3 class="fs-subtitle"> توضیحات تکمیلی پروژه :</h3>
-                  <textarea id="project-desc" placeholder="توضیحات پروژه را وارد کنید" style="height: 100px;"></textarea>
+                  <textarea id="project-desc" name="description" placeholder="توضیحات پروژه را وارد کنید" style="height: 100px;"></textarea>
                   <input type="button" name="next" class="next action-button" value="بعدی" />
                 </fieldset>
 
@@ -168,15 +212,18 @@
 
                         <div class="service-dropdown" id="service-dropdown">
                           <div class="service-option" data-value="" data-text="انتخاب سرویس">انتخاب سرویس</div>
-                          <div class="service-option" data-value="web-development" data-text="توسعه وب">توسعه وب</div>
-                          <div class="service-option" data-value="mobile-development" data-text="توسعه موبایل">توسعه موبایل</div>
-                          <div class="service-option" data-value="graphic-design" data-text="طراحی گرافیک">طراحی گرافیک</div>
-                          <div class="service-option" data-value="content-writing" data-text="نویسندگی محتوا">نویسندگی محتوا</div>
-                          <div class="service-option" data-value="marketing" data-text="بازاریابی">بازاریابی</div>
-                          <div class="service-option" data-value="translation" data-text="ترجمه">ترجمه</div>
-                          <div class="service-option" data-value="video-editing" data-text="تدوین ویدیو">تدوین ویدیو</div>
-                          <div class="service-option" data-value="photography" data-text="عکاسی">عکاسی</div>
-                          <div class="service-option" data-value="other" data-text="سایر">سایر</div>
+                          <div class="service-option" data-value="برنامه نویسی" data-text="برنامه نویسی">برنامه نویسی</div>
+                          <div class="service-option" data-value="سیستم عامل" data-text="سیستم عامل">سیستم عامل</div>
+                          <div class="service-option" data-value="طراحی گرافیک" data-text="طراحی گرافیک">طراحی گرافیک</div>
+                          <div class="service-option" data-value="معماری" data-text="معماری">معماری</div>
+                          <div class="service-option" data-value="عمران" data-text="عمران">عمران</div>
+                          <div class="service-option" data-value="CRM" data-text="CRM">CRM</div>
+                          <div class="service-option" data-value="ERP" data-text="ERP">ERP</div>
+                          <div class="service-option" data-value="تولید محتوا" data-text="تولید محتوا">تولید محتوا</div>
+                          <div class="service-option" data-value="دیتابیس" data-text="دیتابیس">دیتابیس</div>
+                          <div class="service-option" data-value="داده کاوی" data-text="داده کاوی">داده کاوی</div>
+                          <div class="service-option" data-value="بازی سازی" data-text="بازی سازی">بازی سازی</div>
+                          <div class="service-option" data-value="آهنگسازی" data-text="آهنگسازی">آهنگسازی</div>
                         </div>
 
                         <input type="hidden" name="service" id="service-select" value="">
@@ -192,22 +239,22 @@
                         </div>
 
                         <div class="skill-tabs-wrapper">
-                          <button type="button" class="skill-tabs-arrow right" aria-label="بعدی"><i class="fas fa-chevron-right"></i></button>
                           <div class="skill-tabs">
-                            <button type="button" class="skill-tab active" data-category="devops">برنامه نویسی</button>
-                            <button type="button" class="skill-tab" data-category="system">سیستم عامل</button>
-                            <button type="button" class="skill-tab" data-category="design">طراحی</button>
-                            <button type="button" class="skill-tab" data-category="architecture">معماری</button>
-                            <button type="button" class="skill-tab" data-category="civil">عمران</button>
-                            <button type="button" class="skill-tab" data-category="crm">CRM</button>
-                            <button type="button" class="skill-tab" data-category="erp">ERP</button>
-                            <button type="button" class="skill-tab" data-category="marketing">تولید محتوا</button>
-                            <button type="button" class="skill-tab" data-category="database">دیتابیس</button>
-                            <button type="button" class="skill-tab" data-category="data">داده کاوی</button>
-                            <button type="button" class="skill-tab" data-category="game">بازی سازی</button>
-                            <button type="button" class="skill-tab" data-category="music">آهنگسازی</button>
+                            <div class="b2">
+                                <button type="button" class="skill-tab active" data-category="devops">برنامه نویسی</button>
+                                <button type="button" class="skill-tab" data-category="system">سیستم عامل</button>
+                                <button type="button" class="skill-tab" data-category="design">طراحی</button>
+                                <button type="button" class="skill-tab" data-category="architecture">معماری</button>
+                                <button type="button" class="skill-tab" data-category="civil">عمران</button>
+                                <button type="button" class="skill-tab" data-category="crm">CRM</button>
+                                <button type="button" class="skill-tab" data-category="erp">ERP</button>
+                                <button type="button" class="skill-tab" data-category="marketing">تولید محتوا</button>
+                                <button type="button" class="skill-tab" data-category="database">دیتابیس</button>
+                                <button type="button" class="skill-tab" data-category="data">داده کاوی</button>
+                                <button type="button" class="skill-tab" data-category="game">بازی سازی</button>
+                                <button type="button" class="skill-tab" data-category="music">آهنگسازی</button>
+                            </div>
                           </div>
-                          <button type="button" class="skill-tabs-arrow left" aria-label="قبلی"><i class="fas fa-chevron-left"></i></button>
                         </div>
 
                         <div class="skill-category" id="category-devops">
@@ -286,64 +333,65 @@
                     <h3 class="fs-subtitle"> اولیت های شما به  فریلنسرها در کیفیت پروژه و میزان بودجه کمک میکند :</h3>
                     <div class="priority-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
                       
-                        <div class="priority-option" data-value="quality" style="padding: 20px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">کیفیت بالا</h4>
-                            <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">اولویت با کیفیت و دقت کار</p>
+                        <div class="priority-option" data-value="اولویت با کیفیت و دقت کار">
+                            <h4>کیفیت بالا</h4>
+                            <p>اولویت با کیفیت و دقت کار</p>
                         </div>
                         
-                        <div class="priority-option" data-value="speed" style="padding: 20px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">سرعت تحویل</h4>
-                            <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">اولویت با سرعت و زمان تحویل</p>
+                        <div class="priority-option" data-value="اولویت با سرعت و زمان تحویل">
+                            <h4>سرعت تحویل</h4>
+                            <p>اولویت با سرعت و زمان تحویل</p>
                         </div>
                       
-                        <div class="priority-option" data-value="budget" style="padding: 20px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">بودجه کم</h4>
-                            <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">اولویت با هزینه کمتر</p>
+                        <div class="priority-option" data-value="اولویت با هزینه کمتر">
+                            <h4>بودجه کم</h4>
+                            <p>اولویت با هزینه کمتر</p>
                         </div>
                         
-                        <div class="priority-option" data-value="balanced" style="padding: 20px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">تعادل</h4>
-                            <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">تعادل بین کیفیت، سرعت و هزینه</p>
+                        <div class="priority-option" data-value="تعادل بین کیفیت، سرعت و هزینه">
+                            <h4>تعادل</h4>
+                            <p>تعادل بین کیفیت، سرعت و هزینه</p>
                         </div>
 
                     </div>
 
                     <h3 class="fs-subtitle"> بودجه پیشنهادی شما :</h3>
+                    
                     <div class="budget-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
                         
-                        <div class="budget-option" data-value="low" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">پروژه ساده</h4>
-                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">زیر 1 میلیون تومان</p>
+                        <div class="budget-option" data-value="پروژه ساده">
+                            <h4>پروژه ساده</h4>
+                            <p>زیر 1 میلیون تومان</p>
                         </div>
                         
-                        <div class="budget-option" data-value="medium" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">پروژه خیلی کوچیک</h4>
-                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">1 تا 5 میلیون تومان</p>
+                        <div class="budget-option" data-value="پروژه خیلی کوچیک">
+                            <h4>پروژه خیلی کوچیک</h4>
+                            <p>1 تا 5 میلیون تومان</p>
                         </div>
                         
-                        <div class="budget-option" data-value="high" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">پروژۀ کوچیک</h4>
-                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">5 تا 10 میلیون تومان</p>
+                        <div class="budget-option" data-value="5 تا 10 میلیون تومان">
+                            <h4>پروژۀ کوچیک</h4>
+                            <p>5 تا 10 میلیون تومان</p>
                         </div>
                         
-                        <div class="budget-option" data-value="high" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">پروژۀ متوسط</h4>
-                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">10 تا 20 میلیون تومان</p>
+                        <div class="budget-option" data-value="10 تا 20 میلیون تومان">
+                            <h4>پروژۀ متوسط</h4>
+                            <p>10 تا 20 میلیون تومان</p>
                         </div>
                         
-                        <div class="budget-option" data-value="high" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">پروژۀ بزرگ</h4>
-                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">20 تا 30 میلیون تومان</p>
+                        <div class="budget-option" data-value="20 تا 30 میلیون تومان">
+                            <h4>پروژۀ بزرگ</h4>
+                            <p>20 تا 30 میلیون تومان</p>
                         </div>
                         
-                        <div class="budget-option" data-value="high" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">پروژۀ بزرگ تر</h4>
-                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">بیشتر از 30 میلیون تومان </p>
+                        <div class="budget-option" data-value="بیشتر از 30 میلیون تومان">
+                            <h4>پروژۀ بزرگ تر</h4>
+                            <p>بیشتر از 30 میلیون تومان </p>
                         </div>
                         
-                        <div class="budget-option" data-value="negotiable" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white;">
-                            <h4 style="margin: 0; color: #333; font-size: 16px;">قابل مذاکره</h4>
-                            <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">داخل چت روم التا به توافق خواهید رسید</p>
+                        <div class="budget-option" data-value="قابل مذاکره">
+                            <h4>قابل مذاکره</h4>
+                            <p>داخل چت روم التا به توافق خواهید رسید</p>
                         </div>
 
                     </div>
@@ -359,72 +407,34 @@
                     <div class="elta-services" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
 
                         <!-- ایجاد پروژه -->
-                        <div class="service" data-value="create-project" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: not-allowed; transition: all 0.3s ease;">
+                        <div class="service" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: not-allowed; transition: all 0.3s ease;">
                             <div style="margin-left: 20px;">
                                 <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: not-allowed;" checked disabled>
                             </div>  
                             <div style="flex: 1; text-align: right;">
-                                <h4 style="margin: 0 0 10px 0; color: #333; font-size: 18px;">ایجاد پروژه</h4>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">پروژه شما برای هزاران فریلنسر که مهارت انجام پروژه شما را دارند از طریق ایمیل ارسال می شود.</p>
+                                <h4 style="margin: 0 0 10px 0; color: #333; font-size: 18px;">ایجاد پروژه در التا</h4>
+                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">پروژه‌ خود را در التا ثبت کنید تا در کوتاه‌ترین زمان، به هزاران فریلنسر متخصص در حوزه‌ مدنظر شما معرفی شود. فرصتی برای همکاری با بهترین‌ها در انتظار شماست.</p>
                                 <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۱۳۹,۰۰۰ تومان</span>
                             </div>
                         </div>
 
-                        <!-- ۷۱ درصد تخفیف - بی‌نهایت -->
-                        <div class="service" data-value="unlimited" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
-                            <div style="margin-left: 20px;">
-                                <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
-                            </div>
-                            <div style="flex: 1; text-align: right;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <h4 style="margin: 0; color: #333; font-size: 18px;">۷۱ درصد تخفیف</h4>
-                                    <span style="background: #e74c3c; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">بی‌نهایت</span>
-                                </div>
-                                    <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">در پروژه بینهایت، کارفرما امکان تبادل اطلاعات تماس، ارتباط حضوری و استخدام فریلنسر را خواهد داشت. با انتخاب این گزینه، کمیسیون کارفرما ۰ محاسبه میشود.</p>
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span style="text-decoration: line-through; color: #999; font-size: 14px;">۲,۰۰۰,۰۰۰ تومان</span>
-                                    <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۵۹۹,۰۰۰ تومان</span>
-                                </div>
-                            </div>
-
-                        </div>
-
                         <!-- مدیر پروژه -->
-                        <div class="service" data-value="project-manager" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
+                        <div class="service" data-value="مدیر پروژه" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
                             <div style="margin-left: 20px;">
                                 <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
                             </div>  
                             <div style="flex: 1; text-align: right;">
                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <h4 style="margin: 0; color: #333; font-size: 18px;">مدیر پروژه</h4>
-                                    <span style="background: #f39c12; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">مدیر پروژه</span>
+                                <h4 style="margin: 0; color: #333; font-size: 18px;">مدیر پروژه التا</h4>
+                                <span style="background: #007bff; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">مدیر پروژه</span>
                                 </div>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">با انتخاب مدیر پروژه اختصاصی، یک متخصص از طرف پونیشا کل فرآیند اجرای پروژه شما را مدیریت میکند؛ از انتخاب بهترین فریلنسر تا تحویل نهایی با کیفیت و در زمان مقرر.</p>
+                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">با انتخاب مدیر پروژه در التا، اجرای پروژه‌تان را به یک متخصص حرفه‌ای بسپارید. مدیر پروژه از لحظه انتخاب فریلنسر تا تحویل نهایی، بر کیفیت، زمان‌بندی و جزئیات کار نظارت می‌کند تا تجربه‌ای بدون دغدغه برای شما رقم بخورد.</p>
                                 <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۵,۰۰۰,۰۰۰ تومان</span>
                             </div>
                         </div>
 
-                        <!-- ۴۰ درصد تخفیف - فوری و برجسته -->
-                        <div class="service" data-value="urgent-featured" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
-                            <div style="margin-left: 20px;">
-                                <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
-                            </div>
-                            <div style="flex: 1; text-align: right;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <h4 style="margin: 0; color: #333; font-size: 18px;">۴۰ درصد تخفیف</h4>
-                                    <span style="background: #e74c3c; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">فوری</span>
-                                    <span style="background: #e74c3c; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">برجسته</span>
-                                </div>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">این دو ویژگی را با هم انتخاب کنید و ۴۰% تخفیف دریافت کنید</p>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span style="text-decoration: line-through; color: #999; font-size: 14px;">۴۹۸,۰۰۰ تومان</span>
-                                    <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۲۹۹,۰۰۰ تومان</span>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- فوری -->
-                        <div class="service" data-value="urgent" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
+                        <div class="service" data-value="فوری" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
                             <div style="margin-left: 20px;">
                                 <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
                             </div>
@@ -433,43 +443,27 @@
                                     <h4 style="margin: 0; color: #333; font-size: 18px;">فوری</h4>
                                     <span style="background: #e74c3c; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">فوری</span>
                                 </div>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">پروژه فوری نشانگر عجله کارفرما برای انجام هرچه سریع تر پروژه است و مورد توجه فریلنسرهای حرفه ای که علاقه دارند زودتر پروژه دریافت کنند قرار می گیرد.</p>
+                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">اگر زمان برای شما حیاتی است، پروژه خود را به‌صورت فوری در التا ثبت کنید.  این نوع پروژه‌ها در اولویت فریلنسرهای فعال و با‌انگیزه قرار می‌گیرند تا در سریع‌ترین زمان ممکن، با حفظ کیفیت، کار شما را تحویل دهند.</p>
                                 <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۱۴۹,۰۰۰ تومان</span>
                             </div>
                         </div>
 
-                        <!-- برجسته -->
-                        <div class="service" data-value="featured" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
+                        <!-- تخصصی -->
+                        <div class="service" data-value="تخصصی" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
                             <div style="margin-left: 20px;">
                                 <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
                             </div>
                             <div style="flex: 1; text-align: right;">
                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <h4 style="margin: 0; color: #333; font-size: 18px;">برجسته</h4>
-                                    <span style="background: #e74c3c; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">برجسته</span>
+                                    <h4 style="margin: 0; color: #333; font-size: 18px;">تخصصی</h4>
+                                    <span style="background: #f39c12; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">تخصصی</span>
                                 </div>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">پروژه برجسته به دلیل برجسته بودن بیشتر مورد توجه فریلنسرهای حرفه ای قرار می گیرد و فریلنسرهای بیشتری در پروژه شرکت خواهند کرد.</p>
-                                <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۳۴۹,۰۰۰ تومان</span>
-                            </div>
-                          </div>
-
-                        <!-- حرفه‌ای -->
-                        <div class="service" data-value="professional" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
-                            <div style="margin-left: 20px;">
-                                <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
-                            </div>
-                            <div style="flex: 1; text-align: right;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <h4 style="margin: 0; color: #333; font-size: 18px;">حرفه‌ای</h4>
-                                    <span style="background: #f39c12; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">حرفه‌ای</span>
-                                </div>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">پروژه شما توسط متخصصین پونیشا ویرایش میشود تا توضیحات کامل و واضح تری نوشته شود و پیشنهادهای دقیقتری دریافت کنید.</p>
-                                <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۹۹,۰۰۰ تومان</span>
+                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">با فعال‌سازی حالت <strong>پروژه حرفه‌ای</strong> در التا، توضیحات پروژه‌ شما توسط تیم متخصص بازبینی و بهینه‌سازی می‌شود تا شفاف‌تر، دقیق‌تر و جذاب‌تر برای فریلنسرها نمایش یابد.  نتیجه؟ پیشنهادهای با‌کیفیت‌تر و همکاری با افراد حرفه‌ای‌تر.</p>                                <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۹۹,۰۰۰ تومان</span>
                             </div>
                         </div>
 
                         <!-- متمایز -->
-                        <div class="service" data-value="distinctive" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
+                        <div class="service" data-value="متمایز" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
                             <div style="margin-left: 20px;">
                                 <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
                             </div>
@@ -478,23 +472,8 @@
                                     <h4 style="margin: 0; color: #333; font-size: 18px;">متمایز</h4>
                                     <span style="background: #f39c12; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">متمایز</span>
                                 </div>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">رنگ پیش زمینه پروژه شما در فهرست پروژه ها متمایز از بقیه پروژه ها خواهد بود. این کار باعث میشود فریلنسرهای بیشتری به پروژه شما توجه کنند.</p>
+                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">با فعال‌سازی گزینه <strong>پروژه متمایز</strong> در التا، ظاهر التا کارت پروژه شما در فهرست‌ به‌صورت ویژه نمایش داده می‌شود.  این ویژگی باعث جلب توجه سریع‌تر فریلنسرها و افزایش احتمال دریافت پیشنهادهای بیشتر و باکیفیت‌تر می‌شود.</p>
                                 <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۹۹,۰۰۰ تومان</span>
-                            </div>
-                        </div>
-
-                        <!-- میزبانی وب -->
-                        <div class="service" data-value="web-hosting" style="display: flex; align-items: center; padding: 20px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease;">
-                            <div style="margin-left: 20px;">
-                                <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
-                            </div>
-                            <div style="flex: 1; text-align: right;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <h4 style="margin: 0; color: #333; font-size: 18px;">میزبانی وب</h4>
-                                    <span style="background: #3498db; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">میزبانی وب</span>
-                                </div>
-                                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">با انتخاب این گزینه، تیم پونیشا در ساعات کاری با شما تماس میگیرد تا نیازهای هاست شما را بررسی کرده و تخفیف ویژه را در اختیارتان قرار دهد.</p>
-                                <span style="color: #27AE60; font-weight: bold; font-size: 16px;">۰ تومان</span>
                             </div>
                         </div>
 
@@ -505,50 +484,183 @@
 
                 </fieldset>
                 <fieldset dir="rtl">
-
+                    @php
+                        $renewProjectId = request()->get('renew');
+                        $step = request()->get('step', 1);
+                    
+                        // پروژه تمدید شده
+                        $renewProject = $renewProjectId ? \App\Models\NewProject::with('skills','serviceTags','user')->find($renewProjectId) : null;
+                    
+                        // برای حالت عادی از $project استفاده می‌کنیم
+                        $displayProject = $renewProject ?? $project ?? null;
+                    
+                        $hasDistinguishedTag = false;
+                        $sortedTags = collect([]);
+                        if($displayProject) {
+                            foreach($displayProject->serviceTags ?? [] as $tag) {
+                                if($tag->name === 'متمایز') $hasDistinguishedTag = true;
+                            }
+                        
+                            $tagOrder = ['مدیر پروژه', 'فوری', 'تخصصی', 'متمایز'];
+                            $sortedTags = collect($displayProject->serviceTags ?? [])->sortBy(function($tag) use ($tagOrder){
+                                return array_search($tag->name, $tagOrder);
+                            })->values();
+                        }
+                    @endphp
+                    
+                    <script>
+                        window.isRenewProject = {{ $renewProject ? 'true' : 'false' }};
+                        window.renewProjectData = {!! $renewProject ? $renewProject->toJson() : 'null' !!};
+                    </script>
+                    
                     <h2 class="fs-title">التا کارت پروژه</h2>
-                    <h3 class="fs-subtitle"> پیش نمایشی از التا کارت پروژه شما :</h3>
-                    <div class="user-card-link mt-5">
-                        <div class="eltaCard mb-5" style="box-shadow: 0 0 20px #444;">
-                            <div class="search-elta-card pt-5">
-                                <div class="search-image-container">
-                                    <img src="{{ Auth::user()->profilepic ? asset('storage/' . Auth::user()->profilepic) : asset('images/default.jpg') }}" alt="Profile Picture">
-                                </div>
-                                <div class="search-card-tags">
-                                    <h6 class="username-search-card" style="margin: 2px; padding: 3px 8px;">{{ Auth::user()->username }}</h6>
-                                    <div id="selected-services-tags" style="display: flex; flex-wrap: wrap; gap: 5px;">
-                                        <h6 class="tags" id="project-budget-tag" style="margin: 2px; padding: 3px 8px;">پروژه</h6>
+                    <h3 class="fs-subtitle">پیش نمایشی از التا کارت پروژه شما :</h3>
+                    
+                    <div class="user-card-link mt-5 mb-3">
+                    
+                        @if($renewProject)
+                            @php
+                                // بررسی اینکه پروژه تگ "متمایز" دارد یا نه
+                                $hasDistinguishedTag = false;
+                                foreach($project->serviceTags ?? [] as $tag) {
+                                    if($tag->name === 'متمایز') {
+                                        $hasDistinguishedTag = true;
+                                        break;
+                                    }
+                                }
+                            
+                                // مرتب‌سازی تگ‌ها بر اساس اولویت خاص
+                                $tagOrder = ['مدیر پروژه', 'فوری', 'تخصصی', 'متمایز'];
+                            
+                                $sortedTags = collect($project->serviceTags ?? [])->sortBy(function($tag) use ($tagOrder) {
+                                    return array_search($tag->name, $tagOrder);
+                                })->values();
+                            @endphp
+                            <div style="background: #3a4046; margin: 20px; border-radius: 10px;">
+                                <div class="project-card {{ $hasDistinguishedTag ? 'distinguished' : '' }} m-0">
+                                    {{-- هدر کارت --}}
+                                    <div class="project-card-header">
+                                        <div class="project-card-avatar">
+                                            <img src="{{ asset('storage/' . ($project->user->profilepic ?? 'images/default.jpg')) }}" alt="Profile">
+                                        </div>
+                                    </div>
+
+                                    {{-- تگ‌های سرویس --}}
+                                    <div class="project-card-tags dynamic-tag-box">
+                                        @foreach($sortedTags as $tag)
+                                            @php
+                                                $tagClass = match($tag->name) {
+                                                    'تخصصی' => 'takhasosi',
+                                                    'فوری' => 'fori',
+                                                    'مدیر پروژه' => 'modir-proje',
+                                                    'متمایز' => 'motamayez',
+                                                    default => '',
+                                                };
+                                            @endphp
+                                            <span class="project-card-tag {{ $tagClass }}">{{ $tag->name }}</span>
+                                        @endforeach
+                                    </div>
+
+                                    {{-- عنوان پروژه --}}
+                                    <h3 class="project-card-title">{{ $project->title }}</h3>
+
+                                    {{-- بودجه --}}
+                                    <div class="project-card-budget">{{ $project->budget }}</div>
+
+                                    {{-- توضیحات --}}
+                                    <p class="project-card-description">{{ $project->description ?? 'توضیحاتی ثبت نشده است.' }}</p>
+
+                                    {{-- اولویت --}}
+                                    @if($project->priority)
+                                    <div class="project-card-priority">
+                                        <i class="bi bi-info-circle-fill"></i>
+                                        <span>{{ $project->priority }}</span>
+                                    </div>
+                                    @endif
+
+                                    {{-- مهارت‌ها --}}
+                                    <div class="project-card-skills dynamic-skill-box">
+                                        @foreach ($project->skills ?? [] as $skill)
+                                            <span class="project-skill-pill">{{ $skill->skill }}</span>
+                                        @endforeach
+                                    </div>
+
+                                    {{-- علاقه‌مندی --}}
+                                    <div class="add-contact project-card-favorite" data-user-id="{{ $project->user->id }}">
+                                        @if ($project->user->is_favorite)
+                                            <i class="fa-solid fa-user-check icon-anim"></i>
+                                        @else
+                                            <i class="fa-solid fa-user-plus icon-anim"></i>
+                                        @endif
                                     </div>
                                 </div>
-                                <div class="add-contact" data-user-id="{{ Auth::user()->id }}">
-                                    <i class="fa-solid fa-user-plus"></i>
-                                </div>
-                                <div class="search-info-container" style="direction: rtl; text-align: right;">
-                                    <h4 class="search-name" id="project-title">{{ Auth::user()->name }}</h4>
-                                    <h6 class="search-scope-work" id="project-service">سرویس انتخاب شده</h6>
-                                    <p class="search-about-me" id="project-description">توضیحات پروژه شما اینجا نمایش داده می‌شود</p>
-                                </div>
-                                <div class="search-card-skill" id="project-skills">
-                                    <h6 class="userSkill-search-card">مهارت‌ها</h6>
-                                </div>
                             </div>
-                        </div>
+                        @else                            
+
+                        
+                           <div class="project-card" id="project-card">
+                                <div class="project-card-header">
+                                    <div class="project-card-avatar">
+                                        <img src="{{ Auth::user()->profilepic ? asset('storage/' . Auth::user()->profilepic) : asset('images/default.jpg') }}" alt="Profile">
+                                    </div>
+                                </div>
+                                   
+                                <div class="project-card-tags dynamic-tag-box" id="selected-services-tags">
+                                                            
+                                </div>
+                                                            
+                                                            
+                                {{-- عنوان پروژه --}}
+                                <h3 class="project-card-title" id="project-title">{{ Auth::user()->name }}</h3>
+                                                            
+                                {{-- بودجه --}}
+                                <div class="project-card-budget" id="project-budget-tag"></div>
+                                                            
+                                {{-- توضیحات --}}
+                                <p class="project-card-description" id="project-description">توضیحات پروژه شما اینجا نمایش داده می‌شود</p>
+                                                            
+                                {{-- اولویت --}}
+                                <div class="project-card-priority">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                    <span id="project-priority">اولویت پروژه</span>
+                                </div>
+                                                            
+                                {{-- مهارت‌ها --}}
+                                <div class="project-card-skills dynamic-skill-box" id="project-skills">
+                                        <span class="project-skill-pill">مهارت‌ها</span>
+                                </div>
+                                                            
+                                <div class="add-contact project-card-favorite">
+                                    <i class="fa-solid fa-user-plus icon-anim"></i>
+                                </div>
+                                                            
+                            </div>
+                        @endif
+                                            
                     </div>
+
                     <h2 class="fs-title">صورتحساب</h2>
                     <h3 class="fs-subtitle">جزئیات هزینه‌ها و مجموع پرداختی</h3>
 
                     <div id="invoice-container" style="max-width: 800px; margin: 0 auto; text-align: right;">
-                        <div id="invoice-items" style="background: #fff; border: 2px solid #e1e8ed; border-radius: 12px; padding: 15px;">
+                        <div id="invoice-items">
                             <!-- ردیف‌های صورتحساب اینجا رندر می‌شوند -->
                         </div>
-                        <div id="invoice-total" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; background: #f8f9fa; border: 2px solid #e1e8ed; border-radius: 12px; padding: 12px 16px;">
-                            <span style="font-weight: 700; color: #2C3E50;">مجموع قابل پرداخت</span>
-                            <span id="invoice-total-amount" style="font-weight: 800; color: #27AE60;">۰ تومان</span>
+                        <div id="invoice-total" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; ">
+                            <span style="font-weight: 700; color: white;">مجموع قابل پرداخت</span>
+                            <span id="invoice-total-amount" style="color: #27AE60;">۰ تومان</span>
                         </div>
                     </div>
+                    
+                    
+                    <button type="button" id="pay-btn" class="action-button">
+                        {{ $renewProjectId ? 'تمدید پروژه' : 'ثبت پروژه' }}
+                    </button>
 
-                    <button type="button" id="pay-btn" class="action-button">ثبت پروژه</button>
-                    <input type="button" class="previous action-button" value="قبلی" />
+                    @if($renewProjectId)
+                        <input type="hidden" name="renew_project_id" value="{{ $renewProjectId }}">
+                    @endif
+
 
                 </fieldset>
 
@@ -557,34 +669,167 @@
     </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="../js/swiper-bundle.min.js"></script>
+    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.easing.min.js"></script>
 <div id="overlay" class="overlay"></div>
 <script src="../js/newProject.js"> </script>
-<script>
-document.getElementById("pay-btn").addEventListener("click", function() {
-    // همه داده‌های فرم رو جمع کن
-    let formData = new FormData(document.getElementById("msform"));
 
-    fetch("/payment/request", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.url) {
-            window.location.href = data.url; // رفتن به درگاه زرین‌پال
-        }
-    });
-});
-</script>
 
 <!-- Alert System -->
 <script src="../js/alerts.js"></script>
 <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const step = {{ $step }};
+    const renewId = "{{ $renewProjectId }}";
+
+    if (step == 5) {
+        // همه fieldset ها
+        const fieldsets = document.querySelectorAll("fieldset");
+        const progressItems = document.querySelectorAll("#progressbar li");
+
+        fieldsets.forEach((fs, i) => {
+            fs.style.display = (i === 4) ? "block" : "none";
+        });
+
+        progressItems.forEach((li, i) => {
+            if (i <= 4) li.classList.add("active");
+        });
+
+        // اگر تمدید بود → آیدی رو نگه دار
+        if (renewId) {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "renew_project_id";
+            input.value = renewId;
+            document.querySelector("form")?.appendChild(input);
+        }
+    }
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const payBtn = document.getElementById("pay-btn");
+    if (!payBtn) return;
+
+    payBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const form = document.getElementById("msform");
+        if (!form) return;
+
+        const formData = new FormData(form);
+
+        // بررسی حالت تمدید
+        const renewId = document.querySelector('input[name="renew_project_id"]')?.value;
+        const isRenew = !!renewId;
+        if (isRenew) {
+            formData.append("renew_project_id", renewId);
+        }
+
+        // اگر حالت تمدید است، فقط renew_project_id را ارسال کن
+        if (!isRenew) {
+            // اضافه کردن مهارت‌ها
+            if (window.selectedSkills && window.selectedSkills.length > 0) {
+                const skillsForSubmit = window.selectedSkills.map(skill => ({
+                    skill: skill.text || skill.value,
+                }));
+                formData.append("selected_skills", JSON.stringify(skillsForSubmit));
+            }
+
+            // اضافه کردن سرویس‌های التا (selected_services)
+            if (window.selectedServices && window.selectedServices.length > 0) {
+                const eltaServices = window.selectedServices.filter(s => s !== 'create-project');
+                if (eltaServices.length > 0) {
+                    formData.append("selected_services", JSON.stringify(eltaServices));
+                }
+            }
+
+            // اضافه کردن بودجه
+            const selectedBudget = document.querySelector(".budget-option.selected")?.getAttribute("data-value");
+            if (selectedBudget) {
+                formData.append("budget", selectedBudget);
+            }
+
+            // اضافه کردن اولویت
+            const selectedPriority = document.querySelector(".priority-option.selected")?.getAttribute("data-value");
+            if (selectedPriority) {
+                formData.append("priority", selectedPriority);
+            }
+
+            // اضافه کردن سرویس اصلی (اطمینان از وجود آن)
+            const serviceValue = document.querySelector("#service-select")?.value;
+            if (serviceValue) {
+                // اگر از قبل وجود دارد، آن را حذف کن و دوباره اضافه کن تا مطمئن شویم
+                if (formData.has("service")) {
+                    formData.delete("service");
+                }
+                formData.append("service", serviceValue);
+            }
+        }
+
+        // ارسال با fetch
+        fetch("/home/new-project", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]')?.value || ""
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const msg = isRenew ? "آگهی با موفقیت تمدید شد" : "آگهی با موفقیت ثبت شد";
+                if (window.alertManager) {
+                    window.alertManager.success(msg);
+                } else {
+                    alert(msg);
+                }
+
+                // انتقال بعد از ۲ ثانیه
+                setTimeout(() => {
+                    window.location.href = "/home/profile/employer";
+                }, 2000);
+
+            } else {
+                // نمایش خطاهای سرور
+                if (data.errors && Array.isArray(data.errors)) {
+                    data.errors.forEach(err => {
+                        if (window.alertManager) {
+                            window.alertManager.error(err);
+                        } else {
+                            alert(err);
+                        }
+                    });
+                } else if (data.message) {
+                    if (window.alertManager) {
+                        window.alertManager.error(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    const msg = "خطا در ثبت آگهی";
+                    if (window.alertManager) {
+                        window.alertManager.error(msg);
+                    } else {
+                        alert(msg);
+                    }
+                }
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            const msg = "خطا در ارسال درخواست";
+            if (window.alertManager) {
+                window.alertManager.error(msg);
+            } else {
+                alert(msg);
+            }
+        });
+    });
+});
+
+
 // نمایش اعلانات موجود در صفحه
 document.addEventListener('DOMContentLoaded', function() {
     const alerts = document.querySelectorAll('.custom-alert');

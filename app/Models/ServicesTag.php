@@ -19,4 +19,14 @@ class ServicesTag extends Model
     {
         return $this->belongsToMany(NewProject::class, 'services_map', 'tag_id', 'project_id');
     }
+
+    public function ads()
+    {
+        return $this->belongsToMany(
+            Advatisement::class,
+            'service_type_map',
+            'services_id', // foreign key در pivot
+            'ads_id'       // foreign key در pivot
+        );
+    }
 }

@@ -6,7 +6,7 @@
         <div class="m-header" style="direction: rtl;">
             <nav style="display: flex; justify-content: space-between; align-items: center; padding:10px;">
                     
-                <img style="height: 35px;" src="{{ asset('images/logo-white.jpg') }}" alt="">       
+                <img style="height: 35px;" src="{{ asset('images/' . ($dark_mode == 'dark' ? 'logo-white.jpg' : 'logo.jpg')) }}" alt="">       
 
                 {{-- header buttons سمت چپ --}}
                 <div class="m-header-right" style="display: flex; gap: 10px;">
@@ -57,7 +57,7 @@
     {{-- ----------------------Messaging side---------------------- --}}
     <div class="messenger-messagingView">
         {{-- header title [conversation name] amd buttons --}}
-        <div class="m-header m-header-messaging" style="direction: rtl; height: 38px; padding:5px 15px">
+        <div class="m-header m-header-messaging"  style="direction: rtl; height: 50px; padding:5px 15px">
             <nav class="chatify-d-flex chatify-justify-content-between chatify-align-items-center">
                 {{-- header back button, avatar and user name --}}
                 <div class="chatify-d-flex chatify-justify-content-between chatify-align-items-center">
@@ -82,6 +82,44 @@
                 <span class="ic-connected">متصل شد</span>
                 <span class="ic-connecting">در حال اتصال...</span>
                 <span class="ic-noInternet">اینترنت در دسترس نیست</span>
+            </div>
+        </div>
+
+        {{-- Pinned Project Card --}}
+        <div id="pinned-project-card" class="pinned-project-card" style="margin-top: -5px; display: none; direction: rtl; position: relative; padding: 12px 15px 12px 25px; cursor: pointer; transition: background-color 0.2s ease;">
+            {{-- Curved bar on the right --}}
+            <div class="pinned-project-curve" style="
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary-color, #27AE60);
+    border-radius: 8px 0 0 8px;
+    margin-block: 8px;
+    margin-right: 6px;
+            "></div>
+            
+            {{-- Bottom border with theme color --}}
+            <div style="
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: var(--primary-color, #27AE60);
+            "></div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="flex: 1; min-width: 0;">
+                    <h5 id="pinned-project-title" class="pinned-project-title" style="margin: 0; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        عنوان پروژه
+                    </h5>
+                    <p class="pinned-project-description" style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.7;">
+                        گفتگو در مورد این پروژه
+                    </p>
+                </div>
+                <i class="fa-solid fa-arrow-left pinned-project-arrow" style="font-size: 14px; opacity: 0.6;"></i>
             </div>
         </div>
 

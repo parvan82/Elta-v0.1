@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\SkillMapping;
 use Illuminate\Http\Request;
 use App\Models\UserSkill;
@@ -27,6 +28,27 @@ class PortfolioController extends Controller
     public function store(Request $request)
     {
         $userId = Auth::id();
+
+        if ($request->has('Fullname') || $request->has('Phone') || $request->has('userSide')) {
+
+            $user = User::find($userId);
+
+            if ($user) {
+                if ($request->filled('Fullname')) {
+                    $user->name = $request->Fullname;
+                }
+
+                if ($request->filled('Phone')) {
+                    $user->phone = convertPersianToEnglish($request->Phone);
+                }
+
+                if ($request->filled('userSide')) {
+                    $user->side_user = $request->userSide;
+                }
+
+                $user->save();
+            }
+        }
 
         // ذخیره اطلاعات شخصی
         if ($request->has('PersonalStatus')) {
@@ -89,50 +111,39 @@ class PortfolioController extends Controller
 
         // ذخیره اطلاعات پروفایل کاربر
         if ($request->has('profileData')) {
+            $profileData = $request->profileData;
             $user = User::find($userId);
-            if ($user) {
-                $user->name = $request->profileData['fullName']; // ذخیره نام و نام خانوادگی
-                $user->workarea = $request->profileData['workField'];
-                $user->aboutme = $request->profileData['aboutMe'];
+            if ($user){
+                $user->name = $profileData['fullName']?? null;      // نام کاربر
+                $user->workarea = $profileData['workField']?? null;
+                $user->aboutme = $profileData['aboutMe']?? null;
 
-                // ذخیره تصویر پروفایل (اگر داده Base64 باشد)
-                if (!empty($request->profileData['profileImage'])) {
-                    $imageData = $request->profileData['profileImage'];
-
-                    // بررسی اینکه آیا داده، Base64 است
+                if (!empty($profileData['profileImage'])) {
+                    $imageData = $profileData['profileImage'];
                     if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $matches)) {
-                        $extension = strtolower($matches[1]); // استخراج فرمت فایل
-
-                        // بررسی اینکه فرمت معتبر است
-                        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-                        if (!in_array($extension, $allowedExtensions)) {
-                            return response()->json(['error' => 'فرمت تصویر نامعتبر است.'], 400);
+                        $ext = strtolower($matches[1]);
+                        $allowed = ['jpg','jpeg','png','gif','webp'];
+                        if (in_array($ext, $allowed)) {
+                            $imageBase64 = substr($imageData, strpos($imageData, ',') + 1);
+                            $imageBase64 = base64_decode($imageBase64);
+                            $fileName = 'profile_' . md5(time() . uniqid()) . '.' . $ext;
+                            Storage::disk('public')->put("profile_images/$fileName", $imageBase64);
+                            $user->profilepic = "profile_images/$fileName";
                         }
-
-                        // حذف پیشوند Base64
-                        $imageBase64 = substr($imageData, strpos($imageData, ',') + 1);
-                        $imageBase64 = base64_decode($imageBase64);
-
-                        // بررسی حجم تصویر (نباید بیشتر از 2MB باشد)
-                        if (strlen($imageBase64) > 2 * 1024 * 1024) {
-                            return response()->json(['error' => 'حجم تصویر نباید بیشتر از 2MB باشد.'], 400);
-                        }
-
-                        // ایجاد نام تصادفی برای فایل
-                        $fileName = 'profile_' . md5(time() . uniqid()) . '.' . $extension;
-                        Storage::disk('public')->put("profile_images/$fileName", $imageBase64);
-
-                        // مسیر صحیح برای نمایش تصویر
-                        $user->profilepic = "profile_images/$fileName";
-                    } elseif ($request->hasFile('profileData.profileImage')) {
-                        // **حالت فایل آپلود شده**
-                        $imagePath = $request->file('profileData.profileImage')->store('public/profile_images');
-                        $user->profilepic = str_replace('public/', '', $imagePath);
                     }
                 }
 
                 $user->save();
+
+                // ذخیره اطلاعات شرکت جداگانه
+                Company::updateOrCreate(
+                    ['user_id' => $userId],
+                    [
+                        'company_name' => $profileData['companyName'] ?? null, // نام شرکت
+                    ]
+                );
             }
+
         }
 
 
@@ -312,6 +323,7 @@ class PortfolioController extends Controller
 
         return response()->json(['success' => true, 'message' => 'اطلاعات شغلی با موفقیت ویرایش شد']);
     }
+
     public function deletePortfolio($id)
     {
         $portfolio = UserPortfolio::find($id);
@@ -325,34 +337,46 @@ class PortfolioController extends Controller
         return response()->json(['success' => true, 'message' => 'نمونه کار حذف شد.']);
     }
 
-    public function showPortfolio($id)
+    public function show($id)
     {
-        $user = User::findOrFail($id);
+        $portfolio = UserPortfolio::findOrFail($id);
 
-        if ($user->role === 'freelancer') {
-            $data = [
-                'user' => $user,
-                'personalInfo' => $user->personalInformation,
-                'skills' => $user->skills,
-                'languages' => $user->languages,
-                'education' => $user->educationalHistories,
-                'jobHistories' => $user->jobHistories,
-                'portfolios' => $user->portfolios,
-            ];
+        // اگر می‌خوای اطلاعات کاربرش هم بیاد
+        $portfolio->load('user');
 
-            return view('portfolioPage', $data);
+        return view('UserPortfolio', compact('portfolio'));
+    }
 
-        } elseif ($user->role === 'employer') {
-            $company = $user->companies;
+    public function toggleLike(UserPortfolio $portfolio)
+    {
+        $user = auth()->user();
 
+        if ($portfolio->isLikedBy($user)) {
+            // حذف لایک
+            $portfolio->likes()->detach($user->id);
+            $liked = false;
+            $likedAt = null;
+        } else {
+            // افزودن لایک — created_at به صورت خودکار پر می‌شود
+            $portfolio->likes()->attach($user->id);
+            $liked = true;
 
-
-            return view('portfolioPage', [
-                'user' => $user,
-                'company' => $company
-            ]);
+            // زمان ایجاد لایک از pivot می‌گیریم
+            $likedAt = $portfolio->likes()
+                ->where('user_id', $user->id)
+                ->first()
+                ->pivot
+                ->created_at;
         }
 
+        return response()->json([
+            'liked' => $liked,
+            'likes_count' => $portfolio->likes()->count(),
+            'liked_at' => $likedAt,
+        ]);
     }
+
+
+
 }
 

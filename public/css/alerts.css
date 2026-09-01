@@ -12,7 +12,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     display: none;
     animation: slideInRight 0.5s ease-out;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* برای صفحات RTL - اعلانات از سمت راست */

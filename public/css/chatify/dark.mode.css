@@ -156,3 +156,24 @@
 .message-card .actions .delete-btn {
   color: #fff;
 }
+
+/*
+***********************************************
+* Pinned Project Card - Dark Mode
+***********************************************
+*/
+.pinned-project-card {
+  background: linear-gradient(135deg, #434343 0%, var(--dark-primary-bg-color) 100%) !important;
+}
+
+.pinned-project-title {
+  color: #ffffff !important;
+}
+
+.pinned-project-description {
+  color: #bdc3c7 !important;
+}
+
+.pinned-project-card:hover {
+  background: linear-gradient(135deg, var(--dark-secondary-bg-color) 0%, var(--dark-primary-bg-color) 100%) !important;
+}

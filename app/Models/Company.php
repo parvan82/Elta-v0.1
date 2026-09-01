@@ -13,16 +13,13 @@ class Company extends Model
     protected $fillable = [
         'user_id',
         'company_type',
-        'company_representative_name',
-        'representative_national_code',
-        'representative_phone',
-        'representative_email',
+        'established_year',
+        'city',
         'company_phone',
         'national_id',
-        'postal_code',
-        'city',
-        'address',
-        'established_year',
+        'company_name',
+        'company_size',
+        'company_info'
     ];
     // Company.php
 

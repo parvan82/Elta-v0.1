@@ -12,17 +12,24 @@ class UserSkill extends Model
     protected $table = 'user_skill';
 
     protected $fillable = [
-        'skill', // نام مهارت
+        'skill',
     ];
 
     public function projects()
     {
-        return $this->belongsToMany(NewProject::class, 'skill-mapping', 'skill-id', 'project-id')
+        return $this->belongsToMany(NewProject::class, 'skill_mapping', 'skill_id', 'project_id')
             ->withPivot('level');
     }
 
+    // ارتباط با skill_mapping (برای فریلنسرها)
     public function mappings()
     {
         return $this->hasMany(SkillMapping::class, 'skill_id');
+    }
+
+    // 🔥 ارتباط با جدول keyword_mapping
+    public function keywordMapping()
+    {
+        return $this->hasMany(KeywordMapping::class, 'skill_id');
     }
 }

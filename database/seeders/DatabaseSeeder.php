@@ -10,13 +10,18 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
-    {
-        \App\Models\User::factory(50)->create();
+public function run(): void
+{
+    $this->call([
+        skillSeeder::class,          // اول Skills رو بساز
+        UsersSeeder::class,          // بعد Users
+        employerSeeder::class,       // کارفرماها
+        NewProjectSeeder::class,     // پروژه‌ها که به Skills و Users وابسته هست
+        AdvatisementSeeder::class,   // آگهی‌ها که به Users و Skills وابسته
+        KeywordSeeder::class,
+        KeywordMappingSeeder::class,
+        skillMappingSeeder::class,
+    ]);
+}
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-    }
 }

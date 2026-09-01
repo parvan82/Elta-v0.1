@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\HasApiTokens;
+use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 
 class User extends Authenticatable
 {
@@ -25,7 +26,8 @@ class User extends Authenticatable
         'profilepic',
         'role',
         'phone',
-        'session_token', // 🔹 اضافه شد
+        'side_user',
+        'session_token',
     ];
     protected $hidden = [
         'password',
@@ -65,7 +67,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Company::class);
     }
-
+    public function NewProject()
+    {
+        return $this->hasMany(NewProject::class);
+    }
     // app/Models/User.php
 
     public function personalInformation()
@@ -84,6 +89,7 @@ class User extends Authenticatable
         return $this->hasMany(JobHistory::class); // یک کاربر چندین سابقه شغلی دارد
     }
 
+
     public function portfolios()
     {
         return $this->hasMany(UserPortfolio::class); // یک کاربر چندین نمونه کار دارد
@@ -94,5 +100,13 @@ class User extends Authenticatable
         ? asset('storage/' . $this->profilepic)
         : asset('images/default.jpg');
 }
+    public function likedPortfolios()
+    {
+        return $this->belongsToMany(UserPortfolio::class, 'likes', 'user_id', 'portfolio_id');
+    }
 
+    public function ads()
+    {
+        return $this->hasMany(Advatisement::class, 'user_id');
+    }
 }

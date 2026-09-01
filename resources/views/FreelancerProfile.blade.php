@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <link rel="icon" type="image/png" href="{{ asset('images/logo.jpg') }}">
 
     <title>elta</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@latest/dist/css/persian-datepicker.css"/>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://unpkg.com/persian-date@latest/dist/persian-date.js"></script>
-    <script src="https://unpkg.com/persian-datepicker@latest/dist/js/persian-datepicker.js"></script>
-
+    <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icons/bootstrap-icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icons/font-awesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/persian-datepicker.css') }}">
     <link rel="stylesheet" href="/css/profile.css">
+    <link href="{{ asset('css/tooman/css/font.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+       
+
+
+    </style>
 </head>
 <body>
     <div class="container">
@@ -52,16 +54,20 @@
                             <div id="editProfilePopup" class="popup">
                                 <div class="popup-content" >
                                     <div class="d-flex justify-content-between">
-                                        <span class="closeBtn"  onclick="closePopup()"><i class="bi bi-x sign mt-2"></i></span>
+                                        <span class="closeBtn"  onclick="closePopup()"><i class="bi bi-x sign"></i></span>
                                         <h4 class="m-0">پروفایل</h4>
                                     </div>
                                     <div class="popup-body">
                                         <div class="left-column">
-                                            <div class="profile-container mt-4 mr-1">
+                                            <div class="profile-container">
                                                 <label for="profilePicInput" class="profile-pic-label">
                                                     <img id="profilePic" src="{{ Auth::user()->profilepic ? asset('storage/' . Auth::user()->profilepic) : asset('images/default.jpg') }}" class="rounded-circle" width="150" height="150" alt="Profile Picture">
                                                 </label>
-                                                <input type="file" id="profilePicInput" class="profile-pic-input" onchange="previewProfilePic(event)">
+                                            
+                                                <span class="addPhotoBtn" id="openFilePicker">
+                                                    <input type="file" id="profilePicInput" class="profile-pic-input" onchange="previewProfilePic(event)" hidden>
+                                                    <i class="bi bi-plus"></i>
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="right-column">
@@ -75,9 +81,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="about-me">
+                                    <div class="about-me" style="position: relative;">
                                         <label for="aboutMe">درباره من</label>
-                                        <textarea id="aboutMe">{{ Auth::user()->aboutme ?? 'متنی در باره خود برای معرفی بنویسید' }}</textarea>
+                                        <textarea 
+                                            id="aboutMe" 
+                                            maxlength="60"
+                                            oninput="updateCharCount()"
+                                            placeholder="متنی درباره خود برای معرفی بنویسید"
+                                        >{{ Auth::user()->aboutme ?? '' }}</textarea>
+                                        <div id="charCount"></div>
                                     </div>
                                     <button class="col-md-12 save-btn" >ذخیره</button>
                                 </div>
@@ -88,30 +100,30 @@
                     <!--  -->
                     <!-- wallet -->
                     <div class="card mt-3 ">
-                        <div class="card-body">
+                        <div class="card-body" style="height: 560px ;">
                             <div class="d-flex flex-column align-items-center text-center">
-                                <img src="{{ asset('images/profile-pages/wallet.png') }}"  width="150">
+                                <img class="my-4" src="{{ asset('images/profile-pages/wallet.png') }}"  width="150">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item justify-content-between d-flex align-items-center p-1">
-                                        <div class="d-flex align-items-center mt-2 mb-2">
+                                    <li class="list-group-item justify-content-between d-flex align-items-center p-1 mt-2">
+                                        <div class="d-flex align-items-center mt-2 mb-2 text-white">
                                             <h6 class="mr-5">1,300,000 toman</h6>
                                             <h6 id="rtl">:درآمد پروژه های باز</h6>
                                         </div>
                                     </li>
-                                    <li class="list-group-item justify-content-between d-flex align-items-center p-1">
-                                        <div class="d-flex align-items-center mt-2 mb-2">
+                                    <li class="list-group-item justify-content-between d-flex align-items-center p-1 mt-2">
+                                        <div class="d-flex align-items-center mt-2 mb-2 text-white">
                                             <h6 class="mr-5">1,300,000 toman</h6>
                                             <h6 id="rtl">:درآمد پروژه های باز</h6>
                                         </div>
                                     </li>
-                                    <li class="list-group-item justify-content-between d-flex align-items-center p-1">
-                                        <div class="d-flex align-items-center mt-2 mb-2">
+                                    <li class="list-group-item justify-content-between d-flex align-items-center p-1 mt-2">
+                                        <div class="d-flex align-items-center mt-2 mb-2 text-white">
                                             <h6 class="mr-5">1,300,000 toman</h6>
                                             <h6 id="rtl">:درآمد پروژه های باز</h6>
                                         </div>
                                     </li>
                                 </ul>
-                                <button class="button x"><img src="{{ asset('images/profile-pages/wallet-icon.png') }}"  width="28" viewBox="0 0 48 48"height="28">برداشت</button>
+                                <button class="button x mt-2"><img src="{{ asset('images/profile-pages/wallet-icon.png') }}"  width="28" viewBox="0 0 48 48"height="28">برداشت</button>
                             </div>
                         </div>
                     </div>
@@ -121,17 +133,17 @@
                     <!-- informations -->
                     <div class="card mb-3">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-12" id="rtl">
+                            <div class="row mb-3">
+                                <div class="col-sm-12 d-flex justify-content-between" id="rtl">
                                     <button  id="InfoBtn" class="addBtn"><i class="bi bi-plus sign"></i></button>
+                                    <h5 class="align-items-center my-2" id="rtl"><i class="material-icons my-2">اطلاعات شخصی</i></h5>
                                 </div>
                             </div>
-                            <hr>
                             <!-- info pop-up -->
                             <div id="editPopup" class="popup" style="display:none;">
                                 <div class="popup-content infoPopup" id="rtl">
                                     <div class="d-flex justify-content-between">
-                                        <span class="closeBtn " id="close"><i class="bi bi-x sign mt-2"></i></span>
+                                        <span class="closeBtn " id="close"><i class="bi bi-x sign"></i></span>
                                         <h4 >ویرایش اطلاعات</h4>
                                     </div>
                                     <form id="editForm">
@@ -167,7 +179,7 @@
                             </div>
                             <hr>
                             <div class="row">
-                                <div class="col-sm-9 info-value">{{ Auth::user()->personalInformation->birth_date ?? 'تاریخ تولد خود را وارد کنید' }}</div>
+                                <div class="col-sm-9 info-value" id="birthDateDisplay" name="birth_date">{{ Auth::user()->personalInformation->birth_date ?? 'تاریخ تولد خود را وارد کنید' }}</div>                                
                                 <div class="col-sm-3 info-title" id="rtl"><h6 class="mb-0">: تاریخ تولد</h6></div>
                             </div>
                             <hr>
@@ -195,12 +207,14 @@
                     </div>
                     <!-- -->
                     <div class="row gutters-sm">
-                        <div class="col-sm-6 mb-3">
+                        <div class="col-md-12 mb-3">
+                            
+                            
                             <!-- job -->
                             <div class="card">
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between mb-3">
                                     <button class="addBtn" id="openPopupBtn"><i class="bi bi-plus sign"></i></button>
-                                    <h6 class=" align-items-center my-2" id="rtl"><i class="material-icons my-2">سوابق شغلی شما</i></h6>
+                                    <h5 class=" align-items-center my-2" id="rtl"><i class="material-icons my-2">سوابق شغلی شما</i></h5>
                                 </div>
                                 <div id="jobPopup" class="popup">
                                     <div class="popup-content">
@@ -310,11 +324,168 @@
                                 <!--  -->
                             </div>
                             <!--  -->
+                        </div>  
+                        <div class="col-md-12 mb-3">
+                            
+                                                        <!-- Edu -->
+                            <div class="card">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <button   class="addBtn EduAddBtn"><i class="bi bi-plus sign"></i></button>
+                                    <h5 class=" align-items-center my-2" id="rtl"><i class="material-icons mr-2">سوابق تحصیلی شما</i></h5>
+                                </div>
+                                <!-- Edu add pop-up -->
+                                    <div class="popup" id="EduPopup">
+                                        <div class="popup-content" id="rtl">
+                                            <div class="d-flex justify-content-between">
+                                                <span class="closeBtn"  onclick="closeEduPopup()"><i class="bi bi-x sign"></i></span>
+                                                <h4 class="m-0">سابقه تحصیلی</h4>
+                                            </div>
+                                            <label for="degree">مدرک تحصیلی</label>
+                                            <select id="degree" name="degree">
+                                                <option value="سیکل">سیکل</option>
+                                                <option value="دیپلم">دیپلم</option>
+                                                <option value="کاردانی">کاردانی</option>
+                                                <option value="کارشناسی">کارشناسی</option>
+                                                <option value="کارشناسی ارشد">کارشناسی ارشد</option>
+                                                <option value="دکترا">دکترا</option>
+                                            </select>
+                                            <label for="field">رشته تحصیلی</label>
+                                            <input class="input" type="text" id="field" name="field" placeholder="رشته تحصیلی را وارد کنید">
+                                            <label for="university">دانشگاه/مدرسه</label>
+                                            <input class="input" type="text" id="university" name="university" placeholder="نام دانشگاه/مدرسه را وارد کنید">
+                                            <label for="city">شهر تحصیل</label>
+                                            <input class="input" type="text" id="city" name="city" placeholder="شهر تحصیل را وارد کنید">
+                                            <button id="EduSubmit" class="col-md-12 mt-3" type="submit">ارسال</button>
+                                        </div>
+                                    </div>
+                                <!--  -->
+                                <!-- Edu edit pop-up -->
+                                    <div class="popup" id="EditEduPopup">
+                                        <div class="popup-content"  id="rtl">
+                                            <div class="d-flex justify-content-between">
+                                                <span class="closeBtn"  onclick="closeEditEduPopup()"><i class="bi bi-x sign"></i></span>
+                                                <h4 class="m-0">سابقه تحصیلی</h4>
+                                            </div>
+                                            <label for="degree">مدرک تحصیلی</label>
+                                            <select id="editedegree" name="degree">
+                                                <option value="سیکل">سیکل</option>
+                                                <option value="دیپلم">دیپلم</option>
+                                                <option value="کاردانی">کاردانی</option>
+                                                <option value="کارشناسی">کارشناسی</option>
+                                                <option value="کارشناسی ارشد">کارشناسی ارشد</option>
+                                                <option value="دکترا">دکترا</option>
+                                            </select>
+                                            <label for="field">رشته تحصیلی</label>
+                                            <input class="input" type="text" id="editefield" name="field" placeholder="رشته تحصیلی را وارد کنید">
+                                            <label for="university">دانشگاه/مدرسه</label>
+                                            <input class="input" type="text" id="editeuniversity" name="university" placeholder="نام دانشگاه/مدرسه را وارد کنید">
+                                            <label for="city">شهر تحصیل</label>
+                                            <input class="input" type="text" id="editecity" name="city" placeholder="شهر تحصیل را وارد کنید">
+                                            <button id="editeEduSubmit" class="col-md-12 mt-3" type="submit">ارسال</button>
+                                        </div>
+                                    </div>
+                                <!--  -->
+                                <!-- Edu preview -->
+                                    @if(Auth::user()->educationalHistories->isNotEmpty())
+                                        @foreach(Auth::user()->educationalHistories as $educational)
+                                            <div class="study-card py-3 mt-2">
+                                                <div class="d-flex justify-content-between align-items-center experience">
+                                                    <button class="editBtn" id="editEduBtn">
+                                                        <svg height="1em" viewBox="0 0 512 512">
+                                                            <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <h5>{{ $educational->degree}}</h5>
+                                                </div>
+                                                <div class="mr-3 mt-2">
+                                                    <h6>{{ $educational->major}}</h6>
+                                                    <h6>{{ $educational->university}}</h6>
+                                                    <span class="d-flex justify-content-between">
+                                                                    <button class="Edudeletebtn deletebtn mt-2" data-id="{{ $educational->id }}">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="svgIcon bin-top"><g clip-path="url(#clip0_35_24)"><path fill="black" d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"></path></g><defs><clipPath id="clip0_35_24"><rect fill="white" height="14" width="69"></rect></clipPath></defs></svg>
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 57" class="svgIcon bin-bottom"><g clip-path="url(#clip0_35_22)"><path fill="black"d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"></path></g><defs><clipPath id="clip0_35_22"><rect fill="white" height="57" width="69"></rect></clipPath></defs></svg>
+                                                                    </button>
+                                                                    <h6>{{ $educational->study_city}}</h6>
+                                                                </span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="card bg-danger align-items-center m-3">
+                                            <p class="m-0" id="rtl">هیچ سابقه تحصیلی ثبت نشده است</p>
+                                        </div>
+                                    @endif
+                                <!--  -->
+                            </div>
+                            <!--  -->
+                        </div>
+                        <div class="col-12 mb-3">
+                            
+
+                            <!-- language -->
+                                <div class="card"  id="rtl" style="max-height: 291px; overflow: auto;">
+                                    <div class="d-flex justify-content-between p-0 mb-3" >
+                                        <button   class="addBtn LanguageAddBtn"><i class="bi bi-plus sign"></i></button>
+                                        <h5 class=" align-items-center my-2"><i class="material-icons mr-2">سطح زبان</i></h5>
+                                    </div>
+                                    <!-- language pop-up -->
+                                    <div id="popup" class="popup">
+                                        <div class="popup-content" >
+                                            <div class="col-md-12 d-flex justify-content-between p-0">
+                                                <span class="closeBtn"   onclick="LanguageclosePopup()"><i class="bi bi-x sign"></i></span>
+                                                <h4 class="m-0">انتخاب زبان</h4>
+                                            </div>
+                                            <div class="select-container">
+                                                <label for="language">زبان</label>
+                                                <select id="language" name="language">
+                                                    <option value="انگلیسی">انگلیسی</option>
+                                                    <option value="فرانسوی">فرانسوی</option>
+                                                    <option value="اسپانیایی">اسپانیایی</option>
+                                                </select>
+                                            </div>
+                                            <div class="select-container">
+                                                <label for="level">سطح زبان</label>
+                                                <select id="level" name="level">
+                                                    <option value="مبتدی">مبتدی</option>
+                                                    <option value="متوسط رو به پایین">متوسط رو به پایین</option>
+                                                    <option value="متوسط">متوسط</option>
+                                                    <option value="متوسط رو به بالا">متوسط رو به بالا</option>
+                                                    <option value="پیشرفته">پیشرفته</option>
+                                                    <option value="درحد زبان مادری">در حد زبان مادری</option>
+                                                </select>
+                                            </div>
+                                            <button  onclick="saveLanguageLevel()" id="LanguageSubmit" class="col-md-12 mt-5">تأیید</button>
+                                        </div>
+                                    </div>
+                                    <!--  -->
+                                    <!-- language preview -->
+                                
+                                    @if(Auth::user()->languages->isNotEmpty())
+                                    <div class="col-12 row" dir="rtl">
+                                        @foreach(Auth::user()->languages as $language)
+                                            <div class="language m-1">
+                                                                                                <span><i class="bi bi-x-circle-fill text-danger remove-language" style="cursor: pointer;" data-id="{{ $language->id }}"></i></span>
+                                                <span class="mx-1">|</span>
+
+                                                <span class="tag-title font-weight-bold">{{ $language->language}}</span>
+                                                <span class="mx-1">|</span>
+                                                <span>{{ $language->language_level}}</span>
+                                            </div>
+                                         @endforeach
+                                    </div>
+                                    @else
+                                        <div class="card bg-danger align-items-center m-3">
+                                            <p class="m-0" id="rtl">هیچ زبانی ثبت نشده است.</p>
+                                        </div>
+                                    @endif
+                                    <!--  -->
+                                </div>
+                            <!--  -->
                             <!-- skill -->
-                                <div class="card mt-3"  id="rtl">
-                                    <div class="d-flex justify-content-between">
+                                <div class="card mt-3"  id="rtl" style="max-height: 291px; overflow: auto;">
+                                    <div class="d-flex justify-content-between p-0 mb-3" >
                                         <button   class="addBtn" id="SkillBtn"><i class="bi bi-plus sign"></i></button>
-                                        <h6 class=" align-items-center my-2"><i class="material-icons mr-2">مهارت ها</i></h6>
+                                        <h5 class=" align-items-center my-2"><i class="material-icons mr-2">مهارت ها</i></h5>
                                     </div>
     
                                     <div id="skillModal" class="popup">
@@ -360,180 +531,28 @@
                                             <button id="skillSubmit" class="col-md-12 mt-3" type="submit">ارسال</button>
                                         </div>
                                     </div>
-    
-    
                                     <!-- preview skill -->
-                                    @if(Auth::user()->skillMapping->isNotEmpty())
-                                        @foreach(Auth::user()->skillMapping as $mapping)
-                                            <div class="skill mt-1" data-skill-id="{{ $mapping->skill->id }}">
-                                                <span>{{ $mapping->level }}</span>
-                                                <span class="mx-2 ng-star-inserted">|</span>
-                                                <span class="tag-title font-weight-bold">{{ $mapping->skill->skill }}</span>
-                                                <span class="mx-2 ng-star-inserted">|</span>
-                                                <span class="ng-star-inserted">
-                                                    <i class="bi bi-x-circle-fill text-danger remove-skill"
-                                                       data-id="{{ $mapping->id }}"
-                                                       style="cursor: pointer;"></i>
-                                                </span>
-                                                <br>
+                                        @if(Auth::user()->skillMapping->isNotEmpty())
+                                            <div class="col-12 row" dir="rtl">
+                                                @foreach(Auth::user()->skillMapping as $mapping)
+                                                    <div class="skill m-1" data-skill-id="{{ $mapping->skill->id }}">
+                                                        <span>
+                                                            <i class="bi bi-x-circle-fill text-danger remove-skill" data-id="{{ $mapping->id }}" style="cursor: pointer;"></i>
+                                                        </span>
+                                                        <span class="mx-1">|</span>
+                                                        <span class="tag-title font-weight-bold">{{ $mapping->skill->skill }}</span>
+                                                        <span class="mx-1">|</span>
+                                                        <span>{{ $mapping->level }}</span>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                        @endforeach
-                                    @else
-                                        <div class="card bg-danger align-items-center m-3">
-                                            <p class="m-0" id="rtl">هیچ مهارتی ثبت نشده است</p>
-                                        </div>
-                                    @endif
+                                        @else
+                                            <div class="card bg-danger align-items-center m-3">
+                                                <p class="m-0" id="rtl">هیچ مهارتی ثبت نشده است</p>
+                                            </div>
+                                        @endif
                                     <!--  -->
                                 </div>
-                            <!--  -->
-                        </div>  
-
-                        <div class="col-sm-6 mb-3">
-                            <!-- Edu -->
-                            <div class="card">
-                                <div class="d-flex justify-content-between">
-                                    <button   class="addBtn EduAddBtn"><i class="bi bi-plus sign"></i></button>
-                                    <h6 class=" align-items-center my-2" id="rtl"><i class="material-icons mr-2">سوابق تحصیلی شما</i></h6>
-                                </div>
-                                <!-- Edu add pop-up -->
-                                    <div class="popup" id="EduPopup">
-                                        <div class="popup-content" id="rtl">
-                                            <div class="d-flex justify-content-between">
-                                                <span class="closeBtn"  onclick="closeEduPopup()"><i class="bi bi-x sign mt-2"></i></span>
-                                                <h4 class="m-0">سابقه تحصیلی</h4>
-                                            </div>
-                                            <label for="degree">مدرک تحصیلی</label>
-                                            <select id="degree" name="degree">
-                                                <option value="سیکل">سیکل</option>
-                                                <option value="دیپلم">دیپلم</option>
-                                                <option value="کاردانی">کاردانی</option>
-                                                <option value="کارشناسی">کارشناسی</option>
-                                                <option value="کارشناسی ارشد">کارشناسی ارشد</option>
-                                                <option value="دکترا">دکترا</option>
-                                            </select>
-                                            <label for="field">رشته تحصیلی</label>
-                                            <input class="input" type="text" id="field" name="field" placeholder="رشته تحصیلی را وارد کنید">
-                                            <label for="university">دانشگاه</label>
-                                            <input class="input" type="text" id="university" name="university" placeholder="دانشگاه را وارد کنید">
-                                            <label for="city">شهر تحصیل</label>
-                                            <input class="input" type="text" id="city" name="city" placeholder="شهر تحصیل را وارد کنید">
-                                            <button id="EduSubmit" class="col-md-12 mt-3" type="submit">ارسال</button>
-                                        </div>
-                                    </div>
-                                <!--  -->
-                                <!-- Edu edit pop-up -->
-                                    <div class="popup" id="EditEduPopup">
-                                        <div class="popup-content"  id="rtl">
-                                            <div class="d-flex justify-content-between">
-                                                <span class="closeBtn"  onclick="closeEditEduPopup()"><i class="bi bi-x sign mt-2"></i></span>
-                                                <h4 class="m-0">سابقه تحصیلی</h4>
-                                            </div>
-                                            <label for="degree">مدرک تحصیلی</label>
-                                            <select id="editedegree" name="degree">
-                                                <option value="سیکل">سیکل</option>
-                                                <option value="دیپلم">دیپلم</option>
-                                                <option value="کاردانی">کاردانی</option>
-                                                <option value="کارشناسی">کارشناسی</option>
-                                                <option value="کارشناسی ارشد">کارشناسی ارشد</option>
-                                                <option value="دکترا">دکترا</option>
-                                            </select>
-                                            <label for="field">رشته تحصیلی</label>
-                                            <input class="input" type="text" id="editefield" name="field" placeholder="رشته تحصیلی را وارد کنید">
-                                            <label for="university">دانشگاه</label>
-                                            <input class="input" type="text" id="editeuniversity" name="university" placeholder="دانشگاه را وارد کنید">
-                                            <label for="city">شهر تحصیل</label>
-                                            <input class="input" type="text" id="editecity" name="city" placeholder="شهر تحصیل را وارد کنید">
-                                            <button id="editeEduSubmit" class="col-md-12 mt-3" type="submit">ارسال</button>
-                                        </div>
-                                    </div>
-                                <!--  -->
-                                <!-- Edu preview -->
-                                    @if(Auth::user()->educationalHistories->isNotEmpty())
-                                        @foreach(Auth::user()->educationalHistories as $educational)
-                                            <div class="study-card py-3 mt-2">
-                                                <div class="d-flex justify-content-between align-items-center experience">
-                                                    <button class="editBtn" id="editEduBtn">
-                                                        <svg height="1em" viewBox="0 0 512 512">
-                                                            <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path>
-                                                        </svg>
-                                                    </button>
-                                                    <h5>{{ $educational->degree}}</h5>
-                                                </div>
-                                                <div class="mr-3 mt-2">
-                                                    <h6>{{ $educational->major}}</h6>
-                                                    <h6>{{ $educational->university}}</h6>
-                                                    <span class="d-flex justify-content-between">
-                                                                    <button class="Edudeletebtn deletebtn mt-2" data-id="{{ $educational->id }}">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="svgIcon bin-top"><g clip-path="url(#clip0_35_24)"><path fill="black" d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"></path></g><defs><clipPath id="clip0_35_24"><rect fill="white" height="14" width="69"></rect></clipPath></defs></svg>
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 57" class="svgIcon bin-bottom"><g clip-path="url(#clip0_35_22)"><path fill="black"d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"></path></g><defs><clipPath id="clip0_35_22"><rect fill="white" height="57" width="69"></rect></clipPath></defs></svg>
-                                                                    </button>
-                                                                    <h6>{{ $educational->study_city}}</h6>
-                                                                </span>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div class="card bg-danger align-items-center m-3">
-                                            <p class="m-0" id="rtl">هیچ سابقه تحصیلی ثبت نشده است</p>
-                                        </div>
-                                    @endif
-                                <!--  -->
-                            </div>
-                            <!--  -->
-                            <!-- language -->
-                            <div class="card mt-3"  id="rtl">
-                                <div class="d-flex justify-content-between">
-                                    <button   class="addBtn LanguageAddBtn"><i class="bi bi-plus sign"></i></button>
-                                    <h6 class=" align-items-center my-2"><i class="material-icons mr-2">سطح زبان</i></h6>
-                                </div>
-                                <!-- language pop-up -->
-                                <div id="popup" class="popup">
-                                    <div class="popup-content" >
-                                        <div class="col-md-12 d-flex justify-content-between p-0">
-                                            <span class="closeBtn"   onclick="LanguageclosePopup()"><i class="bi bi-x sign mt-2"></i></span>
-                                            <h4 class="m-0">انتخاب زبان</h4>
-                                        </div>
-                                        <div class="select-container">
-                                            <label for="language">زبان</label>
-                                            <select id="language" name="language">
-                                                <option value="انگلیسی">انگلیسی</option>
-                                                <option value="فرانسوی">فرانسوی</option>
-                                                <option value="اسپانیایی">اسپانیایی</option>
-                                            </select>
-                                        </div>
-                                        <div class="select-container">
-                                            <label for="level">سطح زبان</label>
-                                            <select id="level" name="level">
-                                                <option value="مبتدی">مبتدی</option>
-                                                <option value="متوسط رو به پایین">متوسط رو به پایین</option>
-                                                <option value="متوسط">متوسط</option>
-                                                <option value="متوسط رو به بالا">متوسط رو به بالا</option>
-                                                <option value="پیشرفته">پیشرفته</option>
-                                                <option value="درحد زبان مادری">در حد زبان مادری</option>
-                                            </select>
-                                        </div>
-                                        <button  onclick="saveLanguageLevel()" id="LanguageSubmit" class="col-md-12 mt-5">تأیید</button>
-                                    </div>
-                                </div>
-                                <!--  -->
-                                <!-- language preview -->
-                                @if(Auth::user()->languages->isNotEmpty())
-                                    @foreach(Auth::user()->languages as $language)
-                                        <div class="language mt-1">
-                                            <span class="tag-title font-weight-bold" style="font-size: 0.9rem;">{{ $language->language}}</span>
-                                            <span class="mx-2 ng-star-inserted">|</span>
-                                            <span style="font-size: 0.9rem;">{{ $language->language_level}}</span>
-                                            <span class="mx-2 ng-star-inserted">|</span>
-                                            <span class="ng-star-inserted"><i class="bi bi-x-circle-fill text-danger remove-language" style="cursor: pointer;" data-id="{{ $language->id }}"></i></span><br>
-                                        </div>
-                                    @endforeach
-                                @else
-                                    <div class="card bg-danger align-items-center m-3">
-                                        <p class="m-0" id="rtl">هیچ زبانی ثبت نشده است.</p>
-                                    </div>
-                                @endif
-                                <!--  -->
-                            </div>
                             <!--  -->
                         </div>
                     </div>
@@ -541,7 +560,7 @@
 
             </div>
             <!-- nav-bar -->
-            <nav class="breadcrumb" >
+            <nav class="breadcrumb justify-content-between">
                 <button class="addBtn" id="portfolioAddBtn"><i class="bi bi-plus sign"></i></button>    
 
                 <h4 class="mt-1">نمونه کار های شما</h4>
@@ -549,7 +568,7 @@
             <div id="portfolioPopup" class="popup">
                 <div class="popup-content">
                     <div class="col-md-12 d-flex justify-content-between ">
-                        <span class="closeBtn"   onclick="portfolioClosePopup()"><i class="bi bi-x sign mt-2"></i></span>   
+                        <span class="closeBtn"   onclick="portfolioClosePopup()"><i class="bi bi-x sign"></i></span>   
 
                         <h4>ثبت نمونه کار</h4>
                     </div>  
@@ -579,68 +598,230 @@
 
             @if(Auth::user()->portfolios->isNotEmpty())
                 @foreach(Auth::user()->portfolios as $portfolio)
-                    <div class="col-md-12 portfolio-container mb-3" id="rtl">   
+<div class="main my-5">
+                                        <div class="portfolios_card">
+                                            {{-- ✅ بررسی وجود فایل یا لینک --}}
+                                            @php
+                                                $file = $portfolio->file;
+                                                $link = $portfolio->link;
+                                                $file_extension = $file ? strtolower(pathinfo($file, PATHINFO_EXTENSION)) : null;           
+                                        
+                                                // نوع فایل برای آیکون
+                                                switch(true) {
+                                                    case in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']):
+                                                        $file_icon = 'fa-solid fa-image';
+                                                        break;
+                                                    case in_array($file_extension, ['mp4', 'webm', 'ogg']):
+                                                        $file_icon = 'fa-solid fa-video';
+                                                        break;
+                                                    case in_array($file_extension, ['mp3', 'wav', 'ogg']):
+                                                        $file_icon = 'fa-solid fa-music';
+                                                        break;
+                                                    case $file_extension === 'html':
+                                                        $file_icon = 'fa-brands fa-html5';
+                                                        break;
+                                                    case $file_extension === 'pdf':
+                                                        $file_icon = 'fa-solid fa-file-pdf';
+                                                        break;
+                                                    case $file_extension === 'doc' || $file_extension === 'docx':
+                                                        $file_icon = 'fa-solid fa-file-word';
+                                                        break;
+                                                    case $file_extension === 'zip' || $file_extension === 'rar':
+                                                        $file_icon = 'fa-solid fa-file-zipper';
+                                                        break;
+                                                    default:
+                                                        $file_icon = 'fa-solid fa-file'; // فایل ناشناس
+                                                        break;
+                                                }
+                                            @endphp
 
-                        <h4 class="tag-title font-weight-bold text-white">{{ $portfolio->title }}</h4>  
+                                            @if($file_extension && in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                                <img src="{{ asset($file) }}" class="img-fluid" alt="{{ $portfolio->title }}" style="width:100%; height:100%; object-fit:cover; border-radius:7px;">
+                                            @elseif($file_extension && in_array($file_extension, ['mp4', 'webm', 'ogg']))
+                                                <video controls style="width:100%; height:100%; object-fit:cover; border-radius:7px;">
+                                                    <source src="{{ asset($file) }}" type="video/{{ $file_extension }}">
+                                                    مرورگر شما از ویدیو پشتیبانی نمی‌کند.
+                                                </video>
+                                            @elseif($file_extension && in_array($file_extension, ['mp3', 'wav', 'ogg']))
+                                                            <div class="unsupported-file">
+                                                            
+                                                <audio controls style="width:100%;">
+                                                    <source src="{{ asset($file) }}" type="audio/{{ $file_extension }}">
+                                                    مرورگر شما از صوت پشتیبانی نمی‌کند.
+                                                </audio>
+                                                                </div>
+                                                            
+                                            @elseif($file_extension === 'html')
+                                                <iframe src="{{ asset($file) }}" scrolling="no" class="iframe-preview"></iframe>
+                                            @else
+                                                <div class="unsupported-file">
+                                                    <i class="fa-solid fa-file"></i>
+                                                </div>
+                                            @endif
+                                            
+                                            {{-- آیکون تمام‌صفحه --}}
+                                            <div class="visit">
+                                              <button class="fullscreen-btn" onclick="goToPortfolio({{ $portfolio->id }})">
+                                                  <span class="tooltip">مشاهده پروژه</span>
+                                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M320 96C239.2 96 174.5 132.8 127.4 176.6C80.6 220.1 49.3 272 34.4 307.7C31.1 315.6 31.1 324.4 34.4 332.3C49.3 368 80.6 420 127.4 463.4C174.5 507.1 239.2 544 320 544C400.8 544 465.5 507.2 512.6 463.4C559.4 419.9 590.7 368 605.6 332.3C608.9 324.4 608.9 315.6 605.6 307.7C590.7 272 559.4 220 512.6 176.6C465.5 132.9 400.8 96 320 96zM176 320C176 240.5 240.5 176 320 176C399.5 176 464 240.5 464 320C464 399.5 399.5 464 320 464C240.5 464 176 399.5 176 320zM320 256C320 291.3 291.3 320 256 320C244.5 320 233.7 317 224.3 311.6C223.3 322.5 224.2 333.7 227.2 344.8C240.9 396 293.6 426.4 344.8 412.7C396 399 426.4 346.3 412.7 295.1C400.5 249.4 357.2 220.3 311.6 224.3C316.9 233.6 320 244.4 320 256z"/></svg>
+                                              </button>
+                                            </div>
+                                        
+                                            <div class="fl">
+                                                <button class="fullscreen-btn" onclick="openFile('{{ asset($file) }}')">
+                                                  <span class="tooltip">تمام صفحه</span>
+                                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                                    <path d="M128 96C110.3 96 96 110.3 96 128L96 224C96 241.7 110.3 256 128 256C145.7 256 160 241.7 160 224L160 160L224 160C241.7 160 256 145.7 256 128C256 110.3 241.7 96 224 96L128 96zM160 416C160 398.3 145.7 384 128 384C110.3 384 96 398.3 96 416L96 512C96 529.7 110.3 544 128 544L224 544C241.7 544 256 529.7 256 512C256 494.3 241.7 480 224 480L160 480L160 416zM416 96C398.3 96 384 110.3 384 128C384 145.7 398.3 160 416 160L480 160L480 224C480 241.7 494.3 256 512 256C529.7 256 544 241.7 544 224L544 128C544 110.3 529.7 96 512 96L416 96zM544 416C544 398.3 529.7 384 512 384C494.3 384 480 398.3 480 416L480 480L416 480C398.3 480 384 494.3 384 512C384 529.7 398.3 544 416 544L512 544C529.7 544 544 529.7 544 512L544 416z"/>
+                                                  </svg>
+                                                </button>
+                                            </div>
+                                        
+                                            <div class="portfolios_card_back"></div>
+                                        </div>
+                                    
+                                        {{-- اطلاعات پورتفولیو --}}
+                                        <div class="data">
+                                            <div class="img">
+                                                <i class="{{ $file_icon }}"></i>
+                                            </div>
+                                            <div class="portfolios_text">
+                                                <div class="text_m">{{ $portfolio->title }}</div>
+                                                <div class="text_s">{{ $portfolio->description }}</div>
+                                            </div>
+                                        </div>
+                                    
+                                        {{-- بخش دکمه‌ها --}}
+                                        <div class="btns">
+                                            <div class="likes {{ $portfolio->isLikedBy(auth()->user()) ? 'active' : '' }}" data-id="{{ $portfolio->id }}">
+                                                <div class="con-like">
+                                                    <input class="like" type="checkbox" {{ $portfolio->isLikedBy(auth()->user()) ? 'checked' : '' }}>
+                                                    <div class="checkmark">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
+                                                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
+                                                        </svg>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
+                                                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
+                                                        </svg>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" class="celebrate">
+                                                          <polygon class="poly" points="10,10 20,20"></polygon>
+                                                          <polygon class="poly" points="10,50 20,50"></polygon>
+                                                          <polygon class="poly" points="20,80 30,70"></polygon>
+                                                          <polygon class="poly" points="90,10 80,20"></polygon>
+                                                          <polygon class="poly" points="90,50 80,50"></polygon>
+                                                          <polygon class="poly" points="80,80 70,70"></polygon>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <span class="likes_text">{{ $portfolio->likes()->count() }}</span>
+                                            </div>
+                                             <div class="likes" id="portoflioDeleteBtn" data-id="{{ $portfolio->id }}">
+                                                <div class="deletePortfolio">
+                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="svgIcon bin-top" >
+                                                    <g clip-path="url(#clip0_35_24)"><path fill="black" d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"></path></g>
+                                                    <defs>
+                                                        <clipPath id="clip0_35_24"><rect fill="white" height="14" width="69"></rect></clipPath>
+                                                    </defs>
+                                                  </svg>                                                
 
-                        @php
-                            $file = $portfolio->file;
-                            $link = $portfolio->link;
-                            $file_extension = pathinfo($file, PATHINFO_EXTENSION);
-                        @endphp 
-
-                        {{-- نمایش فایل --}}
-                        <div class="mt-4">
-                            @if(in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                                <div class="col-md-12 image-container">
-                                    <img src="{{ asset($file) }}" class="img-fluid" alt="{{ $portfolio->title }}">
-                                </div>
-                            @elseif(in_array($file_extension, ['mp4', 'webm', 'ogg']))
-                                <video controls style="max-width: 100%;">
-                                    <source src="{{ asset($file) }}" type="video/{{ $file_extension }}">
-                                    مرورگر شما از ویدئو پشتیبانی نمی‌کند.
-                                </video>
-                            @elseif(in_array($file_extension, ['mp3', 'wav', 'ogg']))
-                                <audio controls>
-                                    <source src="{{ asset($file) }}" type="audio/{{ $file_extension }}">
-                                    مرورگر شما از صوت پشتیبانی نمی‌کند.
-                                </audio>
-                            @elseif($file_extension === 'html')
-                                <iframe src="{{ asset($file) }}" class="w-100" style="height: 500px;"> مرورگر شما </iframe>
-                            @else
-                                <p class="text-muted">نوع فایل پشتیبانی نمی‌شود.</p>
-                            @endif
-                        </div>
-                        <p class="col-md-12" id="portfolio-description">{{ $portfolio->description }}</p>
-                        <div class="col-md-12 d-flex justify-content-between mt-2 p-0">
-                            <button class="deletebtn mt-2" id="portoflioDeleteBtn" data-id="{{ $portfolio->id }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="svgIcon bin-top"><g clip-path="url(#clip0_35_24)"><path fill="black" d="M20.8232 2.62734L19.9948 4.21304C19.8224 4.54309 19.4808 4.75 19.1085 4.75H4.92857C2.20246 4.75 0 6.87266 0 9.5C0 12.1273 2.20246 14.25 4.92857 14.25H64.0714C66.7975 14.25 69 12.1273 69 9.5C69 6.87266 66.7975 4.75 64.0714 4.75H49.8915C49.5192 4.75 49.1776 4.54309 49.0052 4.21305L48.1768 2.62734C47.3451 1.00938 45.6355 0 43.7719 0H25.2281C23.3645 0 21.6549 1.00938 20.8232 2.62734ZM64.0023 20.0648C64.0397 19.4882 63.5822 19 63.0044 19H5.99556C5.4178 19 4.96025 19.4882 4.99766 20.0648L8.19375 69.3203C8.44018 73.0758 11.6746 76 15.5712 76H53.4288C57.3254 76 60.5598 73.0758 60.8062 69.3203L64.0023 20.0648Z"></path></g><defs><clipPath id="clip0_35_24"><rect fill="white" height="14" width="69"></rect></clipPath></defs></svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 57" class="svgIcon bin-bottom"><g clip-path="url(#clip0_35_22)"><path fill="black"d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"></path></g><defs><clipPath id="clip0_35_22"><rect fill="white" height="57" width="69"></rect></clipPath></defs></svg>
-                            </button>   
-
-                            {{-- دکمه‌های لینک (گیت‌هاب یا ساندکلاد) --}}
-                            @if(strpos($link, 'github.com') !== false)
-                                <a href="{{ $link }}" id="githubBtn" class="socialBtn mt-2">
-                                    <svg class="github-svgIcon" viewBox="0 0 496 512" height="1.4em" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z"></path>
-                                    </svg>
-                                    <span class="text">Github</span>
-                                </a>
-                            @elseif(strpos($link, 'soundcloud.com') !== false)
-                                <a href="{{ $link }}" id="soundcloudBtn" class="socialBtn mt-2" >
-                                    <svg  class="soundcloud-svgIcon"  viewBox="0 0 640 512" height="25px" xmlns="http://www.w3.org/2000/svg" fill="#ff8800" class="soundcloud"><path d="M111.4 256.3l5.8 65-5.8 68.3c-.3 2.5-2.2 4.4-4.4 4.4s-4.2-1.9-4.2-4.4l-5.6-68.3 5.6-65c0-2.2 1.9-4.2 4.2-4.2 2.2 0 4.1 2 4.4 4.2zm21.4-45.6c-2.8 0-4.7 2.2-5 5l-5 105.6 5 68.3c.3 2.8 2.2 5 5 5 2.5 0 4.7-2.2 4.7-5l5.8-68.3-5.8-105.6c0-2.8-2.2-5-4.7-5zm25.5-24.1c-3.1 0-5.3 2.2-5.6 5.3l-4.4 130 4.4 67.8c.3 3.1 2.5 5.3 5.6 5.3 2.8 0 5.3-2.2 5.3-5.3l5.3-67.8-5.3-130c0-3.1-2.5-5.3-5.3-5.3zM7.2 283.2c-1.4 0-2.2 1.1-2.5 2.5L0 321.3l4.7 35c.3 1.4 1.1 2.5 2.5 2.5s2.2-1.1 2.5-2.5l5.6-35-5.6-35.6c-.3-1.4-1.1-2.5-2.5-2.5zm23.6-21.9c-1.4 0-2.5 1.1-2.5 2.5l-6.4 57.5 6.4 56.1c0 1.7 1.1 2.8 2.5 2.8s2.5-1.1 2.8-2.5l7.2-56.4-7.2-57.5c-.3-1.4-1.4-2.5-2.8-2.5zm25.3-11.4c-1.7 0-3.1 1.4-3.3 3.3L47 321.3l5.8 65.8c.3 1.7 1.7 3.1 3.3 3.1 1.7 0 3.1-1.4 3.1-3.1l6.9-65.8-6.9-68.1c0-1.9-1.4-3.3-3.1-3.3zm25.3-2.2c-1.9 0-3.6 1.4-3.6 3.6l-5.8 70 5.8 67.8c0 2.2 1.7 3.6 3.6 3.6s3.6-1.4 3.9-3.6l6.4-67.8-6.4-70c-.3-2.2-2-3.6-3.9-3.6zm241.4-110.9c-1.1-.8-2.8-1.4-4.2-1.4-2.2 0-4.2.8-5.6 1.9-1.9 1.7-3.1 4.2-3.3 6.7v.8l-3.3 176.7 1.7 32.5 1.7 31.7c.3 4.7 4.2 8.6 8.9 8.6s8.6-3.9 8.6-8.6l3.9-64.2-3.9-177.5c-.4-3-2-5.8-4.5-7.2zm-26.7 15.3c-1.4-.8-2.8-1.4-4.4-1.4s-3.1.6-4.4 1.4c-2.2 1.4-3.6 3.9-3.6 6.7l-.3 1.7-2.8 160.8s0 .3 3.1 65.6v.3c0 1.7.6 3.3 1.7 4.7 1.7 1.9 3.9 3.1 6.4 3.1 2.2 0 4.2-1.1 5.6-2.5 1.7-1.4 2.5-3.3 2.5-5.6l.3-6.7 3.1-58.6-3.3-162.8c-.3-2.8-1.7-5.3-3.9-6.7zm-111.4 22.5c-3.1 0-5.8 2.8-5.8 6.1l-4.4 140.6 4.4 67.2c.3 3.3 2.8 5.8 5.8 5.8 3.3 0 5.8-2.5 6.1-5.8l5-67.2-5-140.6c-.2-3.3-2.7-6.1-6.1-6.1zm376.7 62.8c-10.8 0-21.1 2.2-30.6 6.1-6.4-70.8-65.8-126.4-138.3-126.4-17.8 0-35 3.3-50.3 9.4-6.1 2.2-7.8 4.4-7.8 9.2v249.7c0 5 3.9 8.6 8.6 9.2h218.3c43.3 0 78.6-35 78.6-78.3.1-43.6-35.2-78.9-78.5-78.9zm-296.7-60.3c-4.2 0-7.5 3.3-7.8 7.8l-3.3 136.7 3.3 65.6c.3 4.2 3.6 7.5 7.8 7.5 4.2 0 7.5-3.3 7.5-7.5l3.9-65.6-3.9-136.7c-.3-4.5-3.3-7.8-7.5-7.8zm-53.6-7.8c-3.3 0-6.4 3.1-6.4 6.7l-3.9 145.3 3.9 66.9c.3 3.6 3.1 6.4 6.4 6.4 3.6 0 6.4-2.8 6.7-6.4l4.4-66.9-4.4-145.3c-.3-3.6-3.1-6.7-6.7-6.7zm26.7 3.4c-3.9 0-6.9 3.1-6.9 6.9L227 321.3l3.9 66.4c.3 3.9 3.1 6.9 6.9 6.9s6.9-3.1 6.9-6.9l4.2-66.4-4.2-141.7c0-3.9-3-6.9-6.9-6.9z"></path></svg>
-                                    <span class="text">Soundcloud</span>
-                                </a>
-                            @endif
-                        </div>
-                    </div>  
-
+                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 57" class="svgIcon bin-bottom" >
+                                                    <g clip-path="url(#clip0_35_22)">
+                                                      <path
+                                                        fill="black"
+                                                        d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
+                                                      ></path>
+                                                    </g>
+                                                    <defs>
+                                                      <clipPath id="clip0_35_22">
+                                                        <rect fill="white" height="57" width="69"></rect>
+                                                      </clipPath>
+                                                    </defs>
+                                                  </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
                 @endforeach
             @else
-                <div class="col-md-12 card p-3">
-                    <p class="m-0 card  bg-danger align-items-center" id="rtl">هیچ نمونه کاری ثبت نشده است.</p>
+                <div class="card bg-danger align-items-center m-3">
+                    <p class="m-0" id="rtl">هیچ نمونه کاری ثبت نشده است</p>
                 </div>
             @endif  
+            
+                <nav class="breadcrumb justify-content-between mt-5">
+                    <a href="{{ route('Newadvertisement') }}"><button class="addBtn"><i class="bi bi-plus sign"></i></button></a>    
+                    <h4 class="mt-1">آگهی های ثبت شده تا کنون</h4>
+                </nav> 
+            @if($ads->isNotEmpty())
+@foreach($ads as $ad)
+@php
+    $isDistinguished = $ad->tags->contains(fn($tag) => $tag->name === 'متمایز');
+@endphp
+
+<div 
+    class="card-advertisement 
+           {{ $isDistinguished ? 'distinguished-card' : '' }} 
+           {{ $ad->status === 'expired' ? 'card-expired' : 'card-open' }}"
+    dir="rtl"
+>
+
+@if($ad->status === 'expired')
+    <span class="ad-status expired">منقضی شده</span>
+@else
+    <span class="ad-status open">فعال</span>
+@endif
+@if($ad->status === 'expired')
+    <div class="renew-overlay">
+<button class="renew-btn" onclick="location.href='{{ route('Newadvertisement', ['renew' => $ad->id]) }}'">
+    تمدید آگهی
+</button>
+
+    </div>
+@endif
+
+        <!-- هدر کارت: تصویر اصلی -->
+        @php
+            $mainImage = $ad->images->firstWhere('is_main', true);
+        @endphp
+        <div class="card-header-advertisement">
+            <img 
+                src="{{ $mainImage ? asset('storage/' . $mainImage->image_path) : asset('storage/images/default.jpg') }}" 
+                class="image-advertisement"
+            >
+        </div>
+
+        <!-- بخش بالای کارت: تگ‌ها -->
+        <div class="card-body-top">
+                    <span class="services-tags">
+                        {{ $ad->user->username }}@
+                    </span>
+        </div>
+
+        <!-- بدنه کارت -->
+        <div class="card-body-advertisement">
+            <h5>{{ $ad->title }}</h5>
+            <h6>{{ $ad->service_type }}</h6>
+<p style="min-height: 113px">
+    {!! nl2br(e(Str::limit($ad->description, 200))) !!}
+</p>
+        </div>
+
+        <!-- فوتر کارت: قیمت -->
+        <div class="card-body-bottom">
+            <h6>
+        از {{ $ad->price  }}      <span class="price-label"></span>
+            </h6>
+        </div>
+
+    </div>
+@endforeach
+@else
+<div class="card bg-danger align-items-center m-3">
+                                            <p class="m-0" id="rtl">تا کنون آگهی ثبت نکردید</p>
+                                        </div>
+@endif
+
+
 
             <div id="loading-screen">
                 <div class="loader">
@@ -661,7 +842,91 @@
 
         </div>
     </div>
+
+    <script src="{{ asset('/js/jquery-3.5.1.js') }}"></script>
+        <script src="{{ asset('/js/persian-datepicker.js') }}"></script>
+    <script src="{{ asset('/js/persian-date.js') }}"></script>
     <script>
+            function updateCharCount() {
+    const aboutMe = document.getElementById('aboutMe');
+    const charCount = document.getElementById('charCount');
+    const maxChars = aboutMe.getAttribute('maxlength');
+    const currentLength = aboutMe.value.length;
+
+    charCount.textContent = `${maxChars} / ${currentLength}`;
+
+    // تغییر رنگ وقتی به حد نهایی نزدیک می‌شه
+    if (currentLength > maxChars * 0.9) {
+        charCount.style.color = 'red';
+    } else {
+        charCount.style.color = 'wihte';
+    }
+}
+
+// وقتی صفحه لود شد مقدار اولیه رو هم به‌روز کنه
+document.addEventListener('DOMContentLoaded', updateCharCount);
+
+                function goToPortfolio(id) {
+                    window.location.href = `/portfolio/${id}`;
+                }
+            
+                function openFile(url) {
+                  const win = window.open(url, '_blank');
+                  if (win) win.focus();
+                }
+
+                document.querySelectorAll('.likes').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const portfolioId = btn.dataset.id;
+                        const likesText = btn.querySelector('.likes_text');
+                    
+                        fetch(`/portfolio/${portfolioId}/like`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.liked){
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                            likesText.textContent = data.likes_count;
+                        });
+                    });
+                });
+            
+                        document.addEventListener('DOMContentLoaded', function() {
+    const openFilePicker = document.getElementById('openFilePicker');
+    const fileInput = document.getElementById('profilePicInput');
+
+    openFilePicker.addEventListener('click', function() {
+        fileInput.click(); // باز کردن input هنگام کلیک روی آیکون
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const el = document.getElementById('birthDateDisplay');
+    const birthDate = el.textContent.trim();
+
+    // اگر مقدار خالی نبود و تاریخ معتبر بود
+    if (birthDate && birthDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        // جدا کردن سال، ماه، روز میلادی
+        const [gy, gm, gd] = birthDate.split('-').map(Number);
+
+        // تبدیل به شمسی با jalaali-js
+        const j = jalaali.toJalaali(gy, gm, gd);
+        let shamsi = `${j.jy}/${String(j.jm).padStart(2, '0')}/${String(j.jd).padStart(2, '0')}`;
+
+        // تبدیل اعداد انگلیسی به فارسی
+        shamsi = shamsi.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
+        // نمایش در HTML
+        el.textContent = shamsi;
+    }
+});
 
         document.getElementById("gender-select").addEventListener("change", function () {
             let militaryStatusWrapper = document.getElementById("military-status-wrapper");
@@ -1677,43 +1942,61 @@ document.addEventListener('click', () => {
         document.getElementById("projectLink").addEventListener("input", checkProjectLink);
 
         function submitProject() {
-            document.getElementById("portfolioPopup").style.display = "none";
+    const title = document.getElementById("projectTitle").value.trim();
+    const description = document.getElementById("projectDescription").value.trim();
+    const link = document.getElementById("projectLink").value.trim();
+    const file = document.getElementById('projectFile').files[0];
 
-            document.getElementById("loading-screen").style.display = "flex";
+    // بررسی خالی بودن مقادیر
+    if (!title) {
+        showAlert("لطفاً عنوان پروژه را وارد کنید", "error");
+        return;
+    }
+        if (!file) {
+        showAlert("لطفاً فایل پروژه را انتخاب کنید", "error");
+        return;
+    }
+    if (!description) {
+        showAlert("لطفاً توضیحات پروژه را وارد کنید", "error");
+        return;
+    }
+ 
 
-            const title = document.getElementById("projectTitle").value;
-            const description = document.getElementById("projectDescription").value;
-            const link = document.getElementById("projectLink").value;
-            const file = document.getElementById('projectFile').files[0];
 
-            // ایجاد فرم داده برای ارسال به سرور
-            let formData = new FormData();
-            formData.append('portfolioData[title]', title);
-            formData.append('portfolioData[description]', description);
-            formData.append('portfolioData[link]', link);
-            formData.append('portfolioData[file]', file);
+    // نمایش لودینگ بعد از اعتبارسنجی موفق
+    document.getElementById("portfolioPopup").style.display = "none";
+    document.getElementById("loading-screen").style.display = "flex";
 
-            // ارسال داده‌ها با استفاده از AJAX
-            fetch('/submit-profile', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showAlert("نمونه کار با موفقیت ارسال شد", "success");
-                        location.reload();  // بارگذاری مجدد صفحه برای نمایش تغییرات
-                    } else {
-                        showAlert("خطا در ارسال نمونه کار", "error");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    // ساخت FormData برای ارسال به سرور
+    let formData = new FormData();
+    formData.append('portfolioData[title]', title);
+    formData.append('portfolioData[description]', description);
+    formData.append('portfolioData[link]', link);
+    formData.append('portfolioData[file]', file);
+
+    // ارسال داده‌ها با fetch
+    fetch('/submit-profile', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert("نمونه کار با موفقیت ارسال شد", "success");
+            location.reload();  // رفرش برای نمایش تغییرات
+        } else {
+            showAlert("خطا در ارسال نمونه کار", "error");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert("خطا در ارتباط با سرور", "error");
+    });
+}
+
 
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll("#portoflioDeleteBtn").forEach(button => {
@@ -1723,7 +2006,7 @@ document.addEventListener('click', () => {
                     customConfirm("آیا از حذف این نمونه کار مطمئن هستید؟", function(result) {
                         if (result) {
                             document.getElementById("loading-screen").style.display = "flex";
-                            fetch(`/portfolio/${portfolioId}`, {
+                            fetch(`/delete/portfolio/${portfolioId}`, {
                                 method: "DELETE",
                                 headers: {
                                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,

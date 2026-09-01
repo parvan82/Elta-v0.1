@@ -6,6 +6,7 @@
     align-items: center;
     height: 100vh; /* به این صورت ارتفاع کل صفحه را می‌گیرد */
     text-align: center;
+    padding: 0 15px;
 }
 
 .nav-head h1 {
@@ -132,55 +133,9 @@ body {
     opacity: 0.8;
 }
 
-#scroll-animate{
-    overflow: hidden;
-}
-
-#scroll-animate-main{
-    width: 100%;
-    left: 0;
-    position: fixed;
-}
-
-#heightPage,
-#heightScroll{
-    width: 10px;
-    top: 0;
-    position: absolute;
-    z-index: 99;
-}
-
-#heightPage{
-    left: 0;
-}
-
-#heightScroll{
-    right: 0;
-}
-
-header{
-    width: 100%;
-    height: 100%;
-    top: 0;
-    position: fixed;
-    z-index: -1;
-}
-
-footer{
-    width: 100%;
-    height: 600px;
-    background: gray;
-    bottom: -300px;
-    position: fixed;
-    z-index: -1;
-}
-
 .content{
-    padding-bottom: 5px;
-    padding-top: 80px;
+    padding: 80px 15px 40px;
     background: #888;
-    position: relative;
-    z-index: 1;
 }
 
 .shadow-box {
@@ -193,52 +148,25 @@ footer{
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.wrapper-parallax {
-    margin-top: 100%;
-    margin-bottom: 300px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-}
-
-footer h1{
-    line-height: 300px;
-}
-
-header,
-footer,
-#scroll-animate-main{
-    -webkit-transition-property: all;
-    -moz-transition-property: all;
-    transition-property: all;
-    -webkit-transition-duration: 0.4s;
-    -moz-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-    -webkit-transition-timing-function: cubic-bezier(0, 0, 0, 1);
-    -moz-transition-timing-function: cubic-bezier(0, 0, 0, 1);
-    transition-timing-function: cubic-bezier(0, 0, 0, 1);
-}
-
 .card-container {
-    flex-direction: column;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 20px;
+    margin: 40px auto;
+    max-width: 1200px;
+    gap: 20px;
 }
 
-.bottom-container-right{
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.bottom-container-right .card-right{
-    margin-left:570px ;
-}
-
+.bottom-container-right,
 .bottom-container-left{
-    margin-top: 20px;
+    margin: 40px auto;
     display: flex;
     justify-content: space-between;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
 }
 
 .card {

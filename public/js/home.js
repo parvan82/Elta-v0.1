@@ -83,7 +83,7 @@ window.addEventListener("load", () => {
 
 // input auto typing...
 const input = document.querySelector('.search-input');
-const text = "برنامه نویس بک اند"; // متنی که تایپ می‌شود
+const text = "طراحی سایت"; // متنی که تایپ می‌شود
 let currentIndex = 0;
 let isTyping = true; // برای تشخیص اینکه در حال تایپ هستیم یا حذف
 let isWaiting = false; // برای جلوگیری از تداخل تایم‌ها
@@ -197,12 +197,25 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch('/unread-messages')
         .then(response => response.json())
         .then(data => {
-            const badge = document.querySelector('.notification-badge');
-            if (data.unread > 0) {
-                badge.textContent = data.unread;
-                badge.style.display = 'flex';
-            } else {
-                badge.style.display = 'none';
+            const sidebarBadge = document.querySelector('.notification-badge');
+            const bellBadge = document.querySelector('.notification-bell-badge');
+
+            if (sidebarBadge) {
+                if (data.unread > 0) {
+                    sidebarBadge.textContent = data.unread;
+                    sidebarBadge.style.display = 'flex';
+                } else {
+                    sidebarBadge.style.display = 'none';
+                }
+            }
+
+            if (bellBadge) {
+                if (data.unread > 0) {
+                    bellBadge.textContent = data.unread;
+                    bellBadge.style.display = 'inline-block';
+                } else {
+                    bellBadge.style.display = 'none';
+                }
             }
         });
 });
@@ -222,5 +235,57 @@ document.addEventListener('DOMContentLoaded', function () {
             searchInput.value = keyword;
             searchForm.submit();
         });
+    });
+});
+
+
+document.querySelectorAll('.add-contact').forEach(function(btn) {
+    btn.addEventListener('click', function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var userId = this.getAttribute('data-user-id');
+        var icon = this.querySelector('i');
+        if (!icon) return;
+
+        icon.classList.add('icon-fade');
+
+        setTimeout(() => {
+            icon.className = 'fa-solid fa-spinner fa-spin icon-anim icon-gray';
+
+            fetch('/favorite/toggle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ favorite_id: userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                setTimeout(() => {
+                    if (data.status === 'added') {
+                        icon.className = 'fa-solid fa-check icon-anim icon-green';
+                    } else {
+                        icon.className = 'fa-solid fa-xmark icon-anim icon-red';
+                    }
+                }, 400);
+
+                setTimeout(() => {
+                    if (data.status === 'added') {
+                        icon.className = 'fa-solid fa-user-check icon-anim';
+                    } else {
+                        icon.className = 'fa-solid fa-user-plus icon-anim';
+                    }
+                }, 1400);
+
+                setTimeout(() => {
+                    icon.classList.remove('icon-fade');
+                }, 500);
+
+            });
+        }, 150);
     });
 });

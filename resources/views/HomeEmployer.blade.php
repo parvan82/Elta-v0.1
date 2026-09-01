@@ -3,14 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('images/logo.jpg') }}">
     <title>home</title>
-
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icons/bootstrap-icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icons/font-awesome/css/all.min.css') }}">
+    @vite('resources/css/app.css')
     <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/homeMoreStyle.css">
+    <link href="{{ asset('css/tooman/css/font.css') }}" rel="stylesheet" type="text/css" />
+
+    <style>
+    @media (max-width: 768px) {
+            .card-advertisement {
+                width: 80px;
+                height: auto;
+                margin: 15px 20px;
+                overflow: hidden;
+            }
+
+            .card-header-advertisement {
+                position: relative;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 180px;
+                margin-bottom: 10px;
+                transform: none;
+                border-radius: 10px 10px 0 0;
+            }
+            .distinguished-card .card-header-advertisement{
+                border: none;
+                border-bottom: 2px solid #333;
+            }
+
+            .card-body-advertisement {
+                padding: 12px 15px 10px 15px;
+            }
+
+            .card-body-top {
+                padding: 10px 15px 5px 15px;
+            }
+
+            .card-body-bottom {
+                position: static;
+                padding: 10px 15px 15px 15px;
+                margin-top: 5px;
+            }
+        }
+.price-label {
+    font-size: 20px;
+    margin-top: 2px;
+    margin-right: 7px;
+}
+    </style>
 </head>
 <body>
 <header>
@@ -20,12 +67,12 @@
             <div id="sidebar" class="sidebar">
                 <div class="sidebar-header">
                     <div class="header-btn">
-                        <button id="close-sidebar" class="closeBtn"><i class="bi bi-x"></i></button>
+                        <button id="close-sidebar" class="closeBtn"><i class="fa-solid fa-xmark" style="font-size: 16px"></i></button>
                         <a href="{{ route('employerProfile') }}?popup=open"><button class="editBtn"><svg height="1em" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"></path></svg></button></a>
                     </div>
                     
                     <div class="user-info">
-                        <p class="name">{{ Auth::user()->name}}</p>
+                        <p class="name">{{ Auth::user()->companies->company_name }}</p>
                         <p class="career">{{ Auth::user()->workarea ?? 'کاربر التا'}}</p>
                         <p class="username-title">{{ Auth::user()->username}}</p>
 
@@ -49,14 +96,15 @@
                             </button>
                         </li>
                         <li><button><a href="{{ url(config('chatify.routes.prefix')) }}"><span>پیام ها</span></a><div class="notification-badge"></div></button></li>
+                        <li><button><a href="{{ route('mobile.profile', ['id' => auth()->user()->id]) }}"><span>سازمان شما</span></a> </button></li>
                         <li><button><a href="{{ route('EltaCard') }}"><span>التا کارت</span></a></button></li>
-                        <li><button><a href="#"><span>کیف پول</span></a> </button></li>
+                        <li><button><a href="#"><span>کیف پول</span></a></button></li>
                     </ul>
                 </div>
                 <div class="sidebar-footer">
                     <form action="{{ route('logout') }}" method="POST" class="logout-form">
                         @csrf
-                        <button class="Btn"><div class="logout"><i class="bi bi-box-arrow-right"></i></div><div class="text" id="logout-btn">خروج</div></button>
+                        <button class="Btn"><div class="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></div><div class="text" id="logout-btn">خروج</div></button>
                     </form>
                     <button class="Btn"><div class="support"><i class="fa-solid fa-headset "></i></div><div class="text" id="support-btn">پشتیبانی</div></button>
                 </div>
@@ -65,7 +113,7 @@
             <div class="main-content">
                 <div class="left-buttons">
                     <button id="open-sidebar" class="open-btn">☰</button>
-                    <a href="{{route('notifications')}}" class="open-btn"><i class="fa-solid fa-bell"></i></a>
+                    <a href="{{route('notifications')}}" class="open-btn"><i class="fa-solid fa-bell"></i><span class="notification-bell-badge"></span></a>
                 </div>
                 <div class="site-name">
                     <img id="img-icon" src="{{ asset('images/name.jpg') }}" alt="">
@@ -186,10 +234,10 @@
                 <div class="suggest">بک اند </div>
                 <div class="suggest"> طراح داخلی </div>
                 <div class="suggest"> میکس مستر </div>
-                <div class="suggest"> ادیت ویدو </div>
-                <div class="suggest"> فوتوشاپ </div>
-                <div class="suggest">فرانت اند </div>
-                <div class="suggest">بک اند </div>
+                <div class="suggest mobile"> ادیت ویدو </div>
+                <div class="suggest mobile"> فوتوشاپ </div>
+                <div class="suggest mobile">فرانت اند </div>
+                <div class="suggest mobile">بک اند </div>
                 <div class="suggest"> طراح داخلی </div>
                 <div class="suggest"> میکس مستر </div>
                 <div class="suggest"> ادیت ویدو </div>
@@ -249,176 +297,249 @@
         </div>
 
     </section>
-    <div class=" content-container">
-        <div class="club-card-container mt-5">
 
-            <div class="club-card shop">
-                <div class="start-card">
-                    <h5 class="club-title">شاپ</h5>
-                    <p class="club-description">
-                        التا شاپ فضایی برای پیدا کردن چیزای ریز و درشته از المنت های ساده و کوچیک تا المنت های بزرگ و حرفه ای رو میتونی از التا شاپ تهیه کنی اگر در حوضه ای به صورت حرفه ای فعالیت میکنی پیشنهاد میکنم حتما یک سر به التا شاپ بزنی‌
-                    </p>
-                </div>
-                <div class="end-card">
-                    <button class="clubBtn">
-                        التا شاپ
-                    </button>
-                    <img src="{{ asset('images/logo.jpg') }}"  class="club-logo" alt="">
+      <div class="content-container" style="max-width:2000px">
+            <section id="features" >
+                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 " style="margin-bottom: 100px">   
+
+                        <div class="grid lg:grid-cols-2 gap-10 items-center">
+                            <div class="order-1 lg:order-2 " >
+                                <div class="grid gap-6">
+                                    <div class="flex gap-4 text-white" dir="rtl">
+                                        <div class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold mb-1">پرداخت امن</h3>
+                                            <p class="text-sm text-slate-400">تمام تراکنش‌ها در التا با سیستم پرداخت امن انجام می‌شود تا حقوق فریلنسر و کارفرما هر دو حفظ شود.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-4 text-white" dir="rtl">
+                                        <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold mb-1">تعامل مستقیم</h3>
+                                            <p class="text-sm text-slate-400">با فریلنسر بدون واسطه گفت‌وگو کنید، شرایط پروژه رو شفاف سازی کنبد و نتیجه بهتری بگیرید.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-4 text-white" dir="rtl">
+                                        <div class="w-12 h-12 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold mb-1">دسترسی به فریلنسر ها و آگهی ها</h3>
+                                            <p class="text-sm text-slate-400">رزومه و نمونه کاری های چندین فریلنسر حرفهای و مشتاق در دسترس شماست که در لحظه میتوانید ارتباط برقرار کنید</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-4 text-white" dir="rtl">
+                                        <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 0 1 4 4L7 21H3v-4L17 3z"></path></svg>
+                                        </div>
+                                        <div class="relative w-fit">
+                                            <h3 class="font-semibold mb-1">ثبت  پروژه</h3>
+                                            <p class="text-sm text-slate-400">پروژه خود را در التا ثبت کنید تا در دسترس چندین فریلنسر قرار بگیرد و  همکاری حرفه و یا بلند مدت در محیطی تخصصی داشته باشید</p>
+                                            <img src="{{  asset('images/home/arrow.svg') }}" class="transform rotate-[30deg] absolute w-[80px] top-[70px] right-[-80px]"  />
+                                            <a href="{{ route('newProject') }}" class="h-f-btn absolute top-[100px] right-0 mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-md border border-gray-300 bg-white/60 text-gray-800 font-semibold backdrop-blur-md no-underline hover:no-underline transition-colors duration-300 hover:bg-white hover:border-gray-400">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                      </svg>
+                                      همین حالا پروژه خود را ثبت کنید
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="t-h-c-i order-2 lg:order-1 relative -z-[1]">
+                                <img src="{{  asset('images/employer-home-pic1.jpg') }}" class="w-full h-auto rounded-2xl shadow-xl ring-1 ring-black/5" >
+                                <div class="absolute -top-6 -right-6 hidden md:block bg-white rounded-xl shadow-lg p-4 border border-slate-100">
+                                    <div class="flex items-center gap-3" dir="rtl">
+                                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold">التا فریلنسر</p>
+                                            <p class="text-xs text-slate-500">نیاز هر کسب و کار</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ads absolute">
+                                <h3 class="text-xl font-semibold">جدید ترین آگهی های التا</h3>
+                                </iv>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+        
+            <div class="d-flex  mx-auto sm:px-6 py-14">
+                <div class="infinite-slider" dir="rtl" style="padding: 60px 30px;">
+                    <div class="slider-track">
+                        @foreach($ads as $ad)
+                            @php
+                                $isDistinguished = $ad->tags->contains(fn($tag) => $tag->name === 'متمایز');
+                            @endphp
+                            <a class="user-card-link"  href="{{ url('/content?type=ad&id=' . $ad->id) }}" style="text-decoration:none; color:inherit;">
+                                <div class="card-advertisement {{ $isDistinguished ? 'distinguished-card' : '' }}">                         
+                                    @php
+                                        $mainImage = $ad->images->firstWhere('is_main', true);
+                                    @endphp
+                                    <div class="card-header-advertisement">
+                                        <img src="{{ $mainImage ? asset('storage/' . $mainImage->image_path) : asset('storage/images/default.jpg') }}" class="image-advertisement">
+                                    </div>                          
+                                    <div class="card-body-top">
+                                        <span class="services-tags">
+                                            {{ $ad->user->username }}@
+                                        </span>
+                                        <div class="add-contact" data-user-id="{{ $ad->user->id }}">
+                                            @if ($ad->is_favorite)
+                                                <i class="fa-solid fa-user-check icon-anim"></i>
+                                            @else
+                                                <i class="fa-solid fa-user-plus icon-anim"></i>
+                                            @endif
+                                        </div>
+
+                                    </div>                          
+                                    <div class="card-body-advertisement">
+                                        <h5>{{ $ad->title }}</h5>
+                                        <h6>{{ $ad->service_type }}</h6>
+                                        <p style="min-height: 113px">{!! nl2br(e(Str::limit($ad->description, 200))) !!}</p>
+                                    </div>                          
+                                    <div class="card-body-bottom">
+                                        <h6>
+                                            از {{ $ad->price }}<span class="price-label"></span>
+                                        </h6>
+                                    </div>                          
+                                </div>       
+                            </a>                            
+                        @endforeach
+                    </div>
                 </div>
             </div>
+            <section id="features" class="py-16">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="grid lg:grid-cols-2 gap-10 items-center">
+                        <div class="order-2 lg:order-1" dir="rtl">
+                            <p class="text-white mt-5">التا علاوه بر فراهم‌کردن دسترسی به متخصصان حرفه‌ای، به شما کمک می‌کند تا پروژه‌هایتان را سریع‌تر، دقیق‌تر و با هزینهٔ مناسب‌تر انجام دهید و همکاری حرفه ای رو تجربه کنید. تنها کافی است مراحل زیر را دنبال کنید:</p>                            <ul class="mt-3 space-y-3 text-sm text-slate-400">
+                            <ul class="mt-3 space-y-3 text-sm text-slate-400">
+                                <li class="flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check text-green-600"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    تکمیل پروفایل
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check text-green-600"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    ثبت پروژه
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check text-green-600"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    جست و جو آگهی ها و فریلنسر ها
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check text-green-600"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    باز کردن تعامل
+                                </li>
+                            </ul>
+                            <a href="{{ route('employerProfile') }}"
+                               class="mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-md border border-gray-300 bg-white/60 text-gray-800 font-semibold backdrop-blur-md no-underline hover:no-underline transition-colors duration-300 hover:bg-white hover:border-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase">
+                                    <path d="M2 7h20v14H2z"></path>
+                                    <path d="M16 3H8v4h8z"></path>
+                                </svg>
+                                تکمیل پروفایل
+                            </a>
 
-            <div class="club-card job">
-                <div class="start-card">
-                    <h5 class="club-title">جاب</h5>
-                    <p class="club-description">
-                        شرکت نوپا داری و نیاز به نیرو داری؟ نیرو متخصص و تایید شده میخوایی؟ التا جاب این مشکل رو حل کرده میتونی با ورود به التا جاب و با مقایسه التا کارت های کارمندان مصاحبه حضوری با افراد حرفه ای داشته باش و تیم حرفه ای خودتو تشکیل بدی
-                    </p>
+                        </div>
+                        <div class="order-1 lg:order-2 relative">
+                            <img src="{{  asset('images/employer-home-pic4.jpg') }}" alt="برترین پلتفرم فریلنسینگ ایران" class="w-full h-auto rounded-2xl shadow-xl ring-1 ring-black/5">
+                                        <div class="t-h-c -top-14 absolute hidden md:block bg-white rounded-xl shadow-lg p-4 border border-slate-100 " style="left: -30px; text-align: center;">
+                                            <h3 class="text-xl font-semibold text-slate-700 mt-2">بهترین نقطه برای شروع یک داستان</h3>
+                                        </div>
+                            <div class="absolute -bottom-6 -right-6 hidden md:block bg-white rounded-xl shadow-lg p-4 border border-slate-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                             class="feather feather-lightbulb">
+                                            <line x1="9" y1="18" x2="15" y2="18"></line>
+                                            <line x1="10" y1="22" x2="14" y2="22"></line>
+                                            <path d="M12 2a6 6 0 0 0-6 6c0 3 3 5 6 5s6-2 6-5a6 6 0 0 0-6-6z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold">سر نقطه</p>
+                                        <p class="text-xs text-slate-500">چطور شروع کنdم؟</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="end-card">
-                    <button class="clubBtn">
-                        التا جاب
-                    </button>
-                    <img src="{{ asset('images/logo.jpg') }}"  class="club-logo" alt="">
-
-                </div>
-            </div>
-
-            <div class="club-card learn">
-                <div class="start-card">
-                    <h5 class="club-title">لرن</h5>
-                    <p class="club-description">
-                        التا لرن محیطی کاملا نو برای یادگیری علاقه مندان به تمام دسته بندی های مربوطه هستش ما با کمک التایی های عزیز تلاش کردیم بهترین اموزش هارو برای شما تولید کنیم. همین الان شروع به یادگیری کن و در حوضه های مختلف التا شروع به کار کن و عضو خانواده التا شو
-                    </p>
-                </div>
-                <div class="end-card">
-                    <button class="clubBtn">
-                        التا لرن
-                    </button>
-                    <img src="{{ asset('images/logo.jpg') }}"  class="club-logo" alt="">
-
-                </div>
-            </div>
+            </section>
         </div>
-
-        <div class="description-card up-down">
-            <h4 class="title-description">التا فریلنسر چیه؟</h4>
-            <p class="content-description">همیشه یکی از نیاز های شرکت های بزرگ تا کسب و کار های کوچک داشتن نیرو مطمئن و قابل اتکا بوده و  دغدغه این مدیران زمان , کیفیت و هزینه کار بوده . التا فریلنسر با گزینش درست افراد تونسته مجموعه ای از افراد حرفه‌ای که در حوضه کاری خود مهارت بالایی دارن و یا افراد با استعداد نو ظهور که انگیزه بالایی برای رشد دارند رو گرد آوری کنه و همین امر باعث شده سرعت و سهولت انتخاب نیرو بالا بره و از جهتی حضور افراد نو ظهور که نیاز به میدان برای دیده شدن دارن میتوانند هزینه های پروژه شمارو کاهش بدن و و نیرویی با انگیزه به شما ارائه بدن , و البته نباید از حضور افراد قدیمی و حرفه ای برای داشتن یک کار با کیفیت بالا غافل شد</p>
+    </main>
+    <div class="app-content fade-in" style="opacity: 1; transform: translateY(0px); transition: opacity 1s ease-out, transform 1s ease-out; animation: 1s ease-out 0.7s 1 normal forwards running fadeIn;">
+        <div class="benefits">
+            @foreach($randomRows as $index => $usersGroup)
+                <div class="basic-marquee {{ $index % 2 == 0 ? 'basic-marquee-1' : 'basic-marquee-2' }}">
+                    @foreach($usersGroup as $user)
+                        <a href="{{ url('chatify/' . $user->id) }}">
+                            <div class="flex flex-col gap-2 w-full min-w-60 sm:min-w-60 sm:w-auto text-[10px] sm:text-xs z-50 cursor-pointer" dir="rtl">
+                                <div class="succsess-alert flex items-center justify-between w-full p-2 rounded-2xl bg-[#4f545a] hover:bg-[#5a6066] transition-all duration-300">
+                                    <div class="flex gap-3 items-center w-full">
+                                        <div class="w-10 h-10 rounded-lg overflow-hidden bg-white/10">
+                                            <img src="{{ $user->avatar }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-white font-semibold">{{ $user->name }}</p>
+                                            <p class="text-gray-400">{{ $user->workarea ?? 'بدون حوزه مشخص' }}</p>
+                                        </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            @endforeach
         </div>
-
-        <div class="description-card down-up">
-            <h4 class="title-description"> مزایای کار با التا</h4>
-            <div class="info-card-container">
-                <div class="info-card security">
-                    <img class="m-3" width="50" height="50" src="https://img.icons8.com/ios/50/security-shield-green.png" alt="security-shield-green"/>
-                    <p>بعد از توافق برای پروژه بین شما و کارمند التا قرارداد الکترونیکی ایجاد میشه که الزامات توافق در اون ذکر شده , مبلغ پرداختی شما در حساب التا کارمند نگه داری میشود و پس از پایان پروژه و رضایت شما به کارمند پرداخت میشه</p>
-                </div>
-
-                <div class="info-card supports">
-                    <img class="m-3" width="50" height="50" src="https://img.icons8.com/ios/50/headset--v1.png" alt="headset--v1"/>
-                    <p>پشتیبانی التا در تمامی لحاضات اجرای پروژه در کنار شما خواهد بود تا در طی روند اجرای پروژه مشکلی نداشته باشید و با خیالت راحت پروژه خودتون رو به پایان برسانید</p>
-                </div>
-
-                <div class="info-card guarantee">
-                    <img class="m-3" width="50" height="50" src="https://img.icons8.com/ios/50/spyware-free.png" alt="spyware-free"/>
-                    <p>وجود قرارداد الکترونیک امکان کلاهبرداری رو از بین میبرد و شما میتوانید در محیطی  ایمن پروزه خود را به پایان برسانید . هر کارمند التا وظیفه دارد که رضایت شما رو در رابطه با روند پیشرفت  پروژه جلب کند </p>
-
-                </div>
-                <div class="info-card guarantee">
-                    <img class="m-3" width="50" height="50" src="https://img.icons8.com/ios/50/stairs-up.png" alt="stairs-up"/>
-                    <p>در هر لحظه شما میتوانید با کارمند التا در ارتباط باشید و به تمام مراحل پروژ نظارت داشته باشید و روند موفقیت پروژه به شما گزارش داده میشود </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="description-card up-down-0">
-            <h4 class="title-description">چرا التا</h4>
-            <p class="content-description">اگر بخواهیم از جنبه اجتماعی به این موضوع نگاه کنیم التا فضایی برای پیشرفت تمامی افراد در تمامی سطح ها میباشد , التا مجموعه ای بزرگ برای رشد و تحول حوضه های مختلف است . سهولت کار در التا موجب شده  که ارتباط بین  کارمندان و کارفرما ها و صاحیبن کسب و کار راحت شود و بازار کار در عرصه های مختلف رونق بگیرد . شما کارفرمای عزیز با انتخاب التا زمینه رشد و پیشرفت رو برای کسب و کار خود و سایر افراد ایجاد میکنید</p>
-        </div>
-        <section id=timeline>
-
-            <div class="demo-card-header">
-                <h2>ثبت شرکت در التا</h2>
-                <p class="leader">برای بهره‌مندی تجربه خوب و مفید از سایت بهتر است روند زیر را طی کنید</p>
-            </div>
-            <div class="demo-card-wrapper">
-                <div class="demo-card demo-card--step1">
-                    <div class="head">
-
-                        <h2><span class="small">پروفایل</span>تکمیل فیلد های پروفایل</h2>
-                        <div class="number-box">
-                            <span>01</span>
-                        </div>
-                    </div>
-                    <div class="body">
-                        <p>برای جلوه بهتر از شرکت شما برای فریلنسرهای التا و مشتری های شما نیاز است فیلد های پروفایل شرکت خود را کامل کنید . این کار علاوه جلوه شرکت شما به درک بهتر نیاز های شما برایز فریسلنران کمک میکند</p>
-                    </div>
-                </div>
-
-                <div class="demo-card demo-card--step2">
-                    <div class="head head2">
-                        <h2><span class="small">تایید</span>تایید مشخصات شرکت</h2>
-                        <div class="number-box">
-                            <span>02</span>
-                        </div>
-                    </div>
-                    <div class="body">
-                        <p>تیم پشتیبانی التا در کوتاه ترین زمان ممکن مشخصات ارسال شده شمارو بررسی میکند تا از وجود خطا و مشکل جلوگیری شود . در این بازه زمانی شما میتوانید از امکانات سایت استفاده کنید و در صورت مشکل تیم التا با شما تماس خواهد گرفت</p>
-                    </div>
-                </div>
-
-                <div class="demo-card demo-card--step3">
-                    <div class="head head3">
-
-                        <h2><span class="small">درخواست کارت</span>درخواست التا کارت</h2>
-                        <div class="number-box">
-                            <span>03</span>
-                        </div>
-                    </div>
-                    <div class="body">
-                        <p>پس از اینکه شرکت شما در التا ثبت شد و به رسمیت شناخته شد شما میتوانید با مراجعه به داشبورد و قسمت التا کارت , پس از انتخاب مشخصات ظاهری کارت , التا کارت خود را سفارش بدید . التا کارت کمک میکند تا صفحه شرکت خود را در التا به مشتریان خود نمایش بدید این صفحه شامل مشخصات شرکت و فعالیت ها و پروژه های در حال اجرا و به اتمام رسیده است</p>
-                    </div>
-                </div>
-
-                <div class="demo-card demo-card--step4">
-                    <div class="head head4">
-
-                        <h2><span class="small"> دریافت کارت</span> دریافت التا کارت</h2>
-                        <div class="number-box">
-                            <span>04</span>
-                        </div>
-                    </div>
-                    <div class="body">
-                        <p> پس از ارسال درخواست التا کارت شما در ۳ الی ۷ روز کاری به دست شما خواهد رسید . التا کارت میتواند رابط فیزیکی بین شرکت شما و التا برای مشتری باشد تا مشتری شما علاوه بر مشخصات شرکت شما فعالیت ها و پروژه های به اتمام رسیده و در حال اجرا شرکت شمارو ببیند</p>
-                    </div>
-                </div>
-
-                <div class="demo-card demo-card--step5">
-                    <div class="head head5">
-
-
-                        <h2><span class="small">پایان</span>و در کلام آخر</h2>
-                        <div class="number-box">
-                            <span>05</span>
-                        </div>
-                    </div>
-                    <div class="body">
-                        <p>حال شما یک شرکت بروز دارید که پتانسیل و انعطاف بالایی میتواند در بازار کار داشته باشد . پیشنهاد میشه شرکت التا و تیم التارو شامل اعتماد خود قرار بدید , وظیفه ما رفع نیاز های کسب کار شما و ایجاد امتیاز مثبتی نسب به سایر رقبا شما هست . به خانواده بزرگ التا خوش آمیدید</p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
     </div>
-</main>
-<footer>
-
-</footer>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="../js/home.js"></script>
-<div id="overlay" class="overlay"></div>
+    <footer class="border border-slate-100 bg-white rounded-2xl mx-auto mt-[200px] z-50 relative mb-3 " dir="rtl">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-2 justify-between items-center gap-4">
+                    <div class="flex flex-col items-center justify-center text-center w-55">
+                        <img id="img-icon" class="w-35 h-35" src="{{ asset('images/name.jpg') }}" alt="">                        
+                        <p class="text-sm text-slate-600 mt-3">تخصصی ترین پلتفرم فریلنسینگ ایران</p>
+                    </div>
+                    <div >
+                        <h4 class="font-semibold">تماس</h4>
+                        <ul class="mt-3 space-y-2 text-sm text-slate-600">
+                            <li class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                info@elta.ir
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                021-12345678
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-slate-100 text-xs text-slate-500 flex flex-col sm:flex-row justify-between gap-2">
+                    <p dir="ltr">© 2025 elta. تمامی حقوق محفوظ است.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="hover:text-primary-500">قوانین</a>
+                        <a href="#" class="hover:text-primary-500">حریم خصوصی</a>
+                        <a href="#" class="hover:text-primary-500">سوالات متداول</a>
+                    </div>
+                </div>
+            </div>
+    </footer>
+    <script src="../js/swiper-bundle.min.js"></script>
+    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/home.js"></script>
+    <script src="../js/homeFreelancer.js"></script>
+    <div id="overlay" class="overlay"></div>
 
 </body>
 </html>

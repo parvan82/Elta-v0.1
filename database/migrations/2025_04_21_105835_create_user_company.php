@@ -11,17 +11,14 @@ return new class extends Migration {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('company_type');
-            $table->string('company_representative_name');
-            $table->string('representative_national_code', 10);
-            $table->string('representative_phone', 20);
-            $table->string('representative_email')->nullable();
-            $table->string('company_phone', 20);
-            $table->string('national_id', 11); // شناسه ملی شرکت
-            $table->string('postal_code', 10)->nullable();
-            $table->string('city'); // شهر
-            $table->text('address'); // آدرس کامل
-            $table->year('established_year');
+            $table->string('company_type')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('company_phone', 20)->nullable();
+            $table->string('national_id', 11)->nullable(); // شناسه ملی شرکت
+            $table->string('city')->nullable(); // شهر
+            $table->string('established_year', 4)->nullable();
+            $table->string('company_size')->nullable();
+            $table->text('company_info')->nullable();
             $table->timestamps();
         });
     }

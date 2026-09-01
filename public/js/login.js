@@ -25,9 +25,8 @@ const patterns = {
     "UsernameOrPhone": /^(?:[a-z](?:[a-z0-9]*\.?[a-z0-9]+)*|09\d{9})$/,
     "username": /^[a-z]+\d?/,
     "password": /^[^\d\W]\w+\d?\W?\w?/i,
-
     "name": /^^/,
-    "phone": /^09\d{9}$/
+    "phone": /^^/
 };
 
 // Aside Buttons

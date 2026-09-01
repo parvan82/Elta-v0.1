@@ -27,42 +27,11 @@ class StickyHeader {
 new StickyHeader();
 
 
-
 $(document).ready(function () {
-    var windowHeight = $(window).height(),
-        footerHeight = $('footer').height(),
-        heightDocument = windowHeight + $('.content').height() + footerHeight - 20;
-
-    $('#scroll-animate, #scroll-animate-main').css({
-        'height': heightDocument + 'px'
-    });
-
-    $('header').css({
-        'height': windowHeight + 'px',
-        'line-height': windowHeight + 'px'
-    });
-
-    $('.wrapper-parallax').css({
-        'margin-top': windowHeight + 'px'
-    });
-
-    function scrollFooter(scrollY, heightFooter) {
-        if (scrollY >= heightFooter) {
-            $('footer').css({
-                'bottom': '0px'
-            });
-        } else {
-            $('footer').css({
-                'bottom': '-' + heightFooter + 'px'
-            });
-        }
-    }
-
-    scrollFooter(window.scrollY, footerHeight);
+    var windowHeight = $(window).height();
 
     function showCardsOnScroll() {
         var scrollTop = $(window).scrollTop();
-        var cardOffsetTop = $('.card-container').offset().top;
 
         $('.fade-in').each(function (index, card) {
             var cardTop = $(card).offset().top;
@@ -81,18 +50,11 @@ $(document).ready(function () {
     $(window).on('scroll', function () {
         var scroll = $(window).scrollTop();
 
-        $('#scroll-animate-main').css({
-            'top': '-' + scroll + 'px'
-        });
-
-        $('header').css({
-            'background-position-y': 50 - (scroll * 100 / heightDocument) + '%'
-        });
-
-        scrollFooter(scroll, footerHeight);
-
         showCardsOnScroll();
     });
+
+    // اجرای اولیه برای وقتی که کاربر در وسط صفحه رفرش می‌کند
+    showCardsOnScroll();
 });
 
 

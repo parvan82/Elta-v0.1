@@ -11,19 +11,17 @@ class CompanyController extends Controller
 {
     public function save(Request $request)
     {
+
         // ولیدیشن داده‌ها
         $data = $request->validate([
             'company_type'        => 'nullable|string|max:100',
             'established_year'    => 'nullable|digits:4|integer',
-            'postal_code'         => 'nullable|string|max:10',
             'city'                => 'nullable|string|max:100',
-            'address'             => 'nullable|string|max:255',
             'company_phone'       => 'nullable|string|max:20',
             'national_id'         => 'nullable|string|size:11',
-            'company_representative_name' => 'nullable|string|max:100',
-            'representative_national_code' => 'nullable|string|size:10',
-            'representative_phone'        => 'nullable|string|max:20',
-            'representative_email'        => 'nullable|email|max:100',
+            'company_name'        => 'nullable|string|max:100',
+            'company_size'        => 'nullable|string|max:20',
+            'company_info'        => 'nullable|string',
         ]);
 
         // افزودن user_id برای updateOrCreate

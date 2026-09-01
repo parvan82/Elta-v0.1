@@ -57,14 +57,6 @@
         }
       });
   });
-  
-  
-  
-  
-  
-  
-  
-  
   let mediaRecorder, audioChunks = [];
 let isRecording = false,
     isRecordingLocked = false,
@@ -228,26 +220,183 @@ function stopRecordingTimer() {
   timerEl.textContent = "0:00.00";
 }
 
-let editingMessageId = null;
-
-$(document).on("click", ".edit-icon", function () {
-    const msgId = $(this).data("message-id");
-    const msgText = $(this).data("message");
-
-    editingMessageId = msgId;
-    $("#editing-message-text").text(msgText);
-    $("textarea[name='message']").val(msgText);
-    $("#editing-message-preview").css("display", "flex");
-  });
-
-// لغو ویرایش
-$(document).on("click", "#cancel-edit", function () {
-    editingMessageId = null;
-    $("#editing-message-preview").hide();
-    $("textarea[name='message']").val('');
-});
-
 
 </script>
 <script src="{{ asset('js/chatify/utils.js') }}"></script>
 <script src="{{ asset('js/chatify/code.js') }}"></script>
+
+{{-- Script for Pinned Project Card --}}
+<script>
+$(document).ready(function() {
+    const authId = $('meta[name="user-id"]').attr('content');
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    
+    function showPinnedCard(projectId) {
+        const pinnedCard = document.getElementById('pinned-project-card');
+        if (!pinnedCard || !projectId) return;
+        
+        // جلوگیری از اضافه کردن event listener چندباره
+        if (pinnedCard.hasAttribute('data-initialized')) {
+            pinnedCard.setAttribute('data-project-id', projectId);
+            pinnedCard.style.display = 'block';
+            
+            // دریافت اطلاعات پروژه
+            fetch(`{{ url('/api/project') }}/${projectId}`)
+                .then(response => response.ok ? response.json() : null)
+                .then(data => {
+                    if (data && data.title) {
+                        const titleElement = document.getElementById('pinned-project-title');
+                        if (titleElement) {
+                            titleElement.textContent = data.title;
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching project:', error));
+            return;
+        }
+        
+        // ذخیره project_id برای استفاده در کلیک
+        pinnedCard.setAttribute('data-project-id', projectId);
+        pinnedCard.setAttribute('data-initialized', 'true');
+        
+        // دریافت اطلاعات پروژه از API
+        fetch(`{{ url('/api/project') }}/${projectId}`)
+            .then(response => {
+                if (!response.ok) {
+                    return null;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.title) {
+                    const titleElement = document.getElementById('pinned-project-title');
+                    if (titleElement) {
+                        titleElement.textContent = data.title;
+                    }
+                }
+                pinnedCard.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error fetching project:', error);
+                pinnedCard.style.display = 'block';
+            });
+        
+        // کلیک روی کارت برای رفتن به صفحه پروژه (فقط یکبار اضافه شود)
+        pinnedCard.addEventListener('click', function(e) {
+            const pid = this.getAttribute('data-project-id');
+            if (pid) {
+                window.location.href = `/content?type=project&id=${pid}`;
+            }
+        });
+    }
+    
+    function checkAndShowPinnedCard(contactId) {
+        if (!contactId || !authId) {
+            const pinnedCard = document.getElementById('pinned-project-card');
+            if (pinnedCard) pinnedCard.style.display = 'none';
+            return;
+        }
+        
+        // دریافت project_id از API برای این conversation
+        fetch(`{{ url('/api/conversation/project') }}?contact_id=${contactId}`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            credentials: 'same-origin'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return null;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.project_id) {
+                    showPinnedCard(data.project_id);
+                } else {
+                    const pinnedCard = document.getElementById('pinned-project-card');
+                    if (pinnedCard) pinnedCard.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching conversation project:', error);
+                const pinnedCard = document.getElementById('pinned-project-card');
+                if (pinnedCard) pinnedCard.style.display = 'none';
+            });
+    }
+    
+    // دریافت project_id از URL (اگر وجود داشت - برای فرستنده)
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectIdFromUrl = urlParams.get('project_id');
+    const currentContactId = $('meta[name="id"]').attr('content');
+    
+    if (projectIdFromUrl && currentContactId && authId) {
+        // ذخیره در دیتابیس از طریق API
+        fetch(`{{ url('/api/conversation/project') }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                contact_id: currentContactId,
+                project_id: projectIdFromUrl
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    showPinnedCard(projectIdFromUrl);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving conversation project:', error);
+                // حتی در صورت خطا، کارت را نمایش بده
+                showPinnedCard(projectIdFromUrl);
+            });
+    } else if (currentContactId && authId) {
+        // اگر project_id در URL نبود، از API بخوان (برای گیرنده)
+        checkAndShowPinnedCard(currentContactId);
+    }
+    
+    // وقتی conversation تغییر می‌کند، project_id را بررسی کن
+    // استفاده از MutationObserver برای تغییرات در meta[name="id"]
+    const metaId = document.querySelector('meta[name="id"]');
+    if (metaId) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'content') {
+                    const newContactId = metaId.getAttribute('content');
+                    checkAndShowPinnedCard(newContactId);
+                }
+            });
+        });
+        observer.observe(metaId, { attributes: true, attributeFilter: ['content'] });
+    }
+    
+    // همچنین بعد از لود کامل صفحه بررسی کن
+    setTimeout(function() {
+        const contactId = $('meta[name="id"]').attr('content');
+        checkAndShowPinnedCard(contactId);
+    }, 500);
+    
+    // Hook کردن تابع IDinfo برای به‌روزرسانی کارت هنگام تغییر conversation
+    // این باید بعد از لود شدن code.js اجرا شود
+    setTimeout(function() {
+        if (typeof IDinfo === 'function') {
+            const originalIDinfo = IDinfo;
+            window.IDinfo = function(id) {
+                const result = originalIDinfo.apply(this, arguments);
+                // بعد از اینکه conversation باز شد، project_id را بررسی کن
+                setTimeout(function() {
+                    checkAndShowPinnedCard(id);
+                }, 100);
+                return result;
+            };
+        }
+    }, 1000);
+});
+</script>

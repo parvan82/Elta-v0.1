@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained('new_projects')->onDelete('cascade');
             $table->foreignId('skill_id')->constrained('user_skill')->onDelete('cascade');
-            $table->string('level')->nullable();
             $table->timestamps();
         });
     }
