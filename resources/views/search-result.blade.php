@@ -207,7 +207,7 @@
 <body>
     <header>
 
-    <section class="nav-head">
+        <section class="nav-head">
         <div class="header2">
             <!-- Sidebar -->
             <div id="sidebar" class="sidebar">
@@ -326,7 +326,7 @@
 
         </div>
 
-    </section>
+        </section>
 
     </header>
     <main class="main-container" >
@@ -461,19 +461,31 @@
 
                         </div>
                     
-                        <div class="left-card-bottom">
-                            <h5 class="pr-3 pt-3"><b>اطلاعات فردی</b></h5>
-                            <div class=" pr-4" style="direction: rtl;">
-                                <span class="d-flex">
-                                    <h6 style=" padding:0px 5px"><b>سن:</b></h6>
-                                    <h6>22 سال</h6>
-                                </span>
-                                <span class="d-flex">
-                                    <h6 style=" padding:0px 5px"><b>وضعیت نظام وظیفه:</b></h6>
-                                    <h6>{{ $clickedUser->personalInformation->military_status ?? 'ثبت نشده' }}</h6>
-                                </span>
-                                <span class="d-flex">
-                                    <h6 style=" padding:0px 5px"><b>تحصیلات:</b></h6>
+                        <div class="left-card-bottom" style="padding: 20px; background: linear-gradient(135deg, #555 0%, #777 100%); box-shadow: 0 8px 24px rgba(0,0,0,0.3); border-radius: 5px;">
+                            <h4 dir="rtl" class="ad-title mt-4"><i class="bi bi-person-circle" style="color: #ffd700; margin-left: 10px;"></i>اطلاعات فردی</h4>
+                            
+                            <div class="ad-details user-details-grid" dir="rtl">
+                                
+                                <div class="info-item">
+                                    <div class="info-icon username-icon"><i class="fa-solid fa-id-badge"></i></div>
+                                    <div class="info-content">
+                                        <h6 style="color: white;">سن:</h6>
+                                        <p class="info-value">22 سال</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-icon area-icon"><i class="fa-solid fa-map-marker-alt"></i></div>
+                                    <div class="info-content">
+                                        <h6 style="color: white;">وضعیت نظام وظیفه:</h6>
+                                        <p class="info-value">{{ $clickedUser->personalInformation->military_status ?? 'ثبت نشده' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mr-4 info-container-personal info-item mt-3" >
+                                <span class="d-flex my-2">
+                                    <h6 ><b>تحصیلات:</b></h6>
                                     @forelse($clickedUser->educationalHistories ?? [] as $edu)
                                         <h6>{{ $edu->degree }} - {{ $edu->major }}</h6>
                                     @empty
@@ -482,9 +494,9 @@
                                 </span>
                             </div>
 
-                            <hr>
+                            <hr class="section-divider">
 
-                            <h5 class="pr-3"><b>سطح زبان</b></h5>
+                            <h4 dir="rtl" class="ad-title"><i class="bi bi-translate" style="color: #ffd700; margin-left: 10px;"></i>سطح زبان</h4>    
                             <div class="d-flex mr-4" style="direction: rtl; gap:10px; flex-wrap: wrap;">
                                 @forelse($clickedUser->languages ?? [] as $lang)
                                     <div class="language-tag">
@@ -498,9 +510,9 @@
                                 @endforelse
                             </div>
 
-                            <hr>
+                            <hr class="section-divider">
 
-                            <h5 class="pr-3"><b>مهارت ها</b></h5>
+                            <h4 dir="rtl" class="ad-title"><i class="bi bi-tools" style="color: #ffd700; margin-left: 10px;"></i>مهارت ها</h4>                            
                             <div class="d-flex mx-4" style="direction: rtl; gap:10px; flex-wrap: wrap;">
                                 @forelse($clickedUser->skillMapping ?? [] as $map)
                                     @if($map->skill)
@@ -515,11 +527,11 @@
                                 @endforelse
                             </div>
 
-                            <hr>
+                            <hr class="section-divider">
 
                             <div class="d-flex justify-content-between px-3" style="direction: rtl;">
-                                <h5 class="font-weight-bold">نمونه کار ها</h5>
-                                <h6><b>{{ count($clickedUser->portfolios ?? []) }}</b> پروژه ثبت شده است</h6>
+                                <h4 dir="rtl" class="ad-title mr-0"><i class="bi bi-columns-gap" style="color: #ffd700; margin-left: 10px;"></i>نمونه کار</h4>
+                                <h4 class="ad-title" style="font-size: 14px; white-space: break-spaces; font-weight: 0;"><b> {{ count($clickedUser->portfolios ?? []) }}</b> پروژه ثبت شده است</h4>
                             </div>
                             <div class="portfolio-container @if(($clickedUser->portfolios ?? collect())->isEmpty()) overflow-hidden @endif">
                                 @forelse($clickedUser->portfolios ?? [] as $portfolio)
@@ -636,15 +648,18 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <div class="portfolio-empty">
-                                      <div class="portfolio-empty-title">نمونه کار ثبت نشده است</div>
-                                    </div>
+                                <div class="portfolio-empty">
+                                    نمونه کار ثبت نشده است
+                                </div>
                                 @endforelse
                             </div>
-                            <hr>
+                            <hr class="section-divider">
                             <div class="d-flex justify-content-between px-3" style="direction: rtl;">
-                                <h5 class="font-weight-bold">آگهی ها</h5>
-                                <h6><b>{{ count($userAds  ?? []) }}</b> آگهی ثبت شده است </h6>
+                                <h4 dir="rtl" class="ad-title mr-0">
+                                    <i class="bi bi-badge-ad" style="color: #ffd700; margin-left: 10px;"></i>
+                                    آگهی ها
+                                </h4>
+                                <h4 class="ad-title" style="font-size: 14px; white-space: break-spaces; font-weight: 0;"><b>{{ count($userAds  ?? []) }}</b> آگهی ثبت شده است </h4>
                             </div>
                             @forelse($userAds  as $ad)
                                 @php
@@ -674,12 +689,11 @@
                                         </p>
                                     </div>
                                     <div class="card-body-bottom">
-                                        <h6>
-                                            از {{ number_format((float) $ad->price_low * 1000000, 0, '.', ',') }}
-                                            تا {{ number_format((float) $ad->price_hight * 1000000, 0, '.', ',') }}
-                                        </h6>
+                                                    <h6>از {{ $ad->price }}<span class="price-label"></span></h6>
+
                                     </div>                              
                                 </div>
+                                
                                 @empty
                                 <div class='portfolio-container  overflow-hidden '>
                                  <div class="portfolio-empty">
@@ -689,13 +703,17 @@
                       
                             @endforelse
                             @if(!$similarUsers->isEmpty())
-                                <hr>       
-                                <div class="d-flex justify-content-between px-3" style="direction: rtl;">
-                                    <h5 class="font-weight-bold">فریلنسر های مشابه</h5>
-                                </div>
+                            <hr class="section-divider">
+
+                            <div class="d-flex justify-content-between px-3" style="direction: rtl;">
+                                <h4 dir="rtl" class="ad-title mr-0">
+                                    <i class="bi bi-person-vcard" style="color: #ffd700; margin-left: 10px;"></i>
+                                    فریلنسر های مشابه
+                                </h4>
+                            </div>
                                 @foreach($similarUsers as $user)
                                     <a class="user-card-link" href="{{ $defaultUrl = url()->current() . '?q=' . urlencode($query) . '&clickedUserId=' . $user->id }}" data-default-url="{{ $defaultUrl }}" data-mobile-url="{{ url('/profile/' . $user->id) }}" style="text-decoration:none; color:inherit;">
-                                        <div class="eltaCard m-5" style="box-shadow: 0 0 20px #444; cursor: pointer;">
+                                        <div class="eltaCard mx-4 my-5" style="box-shadow: 0 0 20px #444; cursor: pointer;">
                                             <div class="search-elta-card">
                                                 @if ( Cache::has('user-is-online-' . $user->id) )
                                                     <span class="active online"></span>
@@ -929,7 +947,7 @@
                                 <hr class="section-divider m-0">
                                 {{-- آگهی‌های مشابه --}}
                                 @if($similarAds && $similarAds->isNotEmpty())
-                                    <h5 class="font-weight-bold my-4 mr-4 text-white"> آگهی های مشابه</h5>
+                            <h4 dir="rtl" class="ad-title mt-4"><i class="bi bi-badge-ad" style="color: #ffd700; margin-left: 10px;"></i>آگهی های مشابه</h4>
                                     @foreach($similarAds as $similarAd)
                                         @php
                                             $isDistinguished = $similarAd->tags->contains(fn($tag) => $tag->name === 'متمایز');

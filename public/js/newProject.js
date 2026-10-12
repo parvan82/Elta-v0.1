@@ -1132,14 +1132,10 @@ eltaServiceOptions.forEach((option) => {
     const prices = {
         base: { "create-project": 139000 },
         services: {
-            unlimited: 599000,
-            "project-manager": 5000000,
-            "urgent-featured": 299000,
-            urgent: 149000,
-            featured: 349000,
-            professional: 99000,
-            distinctive: 99000,
-            "web-hosting": 0,
+            "مدیر پروژه": 5000000,
+            "فوری": 149000,
+            "تخصصی": 99000,
+            "متمایز": 99000,
         },
     };
 
@@ -1155,30 +1151,10 @@ function formatPrice(amount) {
 }
 
 
-    function getServiceTitle(key) {
-        switch (key) {
-            case "create-project":
-                return "ایجاد پروژه";
-            case "unlimited":
-                return "بی‌نهایت";
-            case "project-manager":
-                return "مدیر پروژه";
-            case "urgent-featured":
-                return "بسته فوری + برجسته (۴۰٪ تخفیف)";
-            case "urgent":
-                return "فوری";
-            case "featured":
-                return "برجسته";
-            case "professional":
-                return "حرفه‌ای";
-            case "distinctive":
-                return "متمایز";
-            case "web-hosting":
-                return "میزبانی وب";
-            default:
-                return key;
-        }
-    }
+function getServiceTitle(key) {
+    return key;
+
+}
 
     function updateInvoice() {
         const itemsContainer = document.getElementById("invoice-items");
@@ -1210,10 +1186,12 @@ function formatPrice(amount) {
             new Set(window.selectedServices)
         ).filter((s) => s !== "create-project");
 
+        
+
         uniqueServices.forEach((serviceKey) => {
-            if (serviceKey === "urgent" || serviceKey === "featured") {
-                if (hasCombo) return; // نادیده بگیر چون بسته تخفیفی انتخاب شده
-            }
+    if (serviceKey === "فوری" || serviceKey === "برجسته") {
+        if (hasCombo) return;
+    }
 
             const price = prices.services[serviceKey];
             if (typeof price !== "number") return;

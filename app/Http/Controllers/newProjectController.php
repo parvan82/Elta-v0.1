@@ -17,10 +17,8 @@ class newProjectController extends Controller
 {
     public function store(Request $request)
     {
-        // دریافت آیدی پروژه برای تمدید
         $renewProjectId = $request->input('renew_project_id');
 
-        // پردازش JSON مهارت‌ها و سرویس‌ها
         $selectedSkills = $this->parseJsonArray($request->input('selected_skills'));
         $selectedServices = $this->parseJsonArray($request->input('selected_services'));
         $eltaServices = $this->parseJsonArray($request->input('elta_services'));
@@ -35,7 +33,6 @@ class newProjectController extends Controller
             return response()->json(['success' => true, 'message' => 'پروژه تمدید شد']);
         }
 
-        // اعتبارسنجی ورودی‌ها
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -49,13 +46,13 @@ class newProjectController extends Controller
             DB::beginTransaction();
 
             if ($renewProjectId) {
-                // ✅ تمدید پروژه
+
                 $project = NewProject::findOrFail($renewProjectId);
-                $project->expires_at = Carbon::now()->addDays(30); // ۳۰ روز تمدید
+                $project->expires_at = Carbon::now()->addDays(30);
                 $project->status = 'open';
                 $project->save();
             } else {
-                // ✅ ثبت پروژه جدید
+
                 $project = NewProject::create([
                     'user_id' => Auth::id(),
                     'title' => $validated['title'],
@@ -67,7 +64,6 @@ class newProjectController extends Controller
                     'expires_at' => $validated['expires_at'] ?? now()->addDays(30),
                 ]);
 
-                // ذخیره سرویس‌ها
                 foreach ($selectedServices as $serviceName) {
                     if (!$serviceName) continue;
                     $serviceTag = ServicesTag::firstOrCreate(['name' => $serviceName]);
@@ -77,21 +73,13 @@ class newProjectController extends Controller
                     ]);
                 }
 
-                // ذخیره مهارت‌ها
                 foreach ($selectedSkills as $skillData) {
                     $skillName = $skillData['skill'] ?? null;
                     if (!$skillName) continue;
 
-                    // مهارت پروژه
                     $skill = UserSkill::firstOrCreate(['skill' => $skillName]);
                     ProjectSkillMapping::updateOrCreate(
                         ['project_id' => $project->id, 'skill_id' => $skill->id],
-                    );
-
-                    // مهارت کاربر
-                    SkillMapping::updateOrCreate(
-                        ['user_id' => Auth::id(), 'skill_id' => $skill->id],
-                        ['level' => $level]
                     );
                 }
             }
@@ -121,9 +109,6 @@ class newProjectController extends Controller
         }
     }
 
-    /**
-     * تبدیل رشته یا آرایه JSON به آرایه PHP
-     */
     private function parseJsonArray($value): array
     {
         if (!$value) return [];
@@ -132,9 +117,6 @@ class newProjectController extends Controller
         return is_array($decoded) ? $decoded : [];
     }
 
-    /**
-     * دریافت اطلاعات پروژه برای نمایش در چت
-     */
     public function getProjectInfo($id)
     {
         $project = NewProject::find($id);
@@ -149,10 +131,7 @@ class newProjectController extends Controller
             'description' => $project->description,
         ]);
     }
-    
-    /**
-     * دریافت project_id برای یک conversation
-     */
+
     public function getConversationProject(Request $request)
     {
         $userId = Auth::id();
@@ -172,10 +151,7 @@ class newProjectController extends Controller
         
         return response()->json(['project_id' => null]);
     }
-    
-    /**
-     * ذخیره project_id برای یک conversation
-     */
+
     public function saveConversationProject(Request $request)
     {
         $request->validate([

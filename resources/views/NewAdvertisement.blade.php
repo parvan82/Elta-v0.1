@@ -52,6 +52,7 @@
     right: 0;
     margin-right: 16px;
     display: flex;
+    color: white;
 }
 .price-title.r .price-label {
     font-size: 18px;
@@ -653,8 +654,7 @@
                       <div class="main-upload">
                         <input type="file" id="imageUpload" accept="image/*" multiple hidden>
                         <label for="imageUpload" class="upload-label">
-                          <div class="placeholder" style="background-color: white;
-">
+                          <div class="placeholder">
                             <i class="fa-solid fa-file-circle-plus"></i>
                             <p>برای افزودن تصویر کلیک کنید</p>
                           </div>
@@ -720,9 +720,21 @@
                     <h2 class="fs-title">التا کارت پروژه</h2>
                     <h3 class="fs-subtitle"> پیش نمایشی از التا کارت پروژه شما :</h3>
                     <div class="card-advertisement">
-                      <div class="card-header-advertisement">
-                        <img  src="{{ asset('storage/images/default.jpg') }}" class="image-advertisement">
-                      </div>
+@if($ad)
+    @php
+        $mainImage = $ad->images->firstWhere('is_main', true);
+    @endphp
+    <div class="card-header-advertisement">
+        <img src="{{ $mainImage ? asset('storage/' . $mainImage->image_path) : asset('storage/images/default.jpg') }}" 
+             class="image-advertisement" 
+             alt="{{ $ad->title ?? 'تصویر آگهی' }}">
+    </div>
+@else
+    <div class="card-header-advertisement">
+        <img src="{{ asset('storage/images/default.jpg') }}" class="image-advertisement" alt="تصویر پیش‌فرض">
+    </div>
+@endif
+
                       <div class="card-body-top">
                         <div class="tags-card-advertisement">
                         </div>
@@ -747,15 +759,12 @@
                             <!-- ردیف‌های صورتحساب اینجا رندر می‌شوند -->
                         </div>
                         <div id="invoice-total" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; background: #f8f9fa; border: 2px solid #e1e8ed; border-radius: 12px; padding: 12px 16px;">
-                            <span style="font-weight: 700; color: #2C3E50;">مجموع قابل پرداخت</span>
+                            <span style="font-weight: 700; color: white;">مجموع قابل پرداخت</span>
                             <span id="invoice-total-amount" style="font-weight: 800; color: #27AE60;">۰ <span class="price-label"></span></span>
                         </div>
                     </div>
 
                     <button type="button" id="pay-btn-ads" class="action-button">{{ $isRenew ? 'تمدید آگهی' : 'ثبت پروژه' }}</button>
-
-                    <input type="button" class="previous action-button" value="قبلی" />
-
                 </fieldset>
 
             </form>

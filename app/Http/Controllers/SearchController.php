@@ -408,7 +408,6 @@ class SearchController extends Controller
 
             if ($request->redirect === 'search-results' && empty($query)) {
 
-                // آخرین پروژه‌های فریلنسرها
                 // آخرین پروژه‌های کارفرماها
                 $projects = NewProject::with([
                     'user',
@@ -453,7 +452,6 @@ class SearchController extends Controller
                         ];
                     });
 
-                // آخرین فریلنسرها
                 // آخرین کارفرماها
                 $users = User::with(['companies', 'skillMapping.skill'])
                     ->where('role', 'employer')
@@ -650,20 +648,16 @@ class SearchController extends Controller
 
             foreach ($similarProjects as $p) {
 
-                // 👈 خیلی مهم
                 $p->type = 'project';
 
-                // services → string[]
                 $p->services = collect($p->serviceTags ?? [])
                     ->pluck('name')
                     ->toArray();
 
-                // skills → string[]
                 $p->skills = collect($p->skills ?? [])
                     ->pluck('skill')
                     ->toArray();
 
-                // user (حداقل چیزی که قالب می‌خواد)
                 $p->user = (object)[
                     'id' => $p->user_id ?? null,
                     'profilepic' => DB::table('users')
@@ -671,7 +665,6 @@ class SearchController extends Controller
                         ->value('profilepic'),
                 ];
 
-                // favorite
                 $p->is_favorite = in_array($p->id, $favorites);
             }
 

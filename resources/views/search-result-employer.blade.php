@@ -161,7 +161,7 @@
 .elta-pill-tag[data-filter-value="متمایز"].active {
     background: #ffb020;
     border-color: #ffb020;
-    color: #1a1f24;
+    color: #fff;
     box-shadow: 0 2px 10px rgba(255, 176, 32, 0.35);
 }
 .elta-filter-reset {
@@ -475,13 +475,6 @@
                             </button>
                         </a>
                         @endif
-                        <a href="{{ route('mobile.profile', ['id' => $clickedUser->id]) }}" style="text-decoration: none;">
-                            <button class='profile-btn'>
-                                <span class="box">
-                                    مشاهده پروفایل
-                                </span>
-                            </button>
-                        </a>
                     </div>
 
                     <div class="Statistics-card-container">
@@ -529,17 +522,6 @@
                                     <i class="fa-solid fa-briefcase" style="color: #ffd700; margin-left: 10px;"></i>
                                     {{ $clickedproject->title }}
                                 </h4>
-                                @if($clickedproject->user_id)
-                                <a href="{{ url('chatify/' . $clickedproject->user_id . '?project_id=' . $clickedproject->id) }}"
-                                    class="project-chat-btn"
-                                    style="margin-right: 15px; text-decoration: none;">
-                                    <button type="button" style="display: inline-flex;align-items: center;gap: 8px;padding: 10px 20px;background: linear-gradient(135deg, #27AE60, #2ECC71);color: white;border: none;border-radius: 25px;font-size: 14px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(39, 174, 96, 0.4)';"
-                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(39, 174, 96, 0.3)';">
-                                        <i class="fa-solid fa-comments" style="font-size: 16px;"></i>
-                                        <span style="white-space: nowrap;">ارسال پیشنهاد</span>
-                                    </button>
-                                </a>
-                                @endif
                             </div>
                             <hr class="section-divider">
 
@@ -593,7 +575,7 @@
                             <hr class="section-divider">
 
                             <div class="px-3" style="direction: rtl;">
-                                <h5 class="font-weight-bold mb-3">مهارت‌ها</h5>
+                                <h4 dir="rtl" class="ad-title"><i class="bi bi-tools" style="color: #ffd700; margin-left: 10px;"></i>مهارت ها</h4>                            
                                 <div class="d-flex mt-2" style="direction: rtl; gap:10px; flex-wrap: wrap;">
                                     @forelse($clickedproject->skills as $skill)
                                     <div class="language-tag">
@@ -662,9 +644,6 @@
                                             <div class="project-card-avatar">
                                                 <img src="{{ asset('storage/' . ($item->user->profilepic ?? 'images/default.jpg')) }}" alt="Profile">
                                             </div>
-                                            @if($hasDistinguishedTag)
-                                            <span class="project-card-status" style="background: rgba(243, 156, 18, 0.2); color: #f39c12;">متمایز</span>
-                                            @endif
                                         </div>
                                     </div>
 
@@ -673,14 +652,14 @@
                                         @foreach($sortedTags as $tag)
                                         @php
                                         $tagClass = match($tag) {
-                                        'تخصصی' => 'takhasosi',
+                                        'تخصصی' => 'takhasosi', 
                                         'فوری' => 'fori',
                                         'مدیر پروژه' => 'modir-proje',
                                         'متمایز' => 'motamayez',
                                         default => '',
                                         };
                                         @endphp
-                                        <span class="project-card-tag {{ $tagClass }}">{{ $tag }}</span>
+                                        <span class="services-tags {{ $tagClass }}">{{ $tag }}</span>
                                         @endforeach
                                     </div>
 
@@ -710,9 +689,6 @@
 
                                     {{-- فوتر کارت --}}
                                     <div class="project-card-footer">
-                                        <div class="project-card-footer-left">
-                                            <span style="font-size: 12px; color: #888;">پروژه</span>
-                                        </div>
                                         <div class="project-card-footer-right">
                                             <div class="add-contact project-card-favorite" data-user-id="{{ $item->user->id }}">
                                                 @if ($item->is_favorite)
@@ -804,10 +780,7 @@
 
                             @if($employerProjects->count())
                             <hr class="section-divider">
-                            <h4 class="mb-4 text-white">
-                                {{$employerProjects->count()}} پروژه ثبت شده توسط {{ $clickedUser->companies->company_name }}
-                            </h4>
-
+                            <h4 dir="rtl" class="ad-title mt-4"><i class="bi bi-kanban" style="color: #ffd700; margin-left: 10px;"></i>{{$employerProjects->count()}} پروژه ثبت شده توسط {{ $clickedUser->companies->company_name }}</h4>
                             {{-- کادر با اسکرول --}}
                             <div class="employer-projects-scroll">
                                 @foreach ($employerProjects as $project)
@@ -852,7 +825,7 @@
                                             default => '',
                                             };
                                             @endphp
-                                            <span class="project-card-tag {{ $tagClass }}">{{ $tag }}</span>
+                                            <span class="services-tags{{ $tagClass }}">{{ $tag }}</span>
                                             @endforeach
                                         </div>
 
@@ -879,14 +852,6 @@
                                             <span class="project-skill-pill">{{ is_object($skill) ? $skill->skill : $skill }}</span>
                                             @endforeach
                                         </div>
-
-                                        {{-- فوتر کارت --}}
-                                        <div class="project-card-footer">
-                                            <div class="project-card-footer-left">
-                                                <span style="font-size: 12px; color: #888;">پروژه</span>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </a>
                                 @endforeach
@@ -895,8 +860,7 @@
 
                             @if(!empty($similarEmployers) && $similarEmployers->count())
                             <hr class="section-divider">
-                            <h4 class="mb-5 text-white">کارفرماهای مشابه</h4>
-
+                            <h4 dir="rtl" class="ad-title mt-4 mb-5"><i class="bi bi-person-video2" style="color: #ffd700; margin-left: 10px;"></i>کارفرما های مشابه</h4>
                             @foreach($similarEmployers as $employer)
                             @php
                             $defaultUrl = url()->current() . '?q=' . urlencode($query) . '&clickedUserId=' . $employer->id;
@@ -1061,7 +1025,7 @@
                     default => '',
                     };
                     @endphp
-                    <span class="project-card-tag {{ $tagClass }}">{{ $tag }}</span>
+                    <span class="services-tags {{ $tagClass }}">{{ $tag }}</span>
                     @endforeach
                 </div>
 

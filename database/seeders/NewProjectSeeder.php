@@ -132,10 +132,6 @@ $randomTags = collect($tags)->shuffle()->take($tagsCount);
 foreach ($randomTags as $tag) {
     $project->serviceTags()->syncWithoutDetaching($tag->id);
 }
-            if ($tag) {
-                $project->serviceTags()->attach($tag->id);
-            }
-
             foreach ($data['skills'] as $skillName => $range) {
             
                 $skill = UserSkill::firstOrCreate([

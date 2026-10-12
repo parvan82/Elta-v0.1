@@ -800,38 +800,38 @@ max-height: 790px;
                             </div>
 
                             @endif
-                            @foreach($similarUsers as $user)
+                            @foreach($similarUsers as $freelancer)
 
 
-                            <a class="user-card-link" href="{{ url('/profile/' . $user->id) }}"style="text-decoration:none; color:inherit;">
+                            <a class="user-card-link" href="{{ url('/profile/' . $freelancer->id) }}"style="text-decoration:none; color:inherit;">
                                     <div class="eltaCard m-5" style="box-shadow: 0 0 20px #444; cursor: pointer;">
                                         <div class="search-elta-card">
-                                            @if ( Cache::has('user-is-online-' . $user->id) )
+                                            @if ( Cache::has('user-is-online-' . $freelancer->id) )
                                                 <span class="active online"></span>
                                             @else
                                                 <span class="active offline"></span>
                                             @endif
                                             <div class="search-image-container">
-                                                <img src="{{ $user->profilepic ? asset('storage/' . $user->profilepic) : asset('images/default.jpg') }}" alt="Profile Picture">
+                                                <img src="{{ $freelancer->profilepic ? asset('storage/' . $freelancer->profilepic) : asset('images/default.jpg') }}" alt="Profile Picture">
                                             </div>
                                             <div class="search-card-tags">
-                                                <h6 class="username-search-card">{{ $user->username }}</h6>
+                                                <h6 class="username-search-card">{{ $freelancer->username }}</h6>
                                                 <h6 class="tags">gold</h6>
                                             </div>
-                                            <div class="add-contact" data-user-id="{{ $user->id }}">
-                                                @if ($user->is_favorite)
+                                            <div class="add-contact" data-user-id="{{ $freelancer->id }}">
+                                                @if ($freelancer->is_favorite)
                                                     <i class="fa-solid fa-user-tie"></i>
                                                 @else
                                                     <i class="fa-solid fa-user-plus"></i>
                                                 @endif
                                             </div>
                                             <div class="search-info-container">
-                                                <h4 class="search-name">{{ $user->name }}</h4>
-                                                <h6 class="search-scope-work">{{ $user->workarea }}</h6>
-                                                <p class="search-about-me">{{ $user->aboutme }}</p>
+                                                <h4 class="search-name">{{ $freelancer->name }}</h4>
+                                                <h6 class="search-scope-work">{{ $freelancer->workarea }}</h6>
+                                                <p class="search-about-me">{{ $freelancer->aboutme }}</p>
                                             </div>
                                             <div class="search-card-skill" style="display:flex; flex-wrap: wrap; gap:8px; direction: rtl;">
-                                                @foreach ($user->skills as $skill)
+                                                @foreach ($freelancer->skills as $skill)
                                                     <h6 class="userSkill-search-card">{{ $skill }}</h6>
                                                 @endforeach
                                             </div>
@@ -1000,7 +1000,7 @@ max-height: 790px;
                                                     default => '',
                                                 };
                                             @endphp
-                                            <span class="project-card-tag {{ $tagClass }}">{{ $tag->name }}</span>
+                                            <span class="services-tags {{ $tagClass }}">{{ $tag->name }}</span>
                                         @endforeach
                                     </div>
 
@@ -1045,7 +1045,7 @@ max-height: 790px;
 
     @if(!empty($similarEmployers) && $similarEmployers->count())
     <hr class="section-divider">
-    <h4 dir="rtl" class="ad-title mt-4 mb-5"><i class="bi bi-person-video2" style="color: #ffd700; margin-left: 10px;"></i>کارفرماهای مشابه</h4>
+    <h4 dir="rtl" class="ad-title mt-4 mb-5"><i class="bi bi-person-video2" style="color: #ffd700; margin-left: 10px;"></i>کارفرما های مشابه</h4>
     @foreach($similarEmployers as $employer)
 
         <a class="user-card-link" href="/profile/{{ $employer->id }}" style="text-decoration:none; color:inherit;">
@@ -1067,7 +1067,7 @@ max-height: 790px;
                     <div class="search-info-container">
                         <h4 class="search-name m-0">{{ $employer->company_name }}</h4>
                         <h6 class="search-scope-work m-0">{{ $employer->workarea ?? 'ثبت نشده' }}</h6>
-                        <p class="search-about-me">{{ $clickedUser->companies->company_info ?? 'توضیحاتی ثبت نشده است.' }}</p>
+                        <p class="search-about-me">{{ $employer->company_info ?? 'توضیحاتی ثبت نشده است.' }}</p>
                     </div>
 
                     {{-- مهارت‌ها --}}
